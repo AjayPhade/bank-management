@@ -1,7 +1,6 @@
 /*Login Page Start*/
 body {
   background-color: #f5f5f5;
-
 }
 
 .emp-login-header {
@@ -50,6 +49,7 @@ body {
 .features-deck{
   padding:5%;
   text-align: center;
+  margin: 0;
 
 }
 .card-img-top{
