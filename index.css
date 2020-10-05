@@ -28,11 +28,13 @@ body {
   padding-left: 83%;
 }
 .nav-link{
-  color: #ecf4f3;
+  color: #deebe9e5;
+  font-weight: 600;
 }
 .nav-link:hover{
   color: white;
-  font-weight: bold;
+
+
 }
 .company-branding{
   color: white;
@@ -58,3 +60,66 @@ body {
   margin-left: 25%;
   margin-top: 10%;
 }
+.card{
+  width: 90%;
+}
+
+.card:hover{
+  transform: scale(1.1);
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+.row-2{
+  margin-top: 10%;
+}
+
+.card-link{
+  text-decoration: none;
+  color: black;
+}
+
+.card-link:hover{
+  color: black;
+}
+
+
+/************************Customer Management Start *************************/
+.row{
+  margin: 0;
+  height:100%;
+  margin-top: 5%;
+}
+.sidebar{
+  height: 100%;
+  background-color: grey;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+.sidebar-tile{
+  padding-top: 20%;
+  padding-bottom: 20%;
+ 
+}
+.sidebar-tile:hover{
+  transform: scale(1.05);
+ 
+}
+
+.add{
+  background-color:#29e681;
+  radi
+}
+
+.view{
+  background-color:#e6a400;
+}
+
+.update{
+  background-color: #393e46;
+}
+
+.remove{
+  background-color:#cf1b1b;
+}
+/************************Customer Management Ends *************************/

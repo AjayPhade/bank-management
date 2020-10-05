@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Dashboard</title>
+  <title>Customer Management</title>
 
   <!--BOOTSTRAP -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -39,51 +39,27 @@
   </nav>
   <!-- Navbar End -->
 
-  <!-- Card Deck Start -->
-  <div class="row row-cols-1 row-cols-md-3 features-deck">
-    <div class="col mb-4">
-      <a class ="card-link" href="customer_mg.html">
-      <div class="card h-100">
-        <img src="images/customer.png" class="card-img-top" alt="..." />
-        <div class="card-body">
-          <h5 class="card-title">Customer Management</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </a>
-    </div>
-    <div class="col mb-4">
-      <div class="card h-100">
-        <img src="images/payment.png" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Transaction Management</h5>
-          <p class="card-text">This is a short card.</p>
-        </div>
+  <!-- Sidebar Starts -->
+  <div class="row">
+    <div class="col-2 sidebar">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link  sidebar-tile add" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+          aria-controls="v-pills-home" aria-selected="true">Add Account</a>
+        <a class="nav-link sidebar-tile view" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile"
+          role="tab" aria-controls="v-pills-profile" aria-selected="false">View Account Details</a>
+        <a class="nav-link sidebar-tile update" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages"
+          role="tab" aria-controls="v-pills-messages" aria-selected="false">Update Account Details</a>
+        <a class="nav-link sidebar-tile remove" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings"
+          role="tab" aria-controls="v-pills-settings" aria-selected="false">Close Account</a>
       </div>
     </div>
-    <div class="col mb-4">
-      <div class="card h-100">
-        <img src="images/loan.png" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Loan Management</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
-            content.</p>
-        </div>
-      </div>
+    <div class="col-10 ">
+      <h1>Hello World</h1>
     </div>
-    <div class="col mb-4">
-      <div class="card h-100 row-2">
-        <img src="images/employee.png" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Employee Management</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </div>
+
   </div>
-  <!-- Card Deck End -->
+  <!-- Sidebar Ends -->
+
 
 
 
