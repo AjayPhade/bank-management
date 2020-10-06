@@ -53,12 +53,99 @@
           role="tab" aria-controls="v-pills-settings" aria-selected="false">Close Account</a>
       </div>
     </div>
+    <!-- Sidebar Ends -->
+
+    <!-- Create Customer Form Starts -->
     <div class="col-10 ">
-      <h1>Hello World</h1>
+      <div class="addcust-div">
+        <form class="create-cust">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>First Name</label>
+              <input type="text" class="form-control" id="inputFirstName" name="first_name" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Last Name</label>
+              <input type="text" class="form-control" id="inputLastName" name="last_name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputAddress">Address</label>
+            <input type="text" class="form-control" id="inputAddress" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">City</label>
+              <input type="text" class="form-control" id="inputCity" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputState">State</label>
+              <input class="form-control" type="text" name="State" id="state" required>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputZip">Zip</label>
+              <input type="text" class="form-control" id="inputZip" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Contact No (Primary)</label>
+              <input type="tel" class="form-control" id="primaryMob" name="Primary Contact No" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Contact No (Secondary)</label>
+              <input type="tel" class="form-control" id="secondaryMob" name="Secondary Contact No">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 required">
+              <legend class="col-form-label pt-0">Gender</legend>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="Male" required>
+                <label class="form-check-label" for="inlineRadio1">Male</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="Female" required>
+                <label class="form-check-label" for="inlineRadio2">Female</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="Other" required>
+                <label class="form-check-label" for="inlineRadio3">Other</label>
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label>DOB</label>
+              <input type="date" class="form-control" id="DOB" name="DOB" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Aadhar Number</label>
+              <input type="text" class="form-control" id="inputFirstName" name="aadhar" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Pan Number</label>
+              <input type="text" class="form-control" id="inputLastName" name="pan">
+            </div>
+          </div>
+            <label for="">Photo</label>
+          <div class="custom-file mb-3">
+            <input type="file" class="custom-file-input" id="validatedCustomFile" name="photo" required>
+            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-cust">Create Account</button>
+        </form>
+      </div>
     </div>
+    <!-- Create Customer Form Ends -->
 
   </div>
-  <!-- Sidebar Ends -->
+
+
+
+
 
 
 
