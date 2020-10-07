@@ -19,121 +19,122 @@ body {
 /*Login Page End
 
 /*Navbar Start*/
-.navbar-div1{
+.navbar-div1 {
   padding-top: 0.6%;
   padding-bottom: 0.6%;
   font-size: 1.2rem;
 }
-.navbar-div2{
+
+.navbar-div2 {
   padding-left: 83%;
 }
-.nav-link{
+
+.nav-link {
   color: #deebe9e5;
   font-weight: 600;
 }
-.nav-link:hover{
-  color: white;
 
-
-}
-.company-branding{
+.nav-link:hover {
   color: white;
-  font-weight: bold;
 }
-.company-branding:hover{
+
+.company-branding {
   color: white;
   font-weight: bold;
 }
 
+.company-branding:hover {
+  color: white;
+  font-weight: bold;
+}
 /*Navbar End*/
 
 /*Card Deck Start*/
-.features-deck{
-  padding:5%;
+.features-deck {
+  padding: 5%;
   text-align: center;
   margin: 0;
-
 }
-.card-img-top{
+
+.card-img-top {
   height: 50%;
   width: 50%;
   margin-left: 25%;
   margin-top: 10%;
 }
-.card{
+
+.card {
   width: 90%;
 }
 
-.card:hover{
+.card:hover {
   transform: scale(1.1);
   border-color: rgba(0, 0, 0, 0.5);
 }
 
-.row-2{
+.row-2 {
   margin-top: 10%;
 }
 
-.card-link{
+.card-link {
   text-decoration: none;
   color: black;
 }
 
-.card-link:hover{
+.card-link:hover {
   color: black;
 }
 
-
-/************************Customer Management Start *************************/
-.row{
+/************************Customer Management Starts *************************/
+.row {
   margin: 0;
-  height:100%;
+  height: 100%;
   margin-top: 5%;
 }
-.sidebar{
+
+.sidebar {
   height: 100%;
   background-color: grey;
   padding-left: 0;
   padding-right: 0;
   text-align: center;
 }
-.sidebar-tile{
+
+.sidebar-tile {
   padding-top: 20%;
   padding-bottom: 20%;
- 
 }
-.sidebar-tile:hover{
+
+.sidebar-tile:hover {
   transform: scale(1.05);
- 
 }
 
-.add{
-  background-color:#29e681;
+.add {
+  background-color: #29e681;
 }
 
-.view{
-  background-color: #e6a400 ;
+.view {
+  background-color: #e6a400;
 }
 
-.update{
+.update {
   background-color: #393e46;
 }
 
-.remove{
-  background-color:#cf1b1b;
+.remove {
+  background-color: #cf1b1b;
 }
 /************************Customer Management Ends *************************/
 
 /************************Customer Add Starts *************************/
-.addcust-div{
+.addcust-div {
   padding-left: 15%;
   padding-right: 15%;
 }
 
-.btn-cust{
+.btn-cust {
   margin-left: 40%;
   margin-top: 3%;
   margin-bottom: 3%;
 }
-
 /************************Customer Add Ends *************************/
-
