@@ -30,6 +30,7 @@ app.get("/", function (req, res) {
 app.get("/dashboard", function (req, res) {
     res.sendFile(__dirname + "/public/dashboard.html");
 });
+
 app.get("/customer_management", function (req, res) {
     res.sendFile(__dirname + "/public/customer_mg.html");
 });
