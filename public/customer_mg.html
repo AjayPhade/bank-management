@@ -71,46 +71,51 @@
           </div>
           <div class="form-group">
             <label for="inputAddress">Address</label>
-            <input type="text" class="form-control" id="inputAddress" required>
+            <input type="text" class="form-control" id="inputAddress" name="address" required>
           </div>
 
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputCity">City</label>
-              <input type="text" class="form-control" id="inputCity" required>
+              <input type="text" class="form-control" id="inputCity" name="city" required>
             </div>
             <div class="form-group col-md-4">
               <label for="inputState">State</label>
-              <input class="form-control" type="text" name="State" id="state" required>
+              <input class="form-control" type="text" name="state" id="state" required>
             </div>
             <div class="form-group col-md-2">
               <label for="inputZip">Zip</label>
-              <input type="text" class="form-control" id="inputZip" required>
+              <input type="text" class="form-control" id="inputZip" name="zip" required>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>Contact No (Primary)</label>
-              <input type="tel" class="form-control" id="primaryMob" name="Primary Contact No" required>
+              <input type="tel" class="form-control" id="primaryMob" name="pcon" required>
             </div>
             <div class="form-group col-md-6">
               <label>Contact No (Secondary)</label>
-              <input type="tel" class="form-control" id="secondaryMob" name="Secondary Contact No">
+              <input type="tel" class="form-control" id="secondaryMob" name="scon">
             </div>
+          </div>
+          <div class="form-group">
+            <label>Email Id</label>
+            <input type="email" class="form-control" id="inputEmail" name="email" required
+              placeholder="example@abc.com">
           </div>
           <div class="form-row">
             <div class="form-group col-md-6 required">
               <legend class="col-form-label pt-0">Gender</legend>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="Male" required>
+                <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="M" required>
                 <label class="form-check-label" for="inlineRadio1">Male</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="Female" required>
+                <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="F" required>
                 <label class="form-check-label" for="inlineRadio2">Female</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="Other" required>
+                <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="O" required>
                 <label class="form-check-label" for="inlineRadio3">Other</label>
               </div>
             </div>
@@ -134,7 +139,19 @@
             <input type="file" class="custom-file-input" id="validatedCustomFile" name="photo" required>
             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
           </div>
-
+          <div class="form-row">
+            <div class="form-group col-md-6 required">
+              <legend class="col-form-label pt-0">Account Type</legend>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="acc_type" id="inlineRadio1" value="Saving" required>
+                <label class="form-check-label" for="inlineRadio1">Savings</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="acc_type" id="inlineRadio2" value="Current" required>
+                <label class="form-check-label" for="inlineRadio2">Current</label>
+              </div>
+            </div>
+          </div>
           <button type="submit" class="btn btn-primary btn-cust">Create Account</button>
         </form>
       </div>
