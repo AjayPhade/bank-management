@@ -44,7 +44,7 @@ app.get("/dashboard", function (req, res) {
 app.get("/customer_management", function (req, res) {
     res.render("customer_mg");
 });
-//Add Customer Form 
+//Add Customer Form
 //FOR FILE UPLOAD
 // Set The Storage Engine
 const storage = multer.diskStorage({
@@ -56,7 +56,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits:{fileSize: 2000000},
+    limits: { fileSize: 2000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
