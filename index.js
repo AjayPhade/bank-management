@@ -6,6 +6,8 @@ const multer = require('multer');
 const path = require('path');
 const { log } = require("console");
 
+//Configure View Engine
+app.set('view engine', 'ejs');
 
 //Establishing Connection to database
 var connection = mysql.createConnection({
@@ -40,7 +42,7 @@ app.get("/dashboard", function (req, res) {
 });
 
 app.get("/customer_management", function (req, res) {
-    res.sendFile(__dirname + "/public/customer_mg.html");
+    res.render("customer_mg");
 });
 //Add Customer Form 
 //FOR FILE UPLOAD
@@ -54,11 +56,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    //limits:{fileSize: 1000000},
+    limits:{fileSize: 2000000},
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
 }).single('myImage');
+
 // Check File Type
 function checkFileType(file, cb) {
     // Allowed ext
