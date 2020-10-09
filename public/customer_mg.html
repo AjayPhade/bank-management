@@ -58,7 +58,7 @@
     <!-- Create Customer Form Starts -->
     <div class="col-10 ">
       <div class="addcust-div">
-        <form class="create-cust" method="POST" action="/customer_management">
+        <form class="create-cust" method="POST" action="/customer_management" enctype="multipart/form-data">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>First Name</label>
@@ -136,7 +136,7 @@
           </div>
           <label for="">Photo</label>
           <div class="custom-file mb-3">
-            <input type="file" class="custom-file-input" id="validatedCustomFile" name="photo" required>
+            <input type="file" class="custom-file-input" id="validatedCustomFile" name="myImage" required>
             <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
           </div>
           <div class="form-row">

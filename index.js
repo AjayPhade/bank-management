@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const multer = require('multer');
+const path = require('path');
+const { log } = require("console");
+
 
 //Establishing Connection to database
 var connection = mysql.createConnection({
@@ -20,6 +24,8 @@ connection.connect(function (error) {
         console.log("Connected to Database");
     }
 });
+
+
 //Used to access static files from public folder
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,6 +43,38 @@ app.get("/customer_management", function (req, res) {
     res.sendFile(__dirname + "/public/customer_mg.html");
 });
 //Add Customer Form 
+//FOR FILE UPLOAD
+// Set The Storage Engine
+const storage = multer.diskStorage({
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/',
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    //limits:{fileSize: 1000000},
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+}).single('myImage');
+// Check File Type
+function checkFileType(file, cb) {
+    // Allowed ext
+    const filetypes = /jpeg|jpg|png/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: Images Only!');
+    }
+}
+
 app.post("/customer_management", function (req, res) {
     var first_name = req.body.first_name;
     var last_name = req.body.last_name;
@@ -65,7 +103,18 @@ app.post("/customer_management", function (req, res) {
         min_bal = 5000;
         interest = 4;
     }
-
+    //Image Upload Function
+    upload(req, res, (err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            if (req.file == undefined) {
+                console.log("File not found");
+            } else {
+                console.log("File Uploaded Successfully!!");
+            }
+        }
+    });
     //String building for query
     var query = "INSERT INTO cust_account values(" + "5010" + ",'TECH0000101',";
     query += "'" + first_name + " " + last_name + "',";
@@ -85,7 +134,7 @@ app.post("/customer_management", function (req, res) {
 
     //Executing Query
     console.log(query);
-    connection.query(query, function (error, rows, fields) {
+    /*connection.query(query, function (error, rows, fields) {
         if (error) {
             console.log("Error in query");
             console.log(error);
@@ -94,7 +143,7 @@ app.post("/customer_management", function (req, res) {
             console.log("Successful Query");
             //console.log(rows);
         }
-    });
+    });*/
     res.redirect("/customer_management")
 });
 
