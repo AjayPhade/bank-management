@@ -1,6 +1,12 @@
-var input = document.getElementById('validatedCustomFile');
-var infoArea = document.getElementById('place-hold');
-input.addEventListener('change', showFileName);
+
+//File upload placeholder change Start
+var input1 = document.getElementById('validatedCustomFile1');
+var infoArea1 = document.getElementById('place-hold1');
+input1.addEventListener('change', showFileName);
+
+var input2 = document.getElementById('validatedCustomFile2');
+var infoArea2 = document.getElementById('place-hold2');
+input2.addEventListener('change', showFileName);
 
 function showFileName(event) {
 
@@ -11,9 +17,20 @@ function showFileName(event) {
   var fileName = input.files[0].name;
 
   // change the text to the actual filename
-  infoArea.textContent = fileName;
+  if(event.target.id === "validatedCustomFile1"){
+    infoArea1.textContent = fileName;
+  }
+  else{
+    infoArea2.textContent = fileName;
+  }
+  
+  console.log(event.target);
 }
 
+//File upload placeholder change End
+
+
+//Styling Sidebar Customer Management
 var sidebar = document.getElementsByClassName("sidebar-tile");
 var previous;
 

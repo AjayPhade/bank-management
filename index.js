@@ -54,13 +54,23 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({
+//For Image
+const upload1 = multer({
     storage: storage,
     limits: { fileSize: 2000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
 }).single('myImage');
+
+//For Aadhar image
+const upload2 = multer({
+    storage: storage,
+    limits: { fileSize: 2000000 },
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+}).single('aadhar');
 
 // Check File Type
 function checkFileType(file, cb) {
@@ -107,7 +117,7 @@ app.post("/customer_management", function (req, res) {
         interest = 4;
     }
     //Image Upload Function
-    upload(req, res, (err) => {
+    upload1(req, res, (err) => {
         if (err) {
             console.log(err);
         } else {
@@ -118,6 +128,18 @@ app.post("/customer_management", function (req, res) {
             }
         }
     });
+    upload2(req, res, (err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            if (req.file == undefined) {
+                console.log("File not found");
+            } else {
+                console.log("File Uploaded Successfully!!");
+            }
+        }
+    });
+
     //String building for query
     var query = "INSERT INTO cust_account values(" + "5010" + ",'TECH0000101',";
     query += "'" + first_name + " " + last_name + "',";
