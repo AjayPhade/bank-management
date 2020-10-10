@@ -95,7 +95,6 @@ body {
 
 .sidebar {
   height: 100%;
-  background-color: grey;
   padding-left: 0;
   padding-right: 0;
   text-align: center;
@@ -106,8 +105,10 @@ body {
   padding-bottom: 20%;
 }
 
-.sidebar-tile:hover {
-  transform: scale(1.05);
+.nav-pills .nav-link {
+  border-radius: 0.7rem;
+  border-top-left-radius: unset;
+  border-bottom-left-radius: unset;
 }
 
 .add {
