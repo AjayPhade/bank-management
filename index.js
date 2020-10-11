@@ -6,9 +6,12 @@ const multer = require('multer');
 const path = require('path');
 const { log } = require("console");
 var md5 = require('md5');
+var ejs = require("ejs");
 var loginstatus = false;
 //ID of logged in employee
 var login_empid;
+var ifsc_code;
+var branch;
 //Configure View Engine
 app.set('view engine', 'ejs');
 
@@ -41,12 +44,12 @@ app.get("/", function (req, res) {
 });
 
 app.get("/dashboard",function(req,res){
-    res.render("dashboard");
+    res.render("dashboard",{ifsc_code:ifsc_code , br_name:branch});
 });
 
 
 app.get("/customer_management", function (req, res) {
-    res.render("customer_mg");
+    res.render("customer_mg",{ifsc_code:ifsc_code , br_name:branch});
 });
 //Add Customer Form
 //FOR FILE UPLOAD
@@ -191,7 +194,7 @@ app.post("/dashboard",function(req,res){
     login_empid = req.body.login_id;
     var password = md5(req.body.password);
     
-    var query = "select password from employee where emp_id = "+login_empid;
+    var query = "select password,ifsc_code from employee where emp_id = "+login_empid;
     connection.query(query,function(err,rows,fields){
         if(err){
             throw err;
@@ -204,7 +207,18 @@ app.post("/dashboard",function(req,res){
             else if(rows[0].password == password){
                 console.log("Successfully Logged In");
                 loginstatus = true;
-                res.render("dashboard")
+                connection.query("select br_name from branch where ifsc_code = ?",[rows[0].ifsc_code],function(err,result,field){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        ifsc_code = rows[0].ifsc_code;
+                        branch = result[0].br_name;
+                        res.redirect("/dashboard");
+                    }
+                })
+                
+                
 
             }
             else{

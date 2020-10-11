@@ -26,7 +26,8 @@ body {
 }
 
 .navbar-div2 {
-  padding-left: 80%;
+  padding-left: auto;
+  margin-left: 58%;
 }
 
 .nav-link {
@@ -46,6 +47,14 @@ body {
 .company-branding:hover {
   color: white;
   font-weight: bold;
+}
+.ifsc{
+  text-align: center;
+  padding-left: 30%;
+  color: white;
+}
+h6{
+  display: inline;
 }
 /******************************** Navbar Ends ********************************/
 
