@@ -1,9 +1,9 @@
 <%- include("header") -%>
 
-<!-- Sidebar Starts -->
 
 
 <div class="row">
+  <!-- Sidebar Starts -->
   <div class="col-2 sidebar">
     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#v-pills-home" role="tab"
@@ -22,7 +22,7 @@
 
   <div class="col-10 ">
     <!-- Add Customer Start -->
-    <div class="addcust-div">
+    <div class="add-custdiv">
       <h2 class="create-heading">Create an Account</h2>
       <br />
       <form class="create-cust" method="POST" action="/customer_management" enctype="multipart/form-data">
@@ -138,7 +138,7 @@
           <label class="form-check-label" for="exampleCheck1">I have verified all information and documents of this
             customer.</label>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust"><i class="fas fa-user-plus"></i>  Create Account </button>
+        <button type="submit" class="btn btn-primary btn-cust"><i class="fas fa-user-plus"></i> Create Account </button>
       </form>
     </div>
     <!-- Add Customer End -->
@@ -152,7 +152,7 @@
               placeholder="Enter Account Number">
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search  <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
           </div>
         </div>
       </form>
@@ -165,7 +165,5 @@
 
 
 <!-- Create Customer Form Ends -->
-
-</div>
 
 <%- include("footer") -%>
