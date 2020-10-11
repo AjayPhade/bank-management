@@ -17,13 +17,13 @@ function showFileName(event) {
   var fileName = input.files[0].name;
 
   // change the text to the actual filename
-  if(event.target.id === "validatedCustomFile1"){
+  if (event.target.id === "validatedCustomFile1") {
     infoArea1.textContent = fileName;
   }
-  else{
+  else {
     infoArea2.textContent = fileName;
   }
-  
+
   console.log(event.target);
 }
 
@@ -42,17 +42,27 @@ function select(event) {
   var element = event.target;
   switch (element.id) {
     case "add":
-      if (previous != undefined)
+      if (previous != undefined) {
         previous.style.transform = "initial";
+        div = document.getElementsByClassName(previous.id + "-custdiv")[0];
+        div.style.display = "none";
+      }
       element.style.backgroundColor = "#29e681";
       element.style.transform = "scale(1.1)";
+      div = document.getElementsByClassName(element.id + "-custdiv")[0];
+      div.style.display = "inherit";
       previous = element;
       break;
     case "view":
-      if (previous != undefined)
+      if (previous != undefined) {
         previous.style.transform = "initial";
+        div = document.getElementsByClassName(previous.id + "-custdiv")[0];
+        div.style.display = "none";
+      }
       element.style.backgroundColor = "#e6a400";
       element.style.transform = "scale(1.1)";
+      div = document.getElementsByClassName(element.id + "-custdiv")[0];
+      div.style.display = "inherit";
       previous = element;
       break;
 
