@@ -5,7 +5,10 @@ const mysql = require("mysql");
 const multer = require('multer');
 const path = require('path');
 const { log } = require("console");
-
+var md5 = require('md5');
+var loginstatus = false;
+//ID of logged in employee
+var login_empid;
 //Configure View Engine
 app.set('view engine', 'ejs');
 
@@ -37,9 +40,10 @@ app.get("/", function (req, res) {
     res.render("index.html");
 });
 
-app.get("/dashboard", function (req, res) {
-    res.sendFile(__dirname + "/public/dashboard.html");
+app.get("/dashboard",function(req,res){
+    res.render("dashboard");
 });
+
 
 app.get("/customer_management", function (req, res) {
     res.render("customer_mg");
@@ -181,6 +185,36 @@ app.post("/customer_management", function (req, res) {
 //         console.log("Disconnected from Database");
 //     }
 // });
+
+/*Login Starts*/
+app.post("/dashboard",function(req,res){
+    login_empid = req.body.login_id;
+    var password = md5(req.body.password);
+    
+    var query = "select password from employee where emp_id = "+login_empid;
+    connection.query(query,function(err,rows,fields){
+        if(err){
+            throw err;
+        }        
+        else{
+            if(rows.length == 0){
+                console.log("Employee Id not found!!");
+                res.redirect("/");
+            }
+            else if(rows[0].password == password){
+                console.log("Successfully Logged In");
+                loginstatus = true;
+                res.render("dashboard")
+
+            }
+            else{
+                console.log("Wrong Password");
+                res.redirect("/");
+                
+            }
+        }
+    });
+});
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");
