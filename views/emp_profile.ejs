@@ -1,0 +1,49 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-md-3 profile-col1">
+        <img src="data:image/png;base64,<%=emp_photo%>"> 
+        <p><strong> Employee Id :</strong> <%=emp_id%></p>
+
+    </div>
+    <div class="col-md-6">
+        <div class="profile-heading">
+            <h2>Employee Profile</h2>
+        </div>
+        <table>
+            <tr class="profile-section">
+                <td><h5>Name : </h5></td>
+                <td><h5 class="profile-text"><%=emp_name%></h5></td>
+            </tr>
+            <tr class="profile-section">
+                <td><h5>Designation : </h5></td>
+                <td><h5 class="profile-text"><%=designation%></h5></td>
+            </tr>
+            <tr class="profile-section">
+                <td><h5>Address : </h5></td>
+                <td><h5 class="profile-text"><%=address%></h5></td>
+            </tr>
+            <tr class="profile-section">
+                <td><h5>Gender : </h5></td>
+                <td><h5 class="profile-text"><%=gender%></h5></td>
+            </tr>
+            <tr class="profile-section">
+                <td><h5>Mobile Number : </h5></td>
+                <td><h5 class="profile-text">8888XXXXXX</h5></td>
+            </tr>
+            <tr class="profile-section">
+                <td><h5>Email Id : </h5></td>
+                <td><h5 class="profile-text"><%=emp_email%></h5></td>
+            </tr>
+            <tr class="profile-section">
+                <td><h5>Monthly Salary : </h5></td>
+                <td><h5 class="profile-text">₹ <%=salary%></h5></td>
+            </tr>
+        </table>
+        
+    </div>
+</div>
+
+
+
+<%- include("footer") -%>

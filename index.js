@@ -43,13 +43,13 @@ app.get("/", function (req, res) {
     res.render("index.html");
 });
 
-app.get("/dashboard",function(req,res){
-    res.render("dashboard",{ifsc_code:ifsc_code , br_name:branch});
+app.get("/dashboard", function (req, res) {
+    res.render("dashboard", { ifsc_code: ifsc_code, br_name: branch });
 });
 
 
 app.get("/customer_management", function (req, res) {
-    res.render("customer_mg",{ifsc_code:ifsc_code , br_name:branch});
+    res.render("customer_mg", { ifsc_code: ifsc_code, br_name: branch });
 });
 //Add Customer Form
 //FOR FILE UPLOAD
@@ -190,46 +190,72 @@ app.post("/customer_management", function (req, res) {
 // });
 
 /*Login Starts*/
-app.post("/dashboard",function(req,res){
+app.post("/dashboard", function (req, res) {
     login_empid = req.body.login_id;
     var password = md5(req.body.password);
-    
-    var query = "select password,ifsc_code from employee where emp_id = "+login_empid;
-    connection.query(query,function(err,rows,fields){
-        if(err){
+
+    var query = "select password,ifsc_code from employee where emp_id = " + login_empid;
+    connection.query(query, function (err, rows, fields) {
+        if (err) {
             throw err;
-        }        
-        else{
-            if(rows.length == 0){
+        }
+        else {
+            if (rows.length == 0) {
                 console.log("Employee Id not found!!");
                 res.redirect("/");
             }
-            else if(rows[0].password == password){
+            else if (rows[0].password == password) {
                 console.log("Successfully Logged In");
                 loginstatus = true;
-                connection.query("select br_name from branch where ifsc_code = ?",[rows[0].ifsc_code],function(err,result,field){
-                    if(err){
+                connection.query("select br_name from branch where ifsc_code = ?", [rows[0].ifsc_code], function (err, result, field) {
+                    if (err) {
                         console.log(err);
                     }
-                    else{
+                    else {
                         ifsc_code = rows[0].ifsc_code;
                         branch = result[0].br_name;
                         res.redirect("/dashboard");
                     }
                 })
-                
-                
+
+
 
             }
-            else{
+            else {
                 console.log("Wrong Password");
                 res.redirect("/");
-                
+
             }
         }
     });
 });
+//Login Ends
 
+/*Profile Starts*/
+app.get("/profile", function (req, res) {
+    var query = "select * from employee where emp_id=" + login_empid;
+    connection.query(query, function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+
+            res.render("emp_profile", {
+                ifsc_code: ifsc_code,
+                br_name: branch,
+                emp_id: login_empid,
+                emp_name: rows[0].emp_name,
+                address: rows[0].address,
+                gender: rows[0].gender,
+                designation: rows[0].designation,
+                emp_email: rows[0].emp_email,
+                salary: rows[0].salary,
+                emp_photo: rows[0].emp_photo.toString("base64")
+
+            });
+        }
+    });
+});
 app.listen(3000, function () {
     console.log("Server started at port 3000");
 });
