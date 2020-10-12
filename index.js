@@ -256,6 +256,44 @@ app.get("/profile", function (req, res) {
         }
     });
 });
+
+/************************View Customer Starts*******************************/
+
+app.post("/view_profile",function(req,res){
+    var query = "select * from cust_account where acc_no=" + req.body.accno;
+    connection.query(query, function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else if(rows.length === 0){
+            console.log("Account Not Found!!");
+        }
+        else {
+
+            res.render("cust_profile", {
+                ifsc_code: ifsc_code,
+                br_name: branch,
+                cust_id: rows[0].cust_id,
+                cust_name: rows[0].cust_name,
+                address: rows[0].address,
+                gender: rows[0].gender,
+                dob: rows[0].dob,
+                email: rows[0].email,
+                city: rows[0].city,
+                photo: rows[0].photo.toString("base64"),
+                state: rows[0].state,
+                zip: rows[0].zip,
+                acc_type: rows[0].acc_type,
+                city: rows[0].city,
+                acc_no: req.body.accno,
+                balance: rows[0].balance                
+
+            });
+        }
+    });
+});
+/************************View Customer Starts*******************************/
+
 app.listen(3000, function () {
     console.log("Server started at port 3000");
 });

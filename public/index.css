@@ -167,14 +167,14 @@ h6{
 }
 /******************************** Customer Add Ends ********************************/
 
-/*******************************Profile Starts*************************************/
+/******************************* Emp Profile Starts*************************************/
 .profile-col1{
   text-align: center;
 }
 .profile-section{
   border-bottom: rgb(219, 210, 210) 0.5px solid;
 }
-table{
+.emp_info{
   width: 80%;
   margin-top: 3%;
 }
@@ -186,3 +186,31 @@ td{
 .profile-text{
   font-weight: 400;
 }
+/******************************* Emp Profile Ends*************************************/
+
+/******************************* Account View Starts*************************************/
+
+.cust_info{
+  width: 90%;
+  table-layout: fixed;
+  margin-left: 3%;
+}
+.first_col{
+  padding-right: 2%;
+  border-right: rgb(219, 210, 210) 0.5px solid;
+}
+.sec_col{
+  
+  border-right: rgb(219, 210, 210) 0.5px solid;
+  padding-left: 3%;
+  padding-right: 3%;
+  margin-right: 3%;
+}
+.acc_info{
+  table-layout: fixed;
+  width: 100%;
+
+}
+
+/******************************* Account View Starts*************************************/
+
