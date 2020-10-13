@@ -48,12 +48,12 @@ body {
   color: white;
   font-weight: bold;
 }
-.ifsc{
+.ifsc {
   text-align: center;
   padding-left: 30%;
   color: white;
 }
-h6{
+h6 {
   display: inline;
 }
 /******************************** Navbar Ends ********************************/
@@ -168,49 +168,51 @@ h6{
 /******************************** Customer Add Ends ********************************/
 
 /******************************* Emp Profile Starts*************************************/
-.profile-col1{
+.profile-col1 {
   text-align: center;
 }
-.profile-section{
+
+.profile-section {
   border-bottom: rgb(219, 210, 210) 0.5px solid;
 }
-.emp_info{
+
+.emp_info {
   width: 80%;
   margin-top: 3%;
 }
-td{
+
+td {
   padding-top: 4%;
   padding-bottom: 1%;
   padding-left: 1%;
 }
-.profile-text{
+
+.profile-text {
   font-weight: 400;
 }
 /******************************* Emp Profile Ends*************************************/
 
 /******************************* Account View Starts*************************************/
-
-.cust_info{
+.cust_info {
   width: 90%;
   table-layout: fixed;
   margin-left: 3%;
 }
-.first_col{
+
+.first_col {
   padding-right: 2%;
   border-right: rgb(219, 210, 210) 0.5px solid;
 }
-.sec_col{
-  
+
+.sec_col {
   border-right: rgb(219, 210, 210) 0.5px solid;
   padding-left: 3%;
   padding-right: 3%;
   margin-right: 3%;
 }
-.acc_info{
+
+.acc_info {
   table-layout: fixed;
   width: 100%;
-
 }
-
-/******************************* Account View Starts*************************************/
-
+/******************************* Account View Ends*************************************/

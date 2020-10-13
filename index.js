@@ -4,14 +4,13 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const multer = require('multer');
 const path = require('path');
-const { log } = require("console");
 var md5 = require('md5');
-var ejs = require("ejs");
-var loginstatus = false;
+
 //ID of logged in employee
-var login_empid;
+var emp_id;
 var ifsc_code;
-var branch;
+var br_name;
+
 //Configure View Engine
 app.set('view engine', 'ejs');
 
@@ -20,7 +19,8 @@ var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'sql123',
-    database: 'bank'
+    database: 'bank',
+    dateStrings: 'date'
 });
 
 connection.connect(function (error) {
@@ -33,7 +33,6 @@ connection.connect(function (error) {
     }
 });
 
-
 //Used to access static files from public folder
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -44,13 +43,13 @@ app.get("/", function (req, res) {
 });
 
 app.get("/dashboard", function (req, res) {
-    res.render("dashboard", { ifsc_code: ifsc_code, br_name: branch });
+    res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name });
 });
-
 
 app.get("/customer_management", function (req, res) {
-    res.render("customer_mg", { ifsc_code: ifsc_code, br_name: branch });
+    res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name });
 });
+
 //Add Customer Form
 //FOR FILE UPLOAD
 // Set The Storage Engine
@@ -70,14 +69,14 @@ const upload1 = multer({
     }
 }).single('myImage');
 
-//For Aadhar image
+//For aadhaar image
 const upload2 = multer({
     storage: storage,
     limits: { fileSize: 2000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
-}).single('aadhar');
+}).single('aadhaar');
 
 // Check File Type
 function checkFileType(file, cb) {
@@ -107,7 +106,7 @@ app.post("/customer_management", function (req, res) {
     var sno = req.body.scon;
     var gender = req.body.gender;
     var dob = req.body.DOB;
-    var aadhar = req.body.aadhar;
+    var aadhaar = req.body.aadhaar;
     var pan = req.body.pan;
     var balance = 0;
     var acc_type = req.body.acc_type;
@@ -191,20 +190,20 @@ app.post("/customer_management", function (req, res) {
 
 /*Login Starts*/
 app.post("/dashboard", function (req, res) {
-    login_empid = req.body.login_id;
+    emp_id = req.body.login_id;
     var password = md5(req.body.password);
 
-    var query = "select password,ifsc_code from employee where emp_id = " + login_empid;
+    var query = "select password,ifsc_code from employee where emp_id = " + emp_id;
     connection.query(query, function (err, rows, fields) {
         if (err) {
             throw err;
         }
         else {
-            if (rows.length == 0) {
+            if (rows.length === 0) {
                 console.log("Employee Id not found!!");
                 res.redirect("/");
             }
-            else if (rows[0].password == password) {
+            else if (rows[0].password === password) {
                 console.log("Successfully Logged In");
                 loginstatus = true;
                 connection.query("select br_name from branch where ifsc_code = ?", [rows[0].ifsc_code], function (err, result, field) {
@@ -213,7 +212,7 @@ app.post("/dashboard", function (req, res) {
                     }
                     else {
                         ifsc_code = rows[0].ifsc_code;
-                        branch = result[0].br_name;
+                        br_name = result[0].br_name;
                         res.redirect("/dashboard");
                     }
                 })
@@ -233,25 +232,38 @@ app.post("/dashboard", function (req, res) {
 
 /*Profile Starts*/
 app.get("/profile", function (req, res) {
-    var query = "select * from employee where emp_id=" + login_empid;
+    var query = "select * from emp_info where emp_id=" + emp_id;
     connection.query(query, function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
         else {
+            var row = rows[0];
+            var phone_no1, phone_no2;
+            phone_no1 = rows[0].phone_no;
+
+            if(rows.length === 2)
+                phone_no2 = rows[1].phone_no;
+            else
+                phone_no2 = "Not Available";
+
+            console.log(typeof(row.dob), row.dob);
 
             res.render("emp_profile", {
                 ifsc_code: ifsc_code,
-                br_name: branch,
-                emp_id: login_empid,
-                emp_name: rows[0].emp_name,
-                address: rows[0].address,
-                gender: rows[0].gender,
-                designation: rows[0].designation,
-                emp_email: rows[0].emp_email,
-                salary: rows[0].salary,
-                emp_photo: rows[0].emp_photo.toString("base64")
-
+                br_name: br_name,
+                emp_id: emp_id,
+                name: row.name,
+                designation: row.designation,
+                email: row.email,
+                gender: row.gender,
+                dob: row.dob.toString().split("T")[0],
+                address: row.address,
+                salary: row.salary,
+                aadhaar: row.aadhaar,
+                phone_no1: phone_no1,
+                phone_no2: phone_no2,
+                photo: row.photo.toString("base64"),
             });
         }
     });
@@ -259,34 +271,35 @@ app.get("/profile", function (req, res) {
 
 /************************View Customer Starts*******************************/
 
-app.post("/view_profile",function(req,res){
+app.post("/view_profile", function (req, res) {
     var query = "select * from cust_account where acc_no=" + req.body.accno;
     connection.query(query, function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
-        else if(rows.length === 0){
+        else if (rows.length === 0) {
             console.log("Account Not Found!!");
         }
         else {
+            var row = rows[0];
 
             res.render("cust_profile", {
                 ifsc_code: ifsc_code,
-                br_name: branch,
-                cust_id: rows[0].cust_id,
-                cust_name: rows[0].cust_name,
-                address: rows[0].address,
-                gender: rows[0].gender,
-                dob: rows[0].dob,
-                email: rows[0].email,
-                city: rows[0].city,
-                photo: rows[0].photo.toString("base64"),
-                state: rows[0].state,
-                zip: rows[0].zip,
-                acc_type: rows[0].acc_type,
-                city: rows[0].city,
+                br_name: br_name,
+                cust_id: rows.cust_id,
+                cust_name: rows.cust_name,
+                address: rows.address,
+                gender: rows.gender,
+                dob: rows.dob,
+                email: rows.email,
+                city: rows.city,
+                photo: rows.photo.toString("base64"),
+                state: rows.state,
+                zip: rows.zip,
+                acc_type: rows.acc_type,
+                city: rows.city,
                 acc_no: req.body.accno,
-                balance: rows[0].balance                
+                balance: rows.balance
 
             });
         }
