@@ -1,7 +1,5 @@
 <%- include("header") -%>
 
-
-
 <div class="row">
   <!-- Sidebar Starts -->
   <div class="col-2 sidebar">
@@ -25,7 +23,7 @@
     <div class="add-custdiv">
       <h2 class="create-heading">Create an Account</h2>
       <br />
-      <form class="create-cust" method="POST" action="/customer_management" enctype="multipart/form-data">
+      <form class="create-cust" method="POST" action="/add_customer" enctype="multipart/form-data">
         <div class="form-row">
           <div class="form-group col-md-6">
             <label>First Name</label>
@@ -87,13 +85,13 @@
           </div>
           <div class="form-group col-md-3">
             <label id="demo">DOB</label>
-            <input type="date" class="form-control" id="DOB" name="DOB" required>
+            <input type="date" class="form-control" id="DOB" name="dob" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
             <label>Aadhar Number</label>
-            <input type="text" class="form-control" id="inputFirstName" name="aadhar" required>
+            <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" required>
           </div>
           <div class="form-group col-md-6">
             <label>Pan Number</label>
@@ -111,12 +109,12 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="">Aadhar Scanned Copy</label>
+          <label for="">Aadhaar Scanned Copy</label>
           <div class="custom-file mb-3">
-            <input type="file" class="custom-file-input" id="validatedCustomFile2" name="aadhar" required>
+            <input type="file" class="custom-file-input" id="validatedCustomFile2" name="aadhaar" required>
             <label class="custom-file-label" for="validatedCustomFile2" id="place-hold2">Choose File...</label>
             <small id="passwordHelpBlock" class="form-text text-muted">
-              Max Image Size : 2 MB (JPG/PNG/JPEG)
+              Max Image Size : 2 MB (JPG/PNG/JPEG/PDF)
             </small>
           </div>
         </div>

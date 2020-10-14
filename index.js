@@ -2,14 +2,15 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-const multer = require('multer');
+const multer = require("multer");
 const path = require('path');
-var md5 = require('md5');
+const md5 = require('md5');
 
 //ID of logged in employee
 var emp_id;
 var ifsc_code;
 var br_name;
+var cust_id;
 
 //Configure View Engine
 app.set('view engine', 'ejs');
@@ -50,38 +51,58 @@ app.get("/customer_management", function (req, res) {
     res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name });
 });
 
-//Add Customer Form
+/*************************** Add Customer Form Starts ***************************/
 //FOR FILE UPLOAD
 // Set The Storage Engine
+var extension1, extension2;
+
 const storage = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/',
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
+            if (rows.length === 0) {
+                cust_id = 5000;
+                connection.query("alter table cust_account auto_increment = 74001000", function (err, rows, fields) {
+                    if (err) {
+                        console.log("Error in query");
+                        console.log(error);
+                    }
+                    else {
+                        console.log("Successful Query");
+                        // console.log(rows);
+                    }
+                });
+            }
+            else
+                cust_id = rows[0].cust_id + 1;
+
+            // console.log(cust_id);
+
+            if (file.fieldname === 'myImage') {
+                extension1 = path.extname(file.originalname);
+                cb(null, cust_id + '-photo' + path.extname(file.originalname));
+            }
+            else if (file.fieldname === 'aadhaar') {
+                extension2 = path.extname(file.originalname);
+                cb(null, cust_id + '-aadhaar' + path.extname(file.originalname));
+            }
+        });
     }
 });
 
 //For Image
-const upload1 = multer({
+const upload = multer({
     storage: storage,
     limits: { fileSize: 2000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
-}).single('myImage');
-
-//For aadhaar image
-const upload2 = multer({
-    storage: storage,
-    limits: { fileSize: 2000000 },
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    }
-}).single('aadhaar');
+});
 
 // Check File Type
 function checkFileType(file, cb) {
     // Allowed ext
-    const filetypes = /jpeg|jpg|png/;
+    const filetypes = /jpeg|jpg|png|pdf/;
     // Check ext
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime
@@ -90,93 +111,84 @@ function checkFileType(file, cb) {
     if (mimetype && extname) {
         return cb(null, true);
     } else {
-        cb('Error: Images Only!');
+        cb('Error: Images or Pdfs Only!');
     }
-}
+};
 
-app.post("/customer_management", function (req, res) {
+app.post("/add_customer", upload.fields([{ name: 'myImage', maxCount: 1 }, { name: 'aadhaar', maxCount: 1 }]), function (req, res) {
     var first_name = req.body.first_name;
     var last_name = req.body.last_name;
+    var name = first_name + " " + last_name;
     var address = req.body.address;
     var city = req.body.city;
     var state = req.body.state;
     var zip = req.body.zip;
     var email = req.body.email;
-    var pno = req.body.pcon;
-    var sno = req.body.scon;
+    var pno = parseInt(req.body.pcon);
+    var sno = parseInt(req.body.scon);
     var gender = req.body.gender;
-    var dob = req.body.DOB;
-    var aadhaar = req.body.aadhaar;
-    var pan = req.body.pan;
+    var dob = req.body.dob;
+    var aadhaar_no = req.body.aadhaar_no;
+    var pan_no = req.body.pan;
     var balance = 0;
     var acc_type = req.body.acc_type;
-    var min_bal;
     var interest;
+
+    console.log(name, address, req.body.first_name);
+    console.log(extension1, extension2);
+
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/' + cust_id + '-photo' + extension1 + '")';
+    var aadhaar = cust_id + '-aadhaar' + extension2;
+
     //Derived Attributes
     if (acc_type === 'Saving') {
-        min_bal = 1000;
         interest = 6.4;
-
     }
     else {
-        min_bal = 5000;
         interest = 4;
     }
-    //Image Upload Function
-    upload1(req, res, (err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (req.file == undefined) {
-                console.log("File not found");
-            } else {
-                console.log("File Uploaded Successfully!!");
-            }
-        }
-    });
-    upload2(req, res, (err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (req.file == undefined) {
-                console.log("File not found");
-            } else {
-                console.log("File Uploaded Successfully!!");
-            }
-        }
-    });
 
-    //String building for query
-    var query = "INSERT INTO cust_account values(" + "5010" + ",'TECH0000101',";
-    query += "'" + first_name + " " + last_name + "',";
-    query += "'" + gender + "',";
-    query += "'" + address + "',";
-    query += "'" + dob + "',";
-    query += "21457846,";
-    query += "'" + acc_type + "',";
-    query += balance + ",";
-    query += min_bal + ",";
-    query += interest + ",";
-    query += "'" + city + "',";
-    query += "'" + state + "',";
-    query += zip + ",";
-    query += "'" + email + "')";
+    var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + photo + ")";
+    var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar];
 
+    console.log(list);
 
     //Executing Query
-    console.log(query);
-    /*connection.query(query, function (error, rows, fields) {
+    connection.query(query1, list, function (error, rows, fields) {
         if (error) {
             console.log("Error in query");
             console.log(error);
         }
         else {
             console.log("Successful Query");
-            //console.log(rows);
+            // console.log(rows);
+
+            var query2 = "insert into cust_phone values ?";
+            var phone;
+            var acc_no = rows.insertId;
+
+            if (sno === undefined)
+                phone = [acc_no, pno];
+            else
+                phone = [[acc_no, pno], [acc_no, sno]];
+
+            connection.query(query2, [phone], function (error, rows, fields) {
+                if (error) {
+                    console.log("Error in query");
+                    console.log(error);
+                }
+                else {
+                    console.log("Successful Query");
+                    // console.log(rows);
+                }
+            });
         }
-    });*/
-    res.redirect("/customer_management")
+    });
+
+    res.redirect("/customer_management");
 });
+
+/*************************** Add Customer Form Ends ***************************/
 
 // connection.end(function (error) {
 //     if (error) {
@@ -188,7 +200,7 @@ app.post("/customer_management", function (req, res) {
 //     }
 // });
 
-/*Login Starts*/
+/*************************** Login Starts ***************************/
 app.post("/dashboard", function (req, res) {
     emp_id = req.body.login_id;
     var password = md5(req.body.password);
@@ -215,10 +227,7 @@ app.post("/dashboard", function (req, res) {
                         br_name = result[0].br_name;
                         res.redirect("/dashboard");
                     }
-                })
-
-
-
+                });
             }
             else {
                 console.log("Wrong Password");
@@ -228,9 +237,9 @@ app.post("/dashboard", function (req, res) {
         }
     });
 });
-//Login Ends
+/*************************** Login Ends ***************************/
 
-/*Profile Starts*/
+/*************************** Employee Profile Starts ***************************/
 app.get("/profile", function (req, res) {
     var query = "select * from emp_info where emp_id=" + emp_id;
     connection.query(query, function (err, rows, fields) {
@@ -242,37 +251,30 @@ app.get("/profile", function (req, res) {
             var phone_no1, phone_no2;
             phone_no1 = rows[0].phone_no;
 
-            if(rows.length === 2)
+            if (rows.length === 2)
                 phone_no2 = rows[1].phone_no;
             else
                 phone_no2 = "Not Available";
 
-            console.log(typeof(row.dob), row.dob);
+            // console.log(typeof(row.dob), row.dob);
 
             res.render("emp_profile", {
                 ifsc_code: ifsc_code,
                 br_name: br_name,
-                emp_id: emp_id,
-                name: row.name,
-                designation: row.designation,
-                email: row.email,
-                gender: row.gender,
-                dob: row.dob.toString().split("T")[0],
-                address: row.address,
-                salary: row.salary,
-                aadhaar: row.aadhaar,
                 phone_no1: phone_no1,
                 phone_no2: phone_no2,
                 photo: row.photo.toString("base64"),
+                row: row
             });
         }
     });
 });
+/*************************** Employee Profile Ends ***************************/
 
-/************************View Customer Starts*******************************/
+/************************Customer Profile Starts*******************************/
 
 app.post("/view_profile", function (req, res) {
-    var query = "select * from cust_account where acc_no=" + req.body.accno;
+    var query = "select * from cust_info where acc_no=" + req.body.accno;
     connection.query(query, function (err, rows, fields) {
         if (err) {
             console.log(err);
@@ -305,7 +307,7 @@ app.post("/view_profile", function (req, res) {
         }
     });
 });
-/************************View Customer Starts*******************************/
+/************************Customer Profile Starts*******************************/
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");

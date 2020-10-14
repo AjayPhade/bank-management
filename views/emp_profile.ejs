@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-3 profile-col1">
         <img src="data:image/png;base64,<%=photo%>">
-        <p><strong> Employee Id :</strong> <%=emp_id%></p>
+        <p><strong> Employee Id :</strong> <%=row.emp_id%></p>
     </div>
     <div class="col-md-6">
         <div class="profile-heading">
@@ -15,7 +15,7 @@
                     <h5>Name : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text"><%=name%></h5>
+                    <h5 class="profile-text"><%=row.name%></h5>
                 </td>
             </tr>
             <tr class="profile-section">
@@ -23,7 +23,7 @@
                     <h5>Designation : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text"><%=designation%></h5>
+                    <h5 class="profile-text"><%=row.designation%></h5>
                 </td>
             </tr>
             <tr class="profile-section">
@@ -31,7 +31,7 @@
                     <h5>Address : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text"><%=address%></h5>
+                    <h5 class="profile-text"><%=row.address%></h5>
                 </td>
             </tr>
             <tr class="profile-section">
@@ -39,7 +39,7 @@
                     <h5>Gender : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text"><%=gender%></h5>
+                    <h5 class="profile-text"><%=row.gender%></h5>
                 </td>
             </tr>
             <tr class="profile-section">
@@ -47,7 +47,7 @@
                     <h5>DOB : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text"><%=dob%></h5>
+                    <h5 class="profile-text"><%=row.dob%></h5>
                 </td>
             </tr>
             <tr class="profile-section">
@@ -71,7 +71,7 @@
                     <h5>Email Id : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text"><%=email%></h5>
+                    <h5 class="profile-text"><%=row.email%></h5>
                 </td>
             </tr>
             <tr class="profile-section">
@@ -79,7 +79,7 @@
                     <h5>Monthly Salary : </h5>
                 </td>
                 <td>
-                    <h5 class="profile-text">₹ <%=salary%></h5>
+                    <h5 class="profile-text">₹ <%=row.salary%></h5>
                 </td>
             </tr>
         </table>
