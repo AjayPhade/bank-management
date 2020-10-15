@@ -53,6 +53,7 @@ function select(event) {
       div.style.display = "inherit";
       previous = element;
       break;
+
     case "view":
       if (previous != undefined) {
         previous.style.transform = "initial";
