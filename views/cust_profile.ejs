@@ -4,18 +4,16 @@
     <div class="col-md-3 first_col">
         <div class="profile-col1">
             <img src="data:image/png;base64,<%=photo%>" height="200px" width="200px">
-            <p class="cust_id"><strong> Customer Id :</strong> <%=cust_id%></p>
+            <p class="cust_id"><strong> Customer Id :</strong> <%=row.cust_id%></p>
         </div>
-
         <div>
             <table class="cust_info">
-
                 <tr class="profile-section">
                     <td>
                         <h5>Name : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=cust_name%></h5>
+                        <h5 class="profile-text"><%=row.name%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -23,7 +21,7 @@
                         <h5>Address : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=address%></h5>
+                        <h5 class="profile-text"><%=row.address%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -31,7 +29,7 @@
                         <h5>City : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=city%></h5>
+                        <h5 class="profile-text"><%=row.city%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -39,7 +37,7 @@
                         <h5>State : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=state%></h5>
+                        <h5 class="profile-text"><%=row.state%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -47,7 +45,7 @@
                         <h5>Zip : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=zip%></h5>
+                        <h5 class="profile-text"><%=row.zip%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -55,7 +53,7 @@
                         <h5>Gender : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=gender%></h5>
+                        <h5 class="profile-text"><%=row.gender%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -63,15 +61,23 @@
                         <h5>DOB : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=dob%></h5>
+                        <h5 class="profile-text"><%=row.dob%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
                     <td>
-                        <h5>Mobile Number : </h5>
+                        <h5>Contact No (Primary) : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text">8888XXXXXX</h5>
+                        <h5 class="profile-text"><%=phone_no1%></h5>
+                    </td>
+                </tr>
+                <tr class="profile-section">
+                    <td>
+                        <h5>Contact No (Secondary) : </h5>
+                    </td>
+                    <td>
+                        <h5 class="profile-text"><%=phone_no2%></h5>
                     </td>
                 </tr>
                 <tr class="profile-section">
@@ -79,35 +85,25 @@
                         <h5>Email Id : </h5>
                     </td>
                     <td>
-                        <h5 class="profile-text"><%=email%></h5>
+                        <h5 class="profile-text"><%=row.email%></h5>
                     </td>
                 </tr>
-
             </table>
-
         </div>
-
     </div>
-
-
-
     <div class="col-md-8 sec_col">
         <div class="accinfo_heading">
             <h3>Account Information</h3>
         </div>
-
         <div class="row">
             <div class="col-md-6">
-
-
                 <table class="acc_info">
-
                     <tr class="profile-section">
                         <td>
                             <h5>Account No : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=acc_no%></h5>
+                            <h5 class="profile-text"><%=row.acc_no%></h5>
                         </td>
                     </tr>
                     <tr class="profile-section">
@@ -115,23 +111,19 @@
                             <h5>Account Type : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=acc_type%></h5>
+                            <h5 class="profile-text"><%=row.acc_type%></h5>
                         </td>
                     </tr>
-
                 </table>
             </div>
             <div class="col-md-6">
-
-
                 <table class="acc_info">
-
                     <tr class="profile-section">
                         <td>
                             <h5>Minimum Balance : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=acc_no%></h5>
+                            <h5 class="profile-text"><%=row.acc_no%></h5>
                         </td>
                     </tr>
                     <tr class="profile-section">
@@ -139,31 +131,19 @@
                             <h5>Interest Rate : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=cust_name%></h5>
+                            <h5 class="profile-text"><%=row.name%></h5>
                         </td>
                     </tr>
-
                 </table>
             </div>
-            <div class="row balance-row">
-                <div class="col-md-4 ">
-                    <div class="balance-box">
-                        <h5 class="bal-text">Balance</h5>
-                       <h3> ₹ <%=balance%></h3>
-                    </div>
-                </div>
-            </div>
-            
         </div>
         <div class="row">
-
+            <div class="balance-box">
+                <h5 class="bal-text">Balance</h5>
+                <h3> ₹ <%=row.balance%></h3>
+            </div>
         </div>
-        
-
     </div>
-
 </div>
-
-
 
 <%- include("footer") -%>

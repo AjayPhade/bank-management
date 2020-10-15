@@ -302,7 +302,7 @@ app.get("/profile", function (req, res) {
 });
 /*************************** Employee Profile Ends ***************************/
 
-/************************Customer Profile Starts*******************************/
+/************************ Customer Profile Starts *******************************/
 
 app.post("/view_profile", function (req, res) {
     if (loggedIn(res)) {
@@ -319,30 +319,27 @@ app.post("/view_profile", function (req, res) {
             }
             else {
                 var row = rows[0];
+                var phone_no1, phone_no2;
+                phone_no1 = rows[0].phone_no;
+
+                if (rows.length === 2)
+                    phone_no2 = rows[1].phone_no;
+                else
+                    phone_no2 = "Not Available";
 
                 res.render("cust_profile", {
                     ifsc_code: ifsc_code,
                     br_name: br_name,
-                    cust_id: row.cust_id,
-                    cust_name: row.name,
-                    address: row.address,
-                    gender: row.gender,
-                    dob: row.dob,
-                    email: row.email,
-                    city: row.city,
+                    phone_no1: phone_no1,
+                    phone_no2: phone_no2,
                     photo: row.photo.toString("base64"),
-                    state: row.state,
-                    zip: row.zip,
-                    acc_type: row.acc_type,
-                    city: row.city,
-                    acc_no: acc_no,
-                    balance: row.balance
+                    row: row
                 });
             }
         });
     }
 });
-/************************Customer Profile Starts*******************************/
+/************************ Customer Profile Starts *******************************/
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");
