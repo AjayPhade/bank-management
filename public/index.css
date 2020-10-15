@@ -215,4 +215,31 @@ td {
   table-layout: fixed;
   width: 100%;
 }
+.cust_id{
+  padding-top: 3%;
+}
+.accinfo_heading{
+  text-align: center;
+}
+.balance-box{
+  text-align: center;
+  width: 250px;
+  height: 90px;
+  border: #393e46 1px solid;
+  border-radius: 10px;
+  box-shadow: 2px 4px #838b87;
+  align-items: center;
+  background-color: white;
+
+}
+
+.balance-row{
+  margin-left: 35%;
+  margin-top: 5%;
+}
+
+.bal-text{
+  padding-top: 5px;;
+}
+
 /******************************* Account View Ends*************************************/

@@ -57,8 +57,9 @@ app.get("/customer_management", function (req, res) {
 var extension1, extension2;
 
 const storage = multer.diskStorage({
-    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/',
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/',
     filename: function (req, file, cb) {
+        /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
             if (rows.length === 0) {
                 cust_id = 5000;
@@ -137,8 +138,10 @@ app.post("/add_customer", upload.fields([{ name: 'myImage', maxCount: 1 }, { nam
     console.log(name, address, req.body.first_name);
     console.log(extension1, extension2);
 
-    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/' + cust_id + '-photo' + extension1 + '")';
+    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
+
+    
 
     //Derived Attributes
     if (acc_type === 'Saving') {
@@ -166,9 +169,8 @@ app.post("/add_customer", upload.fields([{ name: 'myImage', maxCount: 1 }, { nam
             var query2 = "insert into cust_phone values ?";
             var phone;
             var acc_no = rows.insertId;
-
-            if (sno === undefined)
-                phone = [acc_no, pno];
+            if (Number.isNaN(sno))
+                phone = [[acc_no, pno]];
             else
                 phone = [[acc_no, pno], [acc_no, sno]];
 
@@ -283,13 +285,13 @@ app.post("/view_profile", function (req, res) {
             console.log("Account Not Found!!");
         }
         else {
-            var row = rows[0];
+            var rows = rows[0];
 
             res.render("cust_profile", {
                 ifsc_code: ifsc_code,
                 br_name: br_name,
                 cust_id: rows.cust_id,
-                cust_name: rows.cust_name,
+                cust_name: rows.name,
                 address: rows.address,
                 gender: rows.gender,
                 dob: rows.dob,
