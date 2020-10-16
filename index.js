@@ -6,6 +6,8 @@ const multer = require("multer");
 const path = require('path');
 const md5 = require('md5');
 const e = require("express");
+const fs = require('fs');
+
 
 //ID of logged in employee
 var emp_id, name;
@@ -13,7 +15,7 @@ var ifsc_code;
 var br_name;
 var cust_id;
 var logged_in = false;
-
+var designation;
 //Configure View Engine
 app.set('view engine', 'ejs');
 
@@ -58,12 +60,22 @@ app.get("/", function (req, res) {
 
 app.get("/dashboard", function (req, res) {
     if (loggedIn(res))
-        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name });
+    if(designation === "Manager"){
+        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation:"abc" , cashier:"abc"});
+    }
+    else if(designation==="General Employee"){
+        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation:" emp-management", cashier:"transaction"});
+    }
+    else{
+        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation:"emp-management",cashier:"abc" });
+    }
 });
 
 app.get("/customer_management", function (req, res) {
-    if (loggedIn(res))
+    if (loggedIn(res)){
         res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name });
+
+    }
 });
 
 app.get("/logout", function (req, res) {
@@ -75,12 +87,12 @@ app.get("/logout", function (req, res) {
 /*************************** Login Starts ***************************/
 app.post("/dashboard", function (req, res) {
     logged_in = true;
-
+    
     if (loggedIn(res)) {
         emp_id = req.body.login_id;
         var password = md5(req.body.password);
 
-        var query = "select password, ifsc_code, name from employee where emp_id = " + emp_id;
+        var query = "select password, ifsc_code, name, designation from employee where emp_id = " + emp_id;
         connection.query(query, function (err, rows, fields) {
             if (err) {
                 throw err;
@@ -93,7 +105,7 @@ app.post("/dashboard", function (req, res) {
                 }
                 else if (rows[0].password === password) {
                     logged_in = true;
-
+                    designation = rows[0].designation;
                     connection.query("select br_name from branch where ifsc_code = ?", [rows[0].ifsc_code], function (err, result, field) {
                         if (err) {
                             console.log(err);
@@ -123,8 +135,8 @@ app.post("/dashboard", function (req, res) {
 // Set The Storage Engine
 var extension1, extension2;
 
-const storage = multer.diskStorage({
-    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/',
+const storage1 = multer.diskStorage({
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
     filename: function (req, file, cb) {
         /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
@@ -159,8 +171,8 @@ const storage = multer.diskStorage({
 });
 
 //For Image
-const upload = multer({
-    storage: storage,
+const upload1 = multer({
+    storage: storage1,
     limits: { fileSize: 2000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
@@ -183,7 +195,7 @@ function checkFileType(file, cb) {
     }
 };
 
-app.post("/add_customer", upload.fields([{ name: 'myImage', maxCount: 1 }, { name: 'aadhaar', maxCount: 1 }]), function (req, res) {
+app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { name: 'aadhaar', maxCount: 1 }]), function (req, res) {
     if (loggedIn(res)) {
         var first_name = req.body.first_name;
         var last_name = req.body.last_name;
@@ -205,7 +217,7 @@ app.post("/add_customer", upload.fields([{ name: 'myImage', maxCount: 1 }, { nam
 
         console.log(extension1, extension2);
 
-        var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/' + cust_id + '-photo' + extension1 + '")';
+        var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
         var aadhaar = cust_id + '-aadhaar' + extension2;
 
         //Derived Attributes
@@ -339,7 +351,194 @@ app.post("/view_profile", function (req, res) {
         });
     }
 });
-/************************ Customer Profile Starts *******************************/
+/************************ Customer Profile Ends *******************************/
+
+
+
+/************************ Employee Managenment Starts *******************************/
+app.get("/emp_management", function (req, res) {
+    if (loggedIn(res)) {
+        res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name });
+    }
+});
+
+/**********************************Configure storage for employee************************************************* */
+const storage2 = multer.diskStorage({
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
+    filename: function (req, file, cb) {
+
+        connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
+            if (rows.length === 0) {
+                connection.query("alter table employee auto_increment = 1000", function (err, rows, fields) {
+                    if (err) {
+                        console.log("Error in query");
+                        console.log(error);
+                    }
+                    else {
+                        console.log("Successful Query");
+                        // console.log(rows);
+                    }
+                });
+            }
+        });
+
+        if (file.fieldname === 'myImage') {
+            extension1 = path.extname(file.originalname);
+            cb(null, 'photo' + path.extname(file.originalname));
+        }
+        else if (file.fieldname === 'aadhaar') {
+            extension2 = path.extname(file.originalname);
+            cb(null, 'aadhaar' + path.extname(file.originalname));
+        }
+    }
+});
+
+//For Image
+const upload2 = multer({
+    storage: storage2,
+    limits: { fileSize: 2000000 },
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+});
+app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { name: 'aadhaar', maxCount: 1 }]), function (req, res) {
+    if (loggedIn(res)) {
+        var first_name = req.body.first_name;
+        var last_name = req.body.last_name;
+        var name = first_name + " " + last_name;
+        var address = req.body.address;
+        var city = req.body.city;
+        var state = req.body.state;
+        var zip = req.body.zip;
+        var email = req.body.email;
+        var pno = parseInt(req.body.pcon);
+        var sno = parseInt(req.body.scon);
+        var gender = req.body.gender;
+        var dob = req.body.dob;
+        var aadhaar_no = req.body.aadhaar_no;
+        var pan_no = req.body.pan;
+        var salary = req.body.salary;
+        var designation = req.body.designation;
+        var password;
+
+        console.log(extension1, extension2);
+
+        var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
+        var aadhaar = 'aadhaar' + extension2;
+
+        //Derived Attributes
+        if (designation === 'Cashier' || designation === 'General Employee') {
+            password = md5(first_name + '@123');
+        }
+
+        var query1 = "insert into employee (ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, photo,password) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," + photo + ",?)";
+        var list = [ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, password];
+
+        console.log(list);
+
+        //Executing Query
+        connection.query(query1, list, function (error, rows, fields) {
+            if (error) {
+                console.log("Error in query");
+                console.log(error);
+            }
+            else {
+                console.log("Successful Query");
+                // console.log(rows);
+
+                var query2 = "insert into emp_phone values ?";
+                var phone;
+                var emp_id = rows.insertId;
+                if (Number.isNaN(sno))
+                    phone = [[emp_id, pno]];
+                else
+                    phone = [[emp_id, pno], [emp_id, sno]];
+
+
+                /////To rename uploaded files
+                var oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
+                var newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
+                fs.rename(oldPath, newPath, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Renamed Photo");
+                    }
+                })
+                oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
+                newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
+                fs.rename(oldPath, newPath, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Renamed Aadhaar");
+                    }
+                })
+
+                connection.query(query2, [phone], function (error, rows, fields) {
+                    if (error) {
+                        console.log("Error in query");
+                        console.log(error);
+                    }
+                    else {
+                        console.log("Successful Query");
+                        // console.log(rows);
+                    }
+                });
+                connection.query("update employee set aadhaar = ? where emp_id = ?", [emp_id + "-aadhaar" + extension2, emp_id], function (err, rows, fields) {
+                    if (err) {
+                        console.log("Error in Query");
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Successful Query");
+                    }
+                })
+            }
+        });
+
+        res.redirect("/emp_management");
+    }
+});
+
+/////////////View Employee
+app.post("/emp_profile", function (req, res) {
+    if (loggedIn(res)) {
+        var query = "select * from emp_info where emp_id=" + req.body.emp_id;
+        connection.query(query, function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                var row = rows[0];
+                var phone_no1, phone_no2;
+                phone_no1 = rows[0].phone_no;
+
+                if (rows.length === 2)
+                    phone_no2 = rows[1].phone_no;
+                else
+                    phone_no2 = "Not Available";
+
+                // console.log(typeof(row.dob), row.dob);
+
+                res.render("emp_profile", {
+                    ifsc_code: ifsc_code,
+                    br_name: br_name,
+                    phone_no1: phone_no1,
+                    phone_no2: phone_no2,
+                    photo: row.photo.toString("base64"),
+                    row: row
+                });
+            }
+        });
+    }
+});
+
+/************************ Employee Managenment Ends *******************************/
+
+
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");

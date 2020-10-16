@@ -93,6 +93,14 @@ h6 {
 .card-link:hover {
   color: black;
 }
+
+.emp-management{
+  display: none;
+}
+.transaction{
+  display: none;
+}
+
 /******************************** Card Deck Ends ********************************/
 
 /******************************** Customer Management Starts ********************************/
@@ -237,3 +245,5 @@ td {
   padding-top: 5%;
 }
 /******************************* Account View Ends *************************************/
+
+
