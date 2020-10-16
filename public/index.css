@@ -103,7 +103,6 @@ h6 {
 
 .row {
   margin: 0;
-  height: 100%;
   margin-top: 3%;
 }
 
@@ -167,7 +166,7 @@ h6 {
 }
 /******************************** Customer Add Ends ********************************/
 
-/******************************* Emp Profile Starts*************************************/
+/******************************* Emp Profile Starts *************************************/
 .profile-col1 {
   text-align: center;
 }
@@ -190,11 +189,11 @@ td {
 .profile-text {
   font-weight: 400;
 }
-/******************************* Emp Profile Ends*************************************/
+/******************************* Emp Profile Ends *************************************/
 
-/******************************* Account View Starts*************************************/
+/******************************* Account View Starts *************************************/
 .cust_info {
-  width: 90%;
+  width: 80%;
   table-layout: fixed;
   margin-left: 3%;
 }
@@ -208,38 +207,33 @@ td {
   border-right: rgb(219, 210, 210) 0.5px solid;
   padding-left: 3%;
   padding-right: 3%;
-  margin-right: 3%;
 }
 
 .acc_info {
   table-layout: fixed;
   width: 100%;
 }
-.cust_id{
+
+.cust_id {
   padding-top: 3%;
 }
-.accinfo_heading{
+
+.accinfo_heading {
   text-align: center;
 }
-.balance-box{
+
+.balance-box {
   text-align: center;
   width: 250px;
   height: 90px;
   border: #393e46 1px solid;
   border-radius: 10px;
   box-shadow: 2px 4px #838b87;
-  align-items: center;
   background-color: white;
-
+  margin: auto;
 }
 
-.balance-row{
-  margin-left: 35%;
-  margin-top: 5%;
+.bal-text {
+  padding-top: 5%;
 }
-
-.bal-text{
-  padding-top: 5px;;
-}
-
-/******************************* Account View Ends*************************************/
+/******************************* Account View Ends *************************************/
