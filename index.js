@@ -16,6 +16,7 @@ var br_name;
 var cust_id;
 var logged_in = false;
 var designation;
+var counter_no;
 //Configure View Engine
 app.set('view engine', 'ejs');
 
@@ -60,19 +61,28 @@ app.get("/", function (req, res) {
 
 app.get("/dashboard", function (req, res) {
     if (loggedIn(res))
-    if(designation === "Manager"){
-        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation:"abc" , cashier:"abc"});
-    }
-    else if(designation==="General Employee"){
-        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation:" emp-management", cashier:"transaction"});
-    }
-    else{
-        res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation:"emp-management",cashier:"abc" });
-    }
+        if (designation === "Manager") {
+            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "abc", cashier: "abc" });
+        }
+        else if (designation === "General Employee") {
+            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: " emp-management", cashier: "transaction" });
+        }
+        else {
+            connection.query("select counter_no from cash_counter where emp_id = ?", [emp_id], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    counter_no = rows[0].counter_no;
+                    console.log("Query Successful");
+                }
+            });
+            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "emp-management", cashier: "abc" });
+        }
 });
 
 app.get("/customer_management", function (req, res) {
-    if (loggedIn(res)){
+    if (loggedIn(res)) {
         res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name });
 
     }
@@ -87,7 +97,7 @@ app.get("/logout", function (req, res) {
 /*************************** Login Starts ***************************/
 app.post("/dashboard", function (req, res) {
     logged_in = true;
-    
+
     if (loggedIn(res)) {
         emp_id = req.body.login_id;
         var password = md5(req.body.password);
@@ -355,7 +365,7 @@ app.post("/view_profile", function (req, res) {
 
 
 
-/************************ Employee Managenment Starts *******************************/
+/************************ Employee Managenment Starts ********************************************************/
 app.get("/emp_management", function (req, res) {
     if (loggedIn(res)) {
         res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name });
@@ -495,7 +505,29 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                     else {
                         console.log("Successful Query");
                     }
-                })
+                });
+
+                //Adding Cash counter if employee is cashier
+                if (designation == "Cashier") {
+                    connection.query("select * from cash_counter where ifsc_code= ?", [ifsc_code], function (err, rows, fields) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            var counter_no = rows.length + 1;
+                            var q = "insert into cash_counter values(?, ?, ?)";
+                            connection.query(q, [counter_no, emp_id, ifsc_code], function (err, rows, fields) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log("Successful Query:- Adding to Counter");
+                                }
+                            });
+                        }
+
+                    });
+                }
             }
         });
 
@@ -537,6 +569,99 @@ app.post("/emp_profile", function (req, res) {
 });
 
 /************************ Employee Managenment Ends *******************************/
+
+/************************ Transaction Managenment Starts *******************************/
+app.get("/transaction_management", function (req, res) {
+    if (loggedIn(res)) {
+        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name });
+    }
+});
+app.post("/withdraw", function (req, res) {
+
+    var acc_no = parseInt(req.body.acc_no);
+    var amount = parseInt(req.body.amount);
+    console.log(req.body);
+
+    connection.query("select * from cust_account where acc_no=?", [acc_no], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (rows.length === 0) {
+                console.log("Customer Not Found");
+                res.redirect("/transaction_management");
+            }
+            else {
+                if (rows[0].balance < amount) {
+                    console.log("Insufficient Balance....Cannot Withdraw Amount!!");
+                }
+                else {
+
+                    var q = "insert into transaction (counter_no, trans_type,amount, acc_no) values(?,?,?,?)"
+                    connection.query(q, [counter_no, "debit", amount, acc_no], function (err, rows, fields) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            connection.query("Update cust_account set balance= balance-?", [amount], function (err, rows, fields) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log("Successful Withdraw.");
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+});
+
+
+/////////Deposit
+app.post("/deposit", function (req, res) {
+
+    var acc_no = parseInt(req.body.acc_no);
+    var amount = parseInt(req.body.amount);
+    console.log(req.body);
+
+    connection.query("select * from cust_account where acc_no=?", [acc_no], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (rows.length === 0) {
+                console.log("Customer Not Found");
+                res.redirect("/transaction_management");
+            }
+            else {
+
+                var q = "insert into transaction (counter_no, trans_type,amount, acc_no) values(?,?,?,?)"
+                connection.query(q, [counter_no, "credit", amount, acc_no], function (err, rows, fields) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        connection.query("Update cust_account set balance= balance+?", [amount], function (err, rows, fields) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                console.log("Successful Deposit.");
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    });
+
+});
+
+/************************ Transaction Managenment Ends *******************************/
 
 
 

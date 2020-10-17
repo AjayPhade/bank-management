@@ -1,0 +1,82 @@
+<%- include("header") -%>
+
+<div class="row">
+  <!-- Sidebar Starts -->
+  <div class="col-2 sidebar trans_sidebar">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#v-pills-settings" role="tab"
+        aria-controls="v-pills-settings" aria-selected="false">Withdraw</a>
+      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#v-pills-home" role="tab"
+        aria-controls="v-pills-home" aria-selected="true">Deposit</a>
+      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#v-pills-profile" role="tab"
+        aria-controls="v-pills-profile" aria-selected="false">View</a>
+
+    </div>
+  </div>
+  <!-- Sidebar Ends -->
+
+  <!-- Create Customer Form Starts -->
+
+  <div class="col-10 ">
+    <!-- Add Customer Start -->
+    <div class="remove-custdiv">
+      <h2 class="create-heading debit-heading">Withdraw</h2>
+      <br />
+      <form class="create-cust" method="POST" action="/withdraw">
+
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Account No</label>
+          <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Amount(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="amount" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Withdraw
+        </button>
+      </form>
+
+    </div>
+
+    <!-- Deposit -->
+    <div class="add-custdiv deposit-div">
+      <h2 class="create-heading debit-heading">Deposit</h2>
+      <br />
+      <form class="create-cust" method="POST" action="/deposit">
+
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Account No</label>
+          <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Amount(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="amount" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Deposit </button>
+      </form>
+    </div>
+    <!-- Add Customer End -->
+
+    <!-- View Customer Start -->
+    <div class="view-custdiv">
+      <form method="POST" action="/view_profile">
+        <div class="form-row">
+          <div class="form-group col-md-10">
+            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number">
+          </div>
+          <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- View Customer End -->
+</div>
+
+
+<!-- Create Customer Form Ends -->
+
+<%- include("footer") -%>

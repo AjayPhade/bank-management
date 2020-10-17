@@ -246,4 +246,29 @@ td {
 }
 /******************************* Account View Ends *************************************/
 
+/******************************* Transaction Starts *************************************/
+
+.trans_sidebar{
+  font-size: 1.3rem;
+}
+
+.debit_fields{
+  width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.debit-btn{
+  margin-left: 45%;
+}
+
+.debit-heading{
+  margin-bottom: 30px;
+}
+
+.deposit-div{
+  padding: 0;
+}
+/******************************* Transaction Ends *************************************/
+
 
