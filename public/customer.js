@@ -1,6 +1,3 @@
-
-
-
 //Styling Sidebar Customer Management
 var sidebar = document.getElementsByClassName("sidebar-tile");
 var previous;
@@ -22,6 +19,7 @@ function select(event) {
       element.style.transform = "scale(1.1)";
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
+      document.getElementsByName("first_name")[0].focus();
       previous = element;
       break;
 
@@ -35,6 +33,7 @@ function select(event) {
       element.style.transform = "scale(1.1)";
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
+      document.getElementsByName("acc_no")[0].focus();
       previous = element;
       break;
 
