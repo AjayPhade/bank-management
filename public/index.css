@@ -277,4 +277,18 @@ td {
 .deposit-div {
   padding: 0;
 }
+
+.view_trans{
+  text-align: center;
+  margin-top:10%;
+}
+
+.view_all_trans_btn{
+  margin-left: 70%;
+  margin-top: 10%;
+}
+
+.or{
+  margin-top: 5%;
+}
 /******************************* Transaction Ends *************************************/

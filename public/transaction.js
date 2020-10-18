@@ -33,7 +33,7 @@ function select(event) {
       element.style.transform = "scale(1.1)";
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
-      document.getElementsByName("acc_no")[2].focus();
+      document.getElementsByName("trans_no")[0].focus();
       previous = element;
       break;
 

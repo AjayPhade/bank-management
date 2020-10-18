@@ -656,6 +656,46 @@ app.post("/deposit", function (req, res) {
 
 });
 
+/////////View Transaction
+app.post("/particular_trans",function(req,res){
+    var trans_no = parseInt(req.body.trans_no);
+    connection.query("select * from transaction where trans_no = ?",[trans_no],function(err,rows,fields){
+        if(err){
+            console.log(err);
+        }
+        else{
+            if(rows.length == 0){
+                console.log("Transaction Not Found!!!");
+                res.redirect("/transaction_management");
+            }
+            else{
+                console.log("Successful");
+                res.render("transaction_mg2",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length});
+            }
+        }
+
+    });
+});
+
+app.post("/all_trans",function(req,res){
+    connection.query("select * from transaction where counter_no = ? order by time_stamp desc",[counter_no],function(err,rows,fields){
+        if(err){
+            console.log(err);
+        }
+        else{
+            if(rows.length == 0){
+                console.log("Transaction Not Found!!!");
+                res.redirect("/transaction_management");
+            }
+            else{
+                console.log("Successful");
+                res.render("transaction_mg2",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length});
+            }
+        }
+
+    });
+});
+
 /************************ Transaction Managenment Ends *******************************/
 
 
