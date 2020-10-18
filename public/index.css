@@ -10,7 +10,7 @@ body {
 .login-page {
   padding-left: 25%;
   padding-right: 25%;
-  padding-top: 13%;
+  padding-top: 8%;
 }
 
 .login-btn {
@@ -94,10 +94,10 @@ h6 {
   color: black;
 }
 
-.emp-management{
+.emp-management {
   display: none;
 }
-.transaction{
+.transaction {
   display: none;
 }
 
@@ -170,6 +170,14 @@ h6 {
 .view-custdiv {
   padding-left: 25%;
   padding-right: 25%;
+  display: none;
+}
+
+.update-custdiv {
+  display: none;
+}
+
+.remove-custdiv {
   display: none;
 }
 /******************************** Customer Add Ends ********************************/
@@ -248,27 +256,25 @@ td {
 
 /******************************* Transaction Starts *************************************/
 
-.trans_sidebar{
+.trans_sidebar {
   font-size: 1.3rem;
 }
 
-.debit_fields{
+.debit_fields {
   width: 35%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.debit-btn{
+.debit-btn {
   margin-left: 45%;
 }
 
-.debit-heading{
+.debit-heading {
   margin-bottom: 30px;
 }
 
-.deposit-div{
+.deposit-div {
   padding: 0;
 }
 /******************************* Transaction Ends *************************************/
-
-
