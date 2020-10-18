@@ -571,7 +571,7 @@ app.post("/emp_profile", function (req, res) {
 
 app.get("/transaction_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name });
+        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows:undefined, class_name:undefined });
     }
 });
 
@@ -592,6 +592,7 @@ app.post("/withdraw", function (req, res) {
             else {
                 if (rows[0].balance < amount) {
                     console.log("Insufficient Balance.... Cannot Withdraw Amount!!");
+                    res.redirect("/transaction_management");
                 }
                 else {
                     var q = "insert into transaction (counter_no, trans_type,amount, acc_no) values(?,?,?,?)";
@@ -601,12 +602,13 @@ app.post("/withdraw", function (req, res) {
                             console.log(err);
                         }
                         else {
-                            connection.query("Update cust_account set balance= balance-?", [amount], function (err, rows, fields) {
+                            connection.query("Update cust_account set balance= balance-? where acc_no = ?", [amount, acc_no], function (err, rows, fields) {
                                 if (err) {
                                     console.log(err);
                                 }
                                 else {
                                     console.log("Successful Withdraw.");
+                                    res.redirect("/transaction_management");
                                 }
                             });
                         }
@@ -640,12 +642,13 @@ app.post("/deposit", function (req, res) {
                         console.log(err);
                     }
                     else {
-                        connection.query("Update cust_account set balance= balance+?", [amount], function (err, rows, fields) {
+                        connection.query("Update cust_account set balance= balance+? where acc_no=?", [amount,acc_no], function (err, rows, fields) {
                             if (err) {
                                 console.log(err);
                             }
                             else {
                                 console.log("Successful Deposit.");
+                                res.redirect("/transaction_management");
                             }
                         });
                     }
@@ -670,7 +673,7 @@ app.post("/particular_trans",function(req,res){
             }
             else{
                 console.log("Successful");
-                res.render("transaction_mg2",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length});
+                res.render("transaction_mg",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length, class_name:"trans_table"});
             }
         }
 
@@ -689,7 +692,7 @@ app.post("/all_trans",function(req,res){
             }
             else{
                 console.log("Successful");
-                res.render("transaction_mg2",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length});
+                res.render("transaction_mg",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length, class_name:"trans_table"});
             }
         }
 

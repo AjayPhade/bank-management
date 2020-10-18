@@ -8,8 +8,8 @@
         aria-controls="v-pills-settings" aria-selected="false">Withdraw</a>
       <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#v-pills-home" role="tab"
         aria-controls="v-pills-home" aria-selected="true">Deposit</a>
-      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile"
-        aria-selected="false">View</a>
+      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#view_trans" role="tab"
+        aria-controls="v-pills-profile" aria-selected="false">View</a>
 
     </div>
   </div>
@@ -18,6 +18,7 @@
   <!-- Create Customer Form Starts -->
 
   <div class="col-10 ">
+    
     <!-- Add Customer Start -->
     <div class="remove-custdiv">
       <h2 class="create-heading debit-heading">Withdraw</h2>
@@ -59,29 +60,61 @@
 
     <!-- View Customer Start -->
     <div class="view-custdiv view_trans" id="view-data">
-      <form method="POST" action="/particular_trans">
-        <div class="form-row">
-          <div class="form-group col-md-10">
+        <form method="POST" action="/particular_trans">
+          <div class="form-row">
+            <div class="form-group col-md-10">
 
-            <input type="text" name="trans_no" id="view_by_trans_no" class="form-control"
-              placeholder="Enter Transaction Number">
+              <input type="text" name="trans_no" id="view_by_trans_no" class="form-control"
+                placeholder="Enter Transaction Number">
+            </div>
+            <div class="form-group col-md-2">
+              <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            </div>
           </div>
-          <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+        </form>
+        <h5 class="or">OR</h5>
+        <form action="/all_trans" method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-5">
+              <button type="submit" class="btn btn-primary form-control view_all_trans_btn"> View All Transactions <i
+                  class="fas fa-search"></i></button>
+            </div>
           </div>
-        </div>
-      </form>
-      <h5 class="or">OR</h5>
-      <form action="/all_trans" method="POST">
-        <div class="form-row">
-          <div class="form-group col-md-5">
-            <button type="submit" class="btn btn-primary form-control view_all_trans_btn"> View All Transactions <i
-                class="fas fa-search"></i></button>
-          </div>
-        </div>
-      </form>
+        </form>
 
     </div>
+    <%if(class_name !== undefined || rows !== undefined){ %>
+      <div class="<%=class_name%> table_trans">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Transaction No</th>
+              <th scope="col">Account No</th>
+              <th scope="col">Transaction Type</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Time Stamp</th>
+              <th scope="col">Counter No</th>
+            </tr>
+          </thead>
+        <tbody>
+          <%for(var i=0;i < length ; i++){%>
+            <tr>
+              <th scope="row"><%=i+1%></th>
+              <td><%=rows[i].trans_no%></td>
+              <td><%=rows[i].acc_no%></td>
+              <td><%=rows[i].trans_type%></td>
+              <td><%=rows[i].amount%></td>
+              <td><%=rows[i].time_stamp%></td>
+              <td><%=rows[i].counter_no%></td>
+            </tr>
+            <%}%>
+        </tbody>
+        
+      </table>
+  
+    </div>
+    <%}%>
   </div>
 
   <!-- View Customer End -->

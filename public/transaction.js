@@ -52,3 +52,10 @@ function select(event) {
       break;
   }
 }
+
+var table = document.getElementsByClassName("trans_table");
+
+if(table[0] !== undefined){
+  document.getElementsByClassName("view")[0].click();
+  table[0].style.display = "inherit";
+}
