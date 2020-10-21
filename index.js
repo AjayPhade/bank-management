@@ -6,7 +6,7 @@ const multer = require("multer");
 const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
-
+var move = require('fs-extra');
 //ID of logged in employee
 var emp_id, name;
 var ifsc_code;
@@ -84,7 +84,7 @@ app.get("/dashboard", function (req, res) {
 
 app.get("/customer_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name });
+        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows:undefined});
     }
 });
 
@@ -143,7 +143,7 @@ app.post("/dashboard", function (req, res) {
 var extension1, extension2;
 
 const storage1 = multer.diskStorage({
-    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
     filename: function (req, file, cb) {
         /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
@@ -172,6 +172,8 @@ const storage1 = multer.diskStorage({
             else if (file.fieldname === 'aadhaar') {
                 extension2 = path.extname(file.originalname);
                 cb(null, cust_id + '-aadhaar' + path.extname(file.originalname));
+
+                
             }
         });
     }
@@ -223,7 +225,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
+    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
 
     //Derived Attributes
@@ -268,6 +270,16 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                     // console.log(rows);
                 }
             });
+
+            var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
+                move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Moved");
+                    }
+                });
         }
     });
 
@@ -275,16 +287,154 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 });
 
 /*************************** Add Customer Form Ends ***************************/
+/***************************Update Customer Starts ****************************/
 
-// connection.end(function (error) {
-//     if (error) {
-//         console.log("Error in Disconnecting Database");
-//         throw error;
-//     }
-//     else {
-//         console.log("Disconnected from Database");
-//     }
-// });
+
+app.post("/update_customer", function (req, res) {
+    var acc_no = parseInt(req.body.acc_no);
+
+    connection.query("select * from cust_info where acc_no = ?", [acc_no], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else if (rows.length === 0) {
+            console.log("Customer Not Found!!");
+        }
+        else {
+            row = rows[0];
+            var phone_no1 = row.phone_no, phone_no2;
+            if (rows.length == 2) {
+                phone_no2 = rows[1].phone_no;
+            }
+            else {
+                phone_no2 = "Not Available";
+            }
+            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: phone_no1, phone_no2: phone_no2, rows:undefined });
+        }
+    });
+});
+
+
+app.post("/update_customer_details", function (req, res) {
+    var name = req.body.name;
+    var address = req.body.address;
+    var city = req.body.city;
+    var state = req.body.state;
+    var zip = req.body.zip;
+    var email = req.body.email;
+    var pno = parseInt(req.body.pcon);
+    var sno = parseInt(req.body.scon);
+    var dob = req.body.dob;
+    var aadhaar_no = req.body.aadhaar_no;
+    var pan_no = req.body.pan;
+    var acc_no = parseInt(req.body.acc_no);
+    console.log(req.body);
+    var query = "update cust_account set name=?, address=?, city=?, state=?, zip=?, email=?, dob=?,aadhaar_no = ?,pan_no=? where acc_no = ?";
+    connection.query(query, [name, address, city, state, zip, email, dob, aadhaar_no, pan_no, acc_no], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("Successful!");
+            connection.query("select * from cust_phone where acc_no = ?",[acc_no],function(err,rows,fields){
+                var oldphone1 = rows[0].phone_no;
+                
+                if(rows.length===1){
+                    if(!Number.isNaN(sno)){
+                        connection.query("insert into cust_phone values(?,?)",[acc_no,sno],function(err,rows,fields){
+                            if(err){
+                                console.log(err);
+                            }
+                            else{
+                                console.log("Successfully Added Secondary No.");
+                            }
+                        });
+                    }
+                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?",[pno,acc_no,oldphone1],function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            console.log("Updated Primary ");
+                        }
+                    });
+                }
+                else{
+                    var oldphone2 = rows[1].phone_no;
+                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?",[pno,acc_no,oldphone1],function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            console.log("Updated Primary ");
+                        }
+                    });
+                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?",[sno,acc_no,oldphone2],function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            console.log("Updated Secondary ");
+                        }
+                    });
+                }
+            });
+            res.redirect("/customer_management");
+        }
+    });
+
+});
+
+
+/*****************************Update Customer Ends*******************************/
+/*****************************Remove Customer Starts*****************************/
+
+app.post("/remove_customer", function (req, res) {
+    var acc_no = parseInt(req.body.acc_no);
+
+    connection.query("select * from cust_info where acc_no = ?", [acc_no], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else if (rows.length === 0) {
+            console.log("Customer Not Found!!");
+        }
+        else {
+            row = rows[0];
+            var phone_no1 = row.phone_no, phone_no2;
+            if (rows.length == 2) {
+                phone_no2 = rows[1].phone_no;
+            }
+            else {
+                phone_no2 = "Not Available";
+            }
+            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows:row });
+        }
+    });
+});
+app.post("/remove_customer_details",function(req,res){
+    var acc_no = req.body.acc_no;
+    connection.query("DELETE FROM cust_phone WHERE acc_no = ?",[acc_no],function(err){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("Deleted from cust_phone");
+            connection.query("DELETE FROM cust_account WHERE acc_no = ?",[acc_no],function(err){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log("Deleted from cust_account");
+                    res.redirect("/customer_management");
+
+                }
+            });
+        }
+    });
+});
+
+/*****************************Remove Customer Ends*****************************/
 
 /*************************** Employee Profile Starts ***************************/
 app.get("/profile", function (req, res) {
@@ -324,7 +474,7 @@ app.get("/profile", function (req, res) {
 /************************ Customer Profile Starts *******************************/
 
 app.post("/view_profile", function (req, res) {
-    var acc_no = req.body.acc_no;
+    var acc_no = parseInt(req.body.acc_no);
     var query = "select * from cust_info where acc_no=" + acc_no;
 
     connection.query(query, function (err, rows, fields) {
@@ -344,17 +494,31 @@ app.post("/view_profile", function (req, res) {
             else
                 phone_no2 = "Not Available";
 
-            res.render("cust_profile", {
-                ifsc_code: ifsc_code,
-                br_name: br_name,
-                phone_no1: phone_no1,
-                phone_no2: phone_no2,
-                photo: row.photo.toString("base64"),
-                row: row
-            });
+            connection.query("select * from transaction where acc_no = ? order by time_stamp desc limit 5", [acc_no], function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+
+                }
+                else {
+                    res.render("cust_profile", {
+                        ifsc_code: ifsc_code,
+                        br_name: br_name,
+                        phone_no1: phone_no1,
+                        phone_no2: phone_no2,
+                        photo: row.photo.toString("base64"),
+                        row: row,
+                        rows: rows,
+                        length: rows.length
+                    });
+
+                }
+            })
+
+
         }
     });
 });
+
 /************************ Customer Profile Ends *******************************/
 
 
@@ -368,7 +532,7 @@ app.get("/emp_management", function (req, res) {
 
 /**********************************Configure storage for employee************************************************* */
 const storage2 = multer.diskStorage({
-    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
     filename: function (req, file, cb) {
 
         connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
@@ -427,7 +591,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
+    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
     var aadhaar = 'aadhaar' + extension2;
 
     //Derived Attributes
@@ -461,8 +625,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
 
             /////To rename uploaded files
-            var oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
-            var newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
+            var oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
+            var newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -473,8 +637,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 }
             });
 
-            oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
-            newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
+            oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
+            newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -482,6 +646,16 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 }
                 else {
                     console.log("Renamed Aadhaar");
+
+                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + emp_id + '-aadhaar' + extension2;
+                    move.move(newPath, newPath1, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Moved");
+                        }
+                    });
                 }
             });
 
@@ -541,6 +715,10 @@ app.post("/emp_profile", function (req, res) {
         if (err) {
             console.log(err);
         }
+        else if (rows.length === 0) {
+            console.log("Employee Not Found!!");
+
+        }
         else {
             var row = rows[0];
             var phone_no1, phone_no2;
@@ -571,7 +749,7 @@ app.post("/emp_profile", function (req, res) {
 
 app.get("/transaction_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows:undefined, class_name:undefined });
+        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined });
     }
 });
 
@@ -642,7 +820,7 @@ app.post("/deposit", function (req, res) {
                         console.log(err);
                     }
                     else {
-                        connection.query("Update cust_account set balance= balance+? where acc_no=?", [amount,acc_no], function (err, rows, fields) {
+                        connection.query("Update cust_account set balance= balance+? where acc_no=?", [amount, acc_no], function (err, rows, fields) {
                             if (err) {
                                 console.log(err);
                             }
@@ -660,39 +838,39 @@ app.post("/deposit", function (req, res) {
 });
 
 /////////View Transaction
-app.post("/particular_trans",function(req,res){
+app.post("/particular_trans", function (req, res) {
     var trans_no = parseInt(req.body.trans_no);
-    connection.query("select * from transaction where trans_no = ?",[trans_no],function(err,rows,fields){
-        if(err){
+    connection.query("select * from transaction where trans_no = ?", [trans_no], function (err, rows, fields) {
+        if (err) {
             console.log(err);
         }
-        else{
-            if(rows.length == 0){
+        else {
+            if (rows.length == 0) {
                 console.log("Transaction Not Found!!!");
                 res.redirect("/transaction_management");
             }
-            else{
+            else {
                 console.log("Successful");
-                res.render("transaction_mg",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length, class_name:"trans_table"});
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: rows, length: rows.length, class_name: "trans_table" });
             }
         }
 
     });
 });
 
-app.post("/all_trans",function(req,res){
-    connection.query("select * from transaction where counter_no = ? order by time_stamp desc",[counter_no],function(err,rows,fields){
-        if(err){
+app.post("/all_trans", function (req, res) {
+    connection.query("select * from transaction where counter_no = ? order by time_stamp desc", [counter_no], function (err, rows, fields) {
+        if (err) {
             console.log(err);
         }
-        else{
-            if(rows.length == 0){
+        else {
+            if (rows.length == 0) {
                 console.log("Transaction Not Found!!!");
                 res.redirect("/transaction_management");
             }
-            else{
+            else {
                 console.log("Successful");
-                res.render("transaction_mg",{ ifsc_code: ifsc_code, br_name: br_name , rows:rows, length:rows.length, class_name:"trans_table"});
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: rows, length: rows.length, class_name: "trans_table" });
             }
         }
 

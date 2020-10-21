@@ -67,3 +67,35 @@ function select(event) {
       break;
   }
 }
+
+//////////To change placeholder of file upload//////////////
+
+var input1 = document.getElementById('validatedCustomFile1');
+var infoArea1 = document.getElementById('place-hold1');
+input1.addEventListener('change', showFileName);
+
+var input2 = document.getElementById('validatedCustomFile2');
+var infoArea2 = document.getElementById('place-hold2');
+input2.addEventListener('change', showFileName);
+
+function showFileName(event) {
+
+  // the change event gives us the input it occurred in
+  var input = event.srcElement;
+
+  // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
+  var fileName = input.files[0].name;
+
+  // change the text to the actual filename
+  if (event.target.id === "validatedCustomFile1") {
+    infoArea1.textContent = fileName;
+  }
+  else {
+    infoArea2.textContent = fileName;
+  }
+
+  console.log(event.target);
+}
+
+
+//File upload placeholder change End

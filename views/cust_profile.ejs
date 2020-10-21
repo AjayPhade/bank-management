@@ -89,11 +89,36 @@
                     </td>
                 </tr>
             </table>
+            <div class="view-doc-btn">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    <i class="fas fa-eye"></i> View Documents
+                </button>
+                <!-- Modal -->
+                <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Aadhaar Card</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <embed src="pdfs/<%=row.aadhaar%>" type="application/pdf" height="500px" width="100%">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-8 sec_col">
         <div class="accinfo_heading">
-            <h3>Account Information</h3>
+            <h3><em>Account Information</em></h3>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -142,6 +167,39 @@
                 <h5 class="bal-text">Balance</h5>
                 <h3> ₹ <%=row.balance%></h3>
             </div>
+        </div>
+        <div class="accinfo_heading">
+            <h4><em> Last 5 Transactions </em></h4>
+        </div>
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Transaction No</th>
+                        <th scope="col">Account No</th>
+                        <th scope="col">Transaction Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Time Stamp</th>
+                        <th scope="col">Counter No</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%for(var i=0;i < length ; i++){%>
+                    <tr>
+                        <th scope="row"><%=i+1%></th>
+                        <td><%=rows[i].trans_no%></td>
+                        <td><%=rows[i].acc_no%></td>
+                        <td><%=rows[i].trans_type%></td>
+                        <td><%=rows[i].amount%></td>
+                        <td><%=rows[i].time_stamp%></td>
+                        <td><%=rows[i].counter_no%></td>
+                    </tr>
+                    <%}%>
+            </tbody>
+            
+          </table>
+      
         </div>
     </div>
 </div>

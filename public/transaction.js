@@ -6,6 +6,8 @@ for (var i = 0; i < sidebar.length; i++) {
   sidebar[i].addEventListener("click", select);
 }
 
+var trans_table =  document.getElementsByClassName("trans_table")[0];
+
 function select(event) {
   var element = event.target;
   switch (element.id) {
@@ -21,6 +23,9 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("acc_no")[1].focus();
       previous = element;
+      if(trans_table !== undefined){
+        trans_table.style.display = "none";
+      }
       break;
 
     case "view":
@@ -49,6 +54,9 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("acc_no")[0].focus();
       previous = element;
+      if(trans_table !== undefined){
+        trans_table.style.display = "none";
+      }
       break;
   }
 }
