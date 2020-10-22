@@ -8,7 +8,8 @@ var previous;
 for (var i = 0; i < sidebar.length; i++) {
   sidebar[i].addEventListener("click", select);
 }
-
+var update = document.getElementsByClassName("update-cust")[0];
+var remove = document.getElementsByClassName("remove-cust")[0];
 function select(event) {
   var element = event.target;
   switch (element.id) {
@@ -24,6 +25,12 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("first_name")[0].focus();
       previous = element;
+      if(update !==undefined){
+        update.style.display = "none";
+      }
+      if(remove !==undefined){
+        remove.style.display = "none";
+      }
       break;
 
     case "view":
@@ -38,6 +45,12 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("acc_no")[0].focus();
       previous = element;
+      if(update !==undefined){
+        update.style.display = "none";
+      }
+      if(remove !==undefined){
+        remove.style.display = "none";
+      }
       break;
 
     case "update":
@@ -51,6 +64,9 @@ function select(event) {
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
       previous = element;
+      if(remove !==undefined){
+        remove.style.display = "none";
+      }
       break;
 
     case "remove":
@@ -64,6 +80,9 @@ function select(event) {
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
       previous = element;
+      if(update !==undefined){
+        update.style.display = "none";
+      }
       break;
   }
 }
@@ -99,3 +118,23 @@ function showFileName(event) {
 
 
 //File upload placeholder change End
+
+////Update Customer/////////////
+
+if(update !==undefined){
+  document.getElementsByClassName("update")[0].click();
+  update.style.display = "inherit";
+
+  Array.from(document.getElementsByClassName("form-control")).forEach(function(element){
+    element.addEventListener("dblclick",()=>{
+      element.removeAttribute("readonly");
+    });
+  });
+  
+}
+
+if(remove !==undefined){
+  document.getElementsByClassName("remove")[0].click();
+  remove.style.display = "inherit";
+  
+}

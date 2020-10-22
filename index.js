@@ -84,7 +84,7 @@ app.get("/dashboard", function (req, res) {
 
 app.get("/customer_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows:undefined});
+        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined });
     }
 });
 
@@ -173,7 +173,7 @@ const storage1 = multer.diskStorage({
                 extension2 = path.extname(file.originalname);
                 cb(null, cust_id + '-aadhaar' + path.extname(file.originalname));
 
-                
+
             }
         });
     }
@@ -228,39 +228,20 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
     var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
 
-    //Derived Attributes
-    if (acc_type === 'Saving') {
-        interest = 6.4;
-    }
-    else {
-        interest = 4;
-    }
-
-    var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + photo + ")";
-    var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar];
-
-    console.log(list);
-
-    //Executing Query
-    connection.query(query1, list, function (error, rows, fields) {
-        if (error) {
-            console.log("Error in query");
-            console.log(error);
+    //to retrive int_rate
+    connection.query("select int_rate from acc_limit_int where acc_type = ?", [acc_type], function (err, row, col) {
+        if (err) {
+            console.log(err);
         }
         else {
-            console.log("Successful Query");
-            // console.log(rows);
+            interest = row[0].int_rate
+            var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo, int_rate) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + photo + ",?)";
+            var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar,interest];
 
-            var query2 = "insert into cust_phone values ?";
-            var phone;
-            var acc_no = rows.insertId;
+            console.log(list);
 
-            if (Number.isNaN(sno))
-                phone = [[acc_no, pno]];
-            else
-                phone = [[acc_no, pno], [acc_no, sno]];
-
-            connection.query(query2, [phone], function (error, rows, fields) {
+            //Executing Query
+            connection.query(query1, list, function (error, rows, fields) {
                 if (error) {
                     console.log("Error in query");
                     console.log(error);
@@ -268,22 +249,46 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                 else {
                     console.log("Successful Query");
                     // console.log(rows);
+
+                    var query2 = "insert into cust_phone values ?";
+                    var phone;
+                    var acc_no = rows.insertId;
+
+                    if (Number.isNaN(sno))
+                        phone = [[acc_no, pno]];
+                    else
+                        phone = [[acc_no, pno], [acc_no, sno]];
+
+                    connection.query(query2, [phone], function (error, rows, fields) {
+                        if (error) {
+                            console.log("Error in query");
+                            console.log(error);
+                        }
+                        else {
+                            console.log("Successful Query");
+
+                            // console.log(rows);
+                        }
+                    });
+
+                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
+                    move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Moved");
+                            res.redirect("/customer_management");
+                        }
+                    });
                 }
             });
-
-            var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
-                move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        console.log("Moved");
-                    }
-                });
         }
     });
 
-    res.redirect("/customer_management");
+
+
+
 });
 
 /*************************** Add Customer Form Ends ***************************/
@@ -309,7 +314,7 @@ app.post("/update_customer", function (req, res) {
             else {
                 phone_no2 = "Not Available";
             }
-            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: phone_no1, phone_no2: phone_no2, rows:undefined });
+            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined });
         }
     });
 });
@@ -336,44 +341,44 @@ app.post("/update_customer_details", function (req, res) {
         }
         else {
             console.log("Successful!");
-            connection.query("select * from cust_phone where acc_no = ?",[acc_no],function(err,rows,fields){
+            connection.query("select * from cust_phone where acc_no = ?", [acc_no], function (err, rows, fields) {
                 var oldphone1 = rows[0].phone_no;
-                
-                if(rows.length===1){
-                    if(!Number.isNaN(sno)){
-                        connection.query("insert into cust_phone values(?,?)",[acc_no,sno],function(err,rows,fields){
-                            if(err){
+
+                if (rows.length === 1) {
+                    if (!Number.isNaN(sno)) {
+                        connection.query("insert into cust_phone values(?,?)", [acc_no, sno], function (err, rows, fields) {
+                            if (err) {
                                 console.log(err);
                             }
-                            else{
+                            else {
                                 console.log("Successfully Added Secondary No.");
                             }
                         });
                     }
-                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?",[pno,acc_no,oldphone1],function(err){
-                        if(err){
+                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?", [pno, acc_no, oldphone1], function (err) {
+                        if (err) {
                             console.log(err);
                         }
-                        else{
+                        else {
                             console.log("Updated Primary ");
                         }
                     });
                 }
-                else{
+                else {
                     var oldphone2 = rows[1].phone_no;
-                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?",[pno,acc_no,oldphone1],function(err){
-                        if(err){
+                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?", [pno, acc_no, oldphone1], function (err) {
+                        if (err) {
                             console.log(err);
                         }
-                        else{
+                        else {
                             console.log("Updated Primary ");
                         }
                     });
-                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?",[sno,acc_no,oldphone2],function(err){
-                        if(err){
+                    connection.query("update cust_phone set phone_no = ? where acc_no = ? and phone_no = ?", [sno, acc_no, oldphone2], function (err) {
+                        if (err) {
                             console.log(err);
                         }
-                        else{
+                        else {
                             console.log("Updated Secondary ");
                         }
                     });
@@ -408,23 +413,23 @@ app.post("/remove_customer", function (req, res) {
             else {
                 phone_no2 = "Not Available";
             }
-            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows:row });
+            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: row });
         }
     });
 });
-app.post("/remove_customer_details",function(req,res){
+app.post("/remove_customer_details", function (req, res) {
     var acc_no = req.body.acc_no;
-    connection.query("DELETE FROM cust_phone WHERE acc_no = ?",[acc_no],function(err){
-        if(err){
+    connection.query("DELETE FROM cust_phone WHERE acc_no = ?", [acc_no], function (err) {
+        if (err) {
             console.log(err);
         }
-        else{
+        else {
             console.log("Deleted from cust_phone");
-            connection.query("DELETE FROM cust_account WHERE acc_no = ?",[acc_no],function(err){
-                if(err){
+            connection.query("DELETE FROM cust_account WHERE acc_no = ?", [acc_no], function (err) {
+                if (err) {
                     console.log(err);
                 }
-                else{
+                else {
                     console.log("Deleted from cust_account");
                     res.redirect("/customer_management");
 
@@ -476,7 +481,6 @@ app.get("/profile", function (req, res) {
 app.post("/view_profile", function (req, res) {
     var acc_no = parseInt(req.body.acc_no);
     var query = "select * from cust_info where acc_no=" + acc_no;
-
     connection.query(query, function (err, rows, fields) {
         if (err) {
             console.log(err);
@@ -493,26 +497,34 @@ app.post("/view_profile", function (req, res) {
                 phone_no2 = rows[1].phone_no;
             else
                 phone_no2 = "Not Available";
-
-            connection.query("select * from transaction where acc_no = ? order by time_stamp desc limit 5", [acc_no], function (err, rows, fields) {
-                if (err) {
+            connection.query("select * from acc_limit_int where acc_type=?",[row.acc_type],function(err,r,fields){
+                if(err){
                     console.log(err);
-
                 }
-                else {
-                    res.render("cust_profile", {
-                        ifsc_code: ifsc_code,
-                        br_name: br_name,
-                        phone_no1: phone_no1,
-                        phone_no2: phone_no2,
-                        photo: row.photo.toString("base64"),
-                        row: row,
-                        rows: rows,
-                        length: rows.length
-                    });
-
+                else{
+                    connection.query("select * from transaction where acc_no = ? order by time_stamp desc limit 5", [acc_no], function (err, rows, fields) {
+                        if (err) {
+                            console.log(err);
+                            
+                        }
+                        else {
+                            res.render("cust_profile", {
+                                ifsc_code: ifsc_code,
+                                br_name: br_name,
+                                phone_no1: phone_no1,
+                                phone_no2: phone_no2,
+                                photo: row.photo.toString("base64"),
+                                row: row,
+                                rows: rows,
+                                length: rows.length,
+                                r : r[0]
+                            });
+        
+                        }
+                    })
                 }
-            })
+            });
+            
 
 
         }
@@ -526,7 +538,7 @@ app.post("/view_profile", function (req, res) {
 /************************ Employee Managenment Starts ********************************************************/
 app.get("/emp_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name });
+        res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined });
     }
 });
 
@@ -742,6 +754,154 @@ app.post("/emp_profile", function (req, res) {
         }
     });
 });
+/******************************Update Employee Starts */
+app.post("/update_employee", function (req, res) {
+    var emp_id = parseInt(req.body.emp_id);
+
+    connection.query("select * from emp_info where emp_id = ?", [emp_id], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else if (rows.length === 0) {
+            console.log("Employee Not Found!!");
+        }
+        else {
+            row = rows[0];
+            var phone_no1 = row.phone_no, phone_no2;
+            if (rows.length == 2) {
+                phone_no2 = rows[1].phone_no;
+            }
+            else {
+                phone_no2 = "Not Available";
+            }
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined });
+        }
+    });
+});
+
+
+app.post("/update_employee_details", function (req, res) {
+    var name = req.body.name;
+    var address = req.body.address;
+    var city = req.body.city;
+    var state = req.body.state;
+    var zip = req.body.zip;
+    var email = req.body.email;
+    var pno = parseInt(req.body.pcon);
+    var sno = parseInt(req.body.scon);
+    var dob = req.body.dob;
+    var aadhaar_no = req.body.aadhaar_no;
+    var pan_no = req.body.pan;
+    var emp_id = parseInt(req.body.emp_id);
+    var designation = req.body.designation;
+    var salary = parseInt(req.body.salary);
+    console.log(req.body);
+    var query = "update employee set name=?, address=?, city=?, state=?, zip=?, email=?, dob=?,aadhaar_no = ?,pan_no=?, designation=?,salary=? where emp_id = ?";
+    connection.query(query, [name, address, city, state, zip, email, dob, aadhaar_no, pan_no, designation, salary, emp_id], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("Successful!");
+            connection.query("select * from emp_phone where emp_id = ?", [emp_id], function (err, rows, fields) {
+                var oldphone1 = rows[0].phone_no;
+
+                if (rows.length === 1) {
+                    if (!Number.isNaN(sno)) {
+                        connection.query("insert into emp_phone values(?,?)", [emp_id, sno], function (err, rows, fields) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                console.log("Successfully Added Secondary No.");
+                            }
+                        });
+                    }
+                    connection.query("update emp_phone set phone_no = ? where emp_id = ? and phone_no = ?", [pno, emp_id, oldphone1], function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Updated Primary ");
+                        }
+                    });
+                }
+                else {
+                    var oldphone2 = rows[1].phone_no;
+                    connection.query("update emp_phone set phone_no = ? where emp_id = ? and phone_no = ?", [pno, emp_id, oldphone1], function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Updated Primary ");
+                        }
+                    });
+                    connection.query("update emp_phone set phone_no = ? where emp_id = ? and phone_no = ?", [sno, emp_id, oldphone2], function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Updated Secondary ");
+                        }
+                    });
+                }
+            });
+            res.redirect("/emp_management");
+        }
+    });
+
+});
+
+
+/*****************************Update Employee Ends*******************************/
+/*****************************Remove Employee Starts*****************************/
+
+app.post("/remove_employee", function (req, res) {
+    var emp_id = parseInt(req.body.emp_id);
+
+    connection.query("select * from emp_info where emp_id = ?", [emp_id], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else if (rows.length === 0) {
+            console.log("Employee Not Found!!");
+        }
+        else {
+            row = rows[0];
+            var phone_no1 = row.phone_no, phone_no2;
+            if (rows.length == 2) {
+                phone_no2 = rows[1].phone_no;
+            }
+            else {
+                phone_no2 = "Not Available";
+            }
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: row });
+        }
+    });
+});
+app.post("/remove_employee_details", function (req, res) {
+    var emp_id = req.body.emp_id;
+    connection.query("DELETE FROM emp_phone WHERE emp_id = ?", [emp_id], function (err) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("Deleted from emp_phone");
+            connection.query("DELETE FROM employee WHERE emp_id = ?", [emp_id], function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Deleted from employee");
+                    res.redirect("/emp_management");
+
+                }
+            });
+        }
+    });
+});
+
+/*****************************Remove Employee Ends*****************************/
 
 /************************ Employee Managenment Ends *******************************/
 

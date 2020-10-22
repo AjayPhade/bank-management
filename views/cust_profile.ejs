@@ -148,7 +148,7 @@
                             <h5>Minimum Balance : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=row.acc_no%></h5>
+                            <h5 class="profile-text"><%=r.min_bal%></h5>
                         </td>
                     </tr>
                     <tr class="profile-section">
@@ -156,7 +156,7 @@
                             <h5>Interest Rate : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=row.name%></h5>
+                            <h5 class="profile-text"><%=row.int_rate%></h5>
                         </td>
                     </tr>
                 </table>
@@ -165,7 +165,11 @@
         <div class="row">
             <div class="balance-box">
                 <h5 class="bal-text">Balance</h5>
+                    <%if(row.balance < r.min_bal){%>
+                        <h3 style="color: red;"> ₹ <%=row.balance%></h3>
+                        <%}else{%>
                 <h3> ₹ <%=row.balance%></h3>
+                <%}%>
             </div>
         </div>
         <div class="accinfo_heading">
