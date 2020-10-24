@@ -5,11 +5,11 @@
   <div class="col-2 sidebar trans_sidebar">
     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#v-pills-settings" role="tab"
-        aria-controls="v-pills-settings" aria-selected="false">Withdraw</a>
+        aria-controls="v-pills-settings" aria-selected="false">Sanction Loan</a>
       <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#v-pills-home" role="tab"
-        aria-controls="v-pills-home" aria-selected="true">Deposit</a>
+        aria-controls="v-pills-home" aria-selected="true">Repayment</a>
       <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#view_trans" role="tab"
-        aria-controls="v-pills-profile" aria-selected="false">View</a>
+        aria-controls="v-pills-profile" aria-selected="false">View History</a>
 
     </div>
   </div>
@@ -21,11 +21,11 @@
     
     <!-- Add Customer Start -->
     <div class="remove-custdiv sanction">
-      <h2 class="create-heading debit-heading">Withdraw</h2>
+      <h2 class="create-heading debit-heading">Sanction Loan</h2>
       <br />
-      <form class="create-cust" method="POST" action="/withdraw">
-
-        <div class="form-group debit_fields">
+      <form class="create-cust" method="POST" action="/sanction">
+        
+        <div class="form-group debit_fields ">
           <label for="inputAddress">Account No</label>
           <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
         </div>
@@ -33,7 +33,29 @@
           <label for="inputAddress">Amount(₹)</label>
           <input type="text" class="form-control" id="inputAddress" name="amount" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Withdraw
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Loan Type</label>
+          <select class="form-control" name="loan_type">
+            <option value="Personal">Personal</option>
+            <option value="Gold">Gold</option>
+            <option value="Educational">Educational</option>
+            <option value="Housing">Housing</option>
+
+          </select>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Mortgage</label>
+          <input type="text" class="form-control" id="inputAddress" name="mortgage" required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Interest Rate</label>
+          <input type="text" class="form-control" id="inputAddress" name="int_rate" required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Tenure (in years)</label>
+          <input type="number" class="form-control" id="inputAddress" name="tenure" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Sanction
         </button>
       </form>
 
@@ -41,19 +63,19 @@
 
     <!-- Deposit -->
     <div class="add-custdiv deposit-div">
-      <h2 class="create-heading debit-heading">Deposit</h2>
+      <h2 class="create-heading debit-heading">Repayment</h2>
       <br />
-      <form class="create-cust" method="POST" action="/deposit">
+      <form class="create-cust" method="POST" action="/repayment">
 
         <div class="form-group debit_fields">
           <label for="inputAddress">Account No</label>
           <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
         </div>
         <div class="form-group debit_fields">
-          <label for="inputAddress">Amount(₹)</label>
+          <label for="inputAddress">Principal Amount(₹)</label>
           <input type="text" class="form-control" id="inputAddress" name="amount" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Deposit </button>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Repay </button>
       </form>
     </div>
     <!-- Add Customer End -->
@@ -83,38 +105,7 @@
         </form>
 
     </div>
-    <%if(class_name !== undefined || rows !== undefined){ %>
-      <div class="<%=class_name%> table_trans">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Transaction No</th>
-              <th scope="col">Account No</th>
-              <th scope="col">Transaction Type</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Time Stamp</th>
-              <th scope="col">Counter No</th>
-            </tr>
-          </thead>
-        <tbody>
-          <%for(var i=0;i < length ; i++){%>
-            <tr>
-              <th scope="row"><%=i+1%></th>
-              <td><%=rows[i].trans_no%></td>
-              <td><%=rows[i].acc_no%></td>
-              <td><%=rows[i].trans_type%></td>
-              <td><%=rows[i].amount%></td>
-              <td><%=rows[i].time_stamp%></td>
-              <td><%=rows[i].counter_no%></td>
-            </tr>
-            <%}%>
-        </tbody>
-        
-      </table>
-  
-    </div>
-    <%}%>
+    
   </div>
 
   <!-- View Customer End -->

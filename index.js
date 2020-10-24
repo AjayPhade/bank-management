@@ -7,6 +7,7 @@ const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
 var move = require('fs-extra');
+const { resolveSoa } = require("dns");
 //ID of logged in employee
 var emp_id, name;
 var ifsc_code;
@@ -51,6 +52,9 @@ function loggedIn(res) {
 
     return 1;
 }
+
+
+
 
 //Routing Starts
 app.get("/", function (req, res) {
@@ -1039,6 +1043,75 @@ app.post("/all_trans", function (req, res) {
 
 /************************ Transaction Managenment Ends *******************************/
 
+
+/**************************Loan Management Starts*************************************/
+
+app.get("/loan_management",function(req,res){
+    if(loggedIn(res)){
+        res.render("loan_mg",{ ifsc_code: ifsc_code, br_name: br_name});
+    }
+
+});
+
+app.post("/sanction",function(req,res){
+    var acc_no = parseInt(req.body.acc_no);
+    var amount = parseInt(req.body.amount);
+    var loan_type = req.body.loan_type;
+    var mortgage = req.body.mortgage;
+    var int_rate = parseFloat(req.body.int_rate);
+    var tenure = parseInt(req.body.tenure);
+    connection.query("select * from cust_account where acc_no=?",[acc_no],function(err,row){
+        if(err){
+            console.log(err);
+        }
+        else{
+            if(row.length>0){
+                var query = "select * from loan where acc_no=?";
+                connection.query(query,[acc_no],function(err,rows){
+                    if(rows.length ===0){
+                        var query1 = "insert into loan (loan_type,amount,mortgage,int_rate,tenure,acc_no) values(?,?,?,?,?,?)";
+                        connection.query(query1,[loan_type,amount,mortgage,int_rate,tenure,acc_no],function(err,rows){
+                            if(err){
+                                console.log(err);
+                            }
+                            else{
+                                console.log("Inserted Successfully!");
+                                var query2 = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no) values(?,?,?,?,?)";
+                                connection.query(query2,["sanctioned",amount,0,amount,acc_no],function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                    else{
+                                        console.log("Loan Sanctioned");
+                                        var query3 = "update cust_account set balance = balance+? where acc_no=?";
+                                        connection.query(query3,[amount,acc_no],function(err){
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                res.redirect("/loan_management");
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else{
+                        console.log("Loan Already Exists.");
+                    }
+                })
+            }
+            else{
+                console.log("Account No doesn't Exists");
+            }
+            
+        }
+    });
+    
+});
+
+/**************************Loan Management Ends****************************************/
 
 
 app.listen(3000, function () {

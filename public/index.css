@@ -298,7 +298,7 @@ td {
 }
 
 .debit_fields {
-  width: 35%;
+  width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -311,9 +311,6 @@ td {
   margin-bottom: 30px;
 }
 
-.deposit-div {
-  padding: 0;
-}
 
 .view_trans{
   text-align: center;
@@ -341,3 +338,9 @@ td {
 }
 /******************************* Transaction Ends *************************************/
 
+/************************Loan Starts*************************/
+.sanction{
+  padding-left: 15%;
+  padding-right: 15%;
+}
+/************************Loan Ends****************************/
