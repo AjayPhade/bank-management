@@ -22,10 +22,10 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("first_name")[0].focus();
       previous = element;
-      if(update !==undefined){
+      if (update !== undefined) {
         update.style.display = "none";
       }
-      if(remove !==undefined){
+      if (remove !== undefined) {
         remove.style.display = "none";
       }
       break;
@@ -42,10 +42,10 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("acc_no")[0].focus();
       previous = element;
-      if(update !==undefined){
+      if (update !== undefined) {
         update.style.display = "none";
       }
-      if(remove !==undefined){
+      if (remove !== undefined) {
         remove.style.display = "none";
       }
       break;
@@ -61,7 +61,7 @@ function select(event) {
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
       previous = element;
-      if(remove !==undefined){
+      if (remove !== undefined) {
         remove.style.display = "none";
       }
       break;
@@ -77,7 +77,7 @@ function select(event) {
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
       previous = element;
-      if(update !==undefined){
+      if (update !== undefined) {
         update.style.display = "none";
       }
       break;
@@ -117,20 +117,20 @@ function showFileName(event) {
 
 //////Update Customer/////////////
 
-if(update !==undefined){
+if (update !== undefined) {
   document.getElementsByClassName("update")[0].click();
   update.style.display = "inherit";
 
-  Array.from(document.getElementsByClassName("form-control")).forEach(function(element){
-    element.addEventListener("dblclick",()=>{
+  Array.from(document.getElementsByClassName("form-control")).forEach(function (element) {
+    element.addEventListener("dblclick", () => {
       element.removeAttribute("readonly");
     });
   });
-  
+
 }
 
-if(remove !==undefined){
+if (remove !== undefined) {
   document.getElementsByClassName("remove")[0].click();
   remove.style.display = "inherit";
-  
+
 }
