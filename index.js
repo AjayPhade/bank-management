@@ -6,8 +6,9 @@ const multer = require("multer");
 const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
-var move = require('fs-extra');
-const { resolveSoa } = require("dns");
+const move = require('fs-extra');
+//const { check, validationResult } = require('express-validator');
+
 //ID of logged in employee
 var emp_id, name;
 var ifsc_code;
@@ -16,6 +17,7 @@ var cust_id;
 var logged_in = false;
 var designation;
 var counter_no;
+
 //Configure View Engine
 app.set('view engine', 'ejs');
 
@@ -40,7 +42,7 @@ connection.connect(function (error) {
 
 //Used to access static files from public folder
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // To check whether employee has logged in or not
 function loggedIn(res) {
@@ -53,13 +55,10 @@ function loggedIn(res) {
     return 1;
 }
 
-
-
-
 //Routing Starts
 app.get("/", function (req, res) {
     logged_in = false;
-    res.render("index.html");
+    res.render("login", { error: undefined });
 });
 
 app.get("/dashboard", function (req, res) {
@@ -99,8 +98,8 @@ app.get("/logout", function (req, res) {
 });
 
 /*************************** Login Starts ***************************/
-app.post("/dashboard", function (req, res) {
-    emp_id = req.body.login_id;
+app.post("/", function (req, res) {
+    emp_id = req.body.emp_id;
     var password = md5(req.body.password);
     var query = "select password, ifsc_code, name, designation from employee where emp_id = " + emp_id;
 
@@ -112,7 +111,7 @@ app.post("/dashboard", function (req, res) {
             if (rows.length === 0) {
                 console.log("Employee Id not found!!");
                 logged_in = false;
-                res.redirect("/");
+                res.render("login", { error: "Employee ID Not Found" });
             }
             else if (rows[0].password === password) {
                 logged_in = true;
@@ -134,7 +133,7 @@ app.post("/dashboard", function (req, res) {
             else {
                 console.log("Wrong Password");
                 logged_in = false;
-                res.redirect("/");
+                res.render("login", { error: "Wrong Password" });
             }
         }
     });
@@ -147,7 +146,7 @@ app.post("/dashboard", function (req, res) {
 var extension1, extension2;
 
 const storage1 = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
     filename: function (req, file, cb) {
         /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
@@ -229,7 +228,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
 
     //to retrive int_rate
@@ -240,7 +239,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
         else {
             interest = row[0].int_rate
             var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo, int_rate) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + photo + ",?)";
-            var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar,interest];
+            var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, interest];
 
             console.log(list);
 
@@ -276,7 +275,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                     });
 
                     var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
-                    move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
+                    move.move('D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -467,12 +466,12 @@ app.get("/profile", function (req, res) {
                 // console.log(typeof(row.dob), row.dob);
 
                 res.render("emp_profile", {
-                    ifsc_code: ifsc_code,
-                    br_name: br_name,
-                    phone_no1: phone_no1,
-                    phone_no2: phone_no2,
+                    ifsc_code,
+                    br_name,
+                    phone_no1,
+                    phone_no2,
                     photo: row.photo.toString("base64"),
-                    row: row
+                    row
                 });
             }
         });
@@ -501,15 +500,15 @@ app.post("/view_profile", function (req, res) {
                 phone_no2 = rows[1].phone_no;
             else
                 phone_no2 = "Not Available";
-            connection.query("select * from acc_limit_int where acc_type=?",[row.acc_type],function(err,r,fields){
-                if(err){
+            connection.query("select * from acc_limit_int where acc_type=?", [row.acc_type], function (err, r, fields) {
+                if (err) {
                     console.log(err);
                 }
-                else{
+                else {
                     connection.query("select * from transaction where acc_no = ? order by time_stamp desc limit 5", [acc_no], function (err, rows, fields) {
                         if (err) {
                             console.log(err);
-                            
+
                         }
                         else {
                             res.render("cust_profile", {
@@ -521,14 +520,14 @@ app.post("/view_profile", function (req, res) {
                                 row: row,
                                 rows: rows,
                                 length: rows.length,
-                                r : r[0]
+                                r: r[0]
                             });
-        
+
                         }
                     })
                 }
             });
-            
+
 
 
         }
@@ -548,7 +547,7 @@ app.get("/emp_management", function (req, res) {
 
 /**********************************Configure storage for employee************************************************* */
 const storage2 = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
     filename: function (req, file, cb) {
 
         connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
@@ -607,7 +606,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
     var aadhaar = 'aadhaar' + extension2;
 
     //Derived Attributes
@@ -641,8 +640,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
 
             /////To rename uploaded files
-            var oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
-            var newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
+            var oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
+            var newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -653,8 +652,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 }
             });
 
-            oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
-            newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
+            oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
+            newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -1046,49 +1045,49 @@ app.post("/all_trans", function (req, res) {
 
 /**************************Loan Management Starts*************************************/
 
-app.get("/loan_management",function(req,res){
-    if(loggedIn(res)){
-        res.render("loan_mg",{ ifsc_code: ifsc_code, br_name: br_name});
+app.get("/loan_management", function (req, res) {
+    if (loggedIn(res)) {
+        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name });
     }
 
 });
 
-app.post("/sanction",function(req,res){
+app.post("/sanction", function (req, res) {
     var acc_no = parseInt(req.body.acc_no);
     var amount = parseInt(req.body.amount);
     var loan_type = req.body.loan_type;
     var mortgage = req.body.mortgage;
     var int_rate = parseFloat(req.body.int_rate);
     var tenure = parseInt(req.body.tenure);
-    connection.query("select * from cust_account where acc_no=?",[acc_no],function(err,row){
-        if(err){
+    connection.query("select * from cust_account where acc_no=?", [acc_no], function (err, row) {
+        if (err) {
             console.log(err);
         }
-        else{
-            if(row.length>0){
+        else {
+            if (row.length > 0) {
                 var query = "select * from loan where acc_no=?";
-                connection.query(query,[acc_no],function(err,rows){
-                    if(rows.length ===0){
+                connection.query(query, [acc_no], function (err, rows) {
+                    if (rows.length === 0) {
                         var query1 = "insert into loan (loan_type,amount,mortgage,int_rate,tenure,acc_no) values(?,?,?,?,?,?)";
-                        connection.query(query1,[loan_type,amount,mortgage,int_rate,tenure,acc_no],function(err,rows){
-                            if(err){
+                        connection.query(query1, [loan_type, amount, mortgage, int_rate, tenure, acc_no], function (err, rows) {
+                            if (err) {
                                 console.log(err);
                             }
-                            else{
+                            else {
                                 console.log("Inserted Successfully!");
                                 var query2 = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no) values(?,?,?,?,?)";
-                                connection.query(query2,["sanctioned",amount,0,amount,acc_no],function(err){
-                                    if(err){
+                                connection.query(query2, ["sanctioned", amount, 0, amount, acc_no], function (err) {
+                                    if (err) {
                                         console.log(err);
                                     }
-                                    else{
+                                    else {
                                         console.log("Loan Sanctioned");
                                         var query3 = "update cust_account set balance = balance+? where acc_no=?";
-                                        connection.query(query3,[amount,acc_no],function(err){
-                                            if(err){
+                                        connection.query(query3, [amount, acc_no], function (err) {
+                                            if (err) {
                                                 console.log(err);
                                             }
-                                            else{
+                                            else {
                                                 res.redirect("/loan_management");
                                             }
                                         });
@@ -1097,18 +1096,18 @@ app.post("/sanction",function(req,res){
                             }
                         });
                     }
-                    else{
+                    else {
                         console.log("Loan Already Exists.");
                     }
                 })
             }
-            else{
+            else {
                 console.log("Account No doesn't Exists");
             }
-            
+
         }
     });
-    
+
 });
 
 /**************************Loan Management Ends****************************************/

@@ -153,7 +153,6 @@ h6 {
   background-color: #cf1b1b;
 }
 
-
 /******************************** Customer Add Starts ********************************/
 .add-custdiv {
   padding-left: 15%;
@@ -182,12 +181,12 @@ h6 {
 }
 /******************************** Customer Add Ends ********************************/
 /***************************************Customer Update Starts*******************************************/
-.update-custdiv{
+.update-custdiv {
   padding-left: 25%;
   padding-right: 25%;
   display: none;
 }
-.update-cust{
+.update-cust {
   padding-left: 15%;
   padding-right: 15%;
   display: none;
@@ -197,19 +196,18 @@ h6 {
 
 /**********************************Customer Remove Starts *******************************/
 
-.remove-custdiv{
+.remove-custdiv {
   padding-left: 25%;
   padding-right: 25%;
   display: none;
 }
-.remove-cust{
+.remove-cust {
   padding-left: 15%;
   padding-right: 15%;
   display: none;
 }
 /******************************** Customer Remove Ends ********************************/
 /******************************** Customer Management Ends ********************************/
-
 
 /******************************* Emp Profile Starts *************************************/
 .profile-col1 {
@@ -283,7 +281,7 @@ td {
 .bal-text {
   padding-top: 5%;
 }
-.view-doc-btn{
+.view-doc-btn {
   text-align: center;
   margin: auto;
   padding-top: 10%;
@@ -311,35 +309,32 @@ td {
   margin-bottom: 30px;
 }
 
-
-.view_trans{
+.view_trans {
   text-align: center;
-  margin-top:2%
+  margin-top: 2%;
 }
 
-.view_all_trans_btn{
+.view_all_trans_btn {
   margin-left: 70%;
   margin-top: 10%;
 }
 
-.or{
+.or {
   margin-top: 5%;
 }
 
-.table_trans{
+.table_trans {
   display: none;
   margin: 7%;
-
 }
 
-.table-bordered{
+.table-bordered {
   table-layout: auto;
-  
 }
 /******************************* Transaction Ends *************************************/
 
 /************************Loan Starts*************************/
-.sanction{
+.sanction {
   padding-left: 15%;
   padding-right: 15%;
 }
