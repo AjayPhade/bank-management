@@ -7,6 +7,7 @@ const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
 const move = require('fs-extra');
+const e = require("express");
 //const { check, validationResult } = require('express-validator');
 
 //ID of logged in employee
@@ -146,7 +147,7 @@ app.post("/", function (req, res) {
 var extension1, extension2;
 
 const storage1 = multer.diskStorage({
-    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
     filename: function (req, file, cb) {
         /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
@@ -228,7 +229,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
+    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
 
     //to retrive int_rate
@@ -274,8 +275,8 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                         }
                     });
 
-                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
-                    move.move('D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
+                    var newPath1 = "C:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
+                    move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -547,7 +548,7 @@ app.get("/emp_management", function (req, res) {
 
 /**********************************Configure storage for employee************************************************* */
 const storage2 = multer.diskStorage({
-    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
+    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
     filename: function (req, file, cb) {
 
         connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
@@ -606,7 +607,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
+    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
     var aadhaar = 'aadhaar' + extension2;
 
     //Derived Attributes
@@ -640,8 +641,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
 
             /////To rename uploaded files
-            var oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
-            var newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
+            var oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
+            var newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -652,8 +653,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 }
             });
 
-            oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
-            newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
+            oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
+            newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -662,7 +663,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 else {
                     console.log("Renamed Aadhaar");
 
-                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + emp_id + '-aadhaar' + extension2;
+                    var newPath1 = "C:/Web Development/College Project/DBE-Bank/public/pdfs/" + emp_id + '-aadhaar' + extension2;
                     move.move(newPath, newPath1, function (err) {
                         if (err) {
                             console.log(err);
@@ -1047,14 +1048,14 @@ app.post("/all_trans", function (req, res) {
 
 app.get("/loan_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name });
+        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf',rows:undefined,class_name:undefined });
     }
 
 });
 
 app.post("/sanction", function (req, res) {
     var acc_no = parseInt(req.body.acc_no);
-    var amount = parseInt(req.body.amount);
+    var amount = parseFloat(req.body.amount);
     var loan_type = req.body.loan_type;
     var mortgage = req.body.mortgage;
     var int_rate = parseFloat(req.body.int_rate);
@@ -1068,15 +1069,15 @@ app.post("/sanction", function (req, res) {
                 var query = "select * from loan where acc_no=?";
                 connection.query(query, [acc_no], function (err, rows) {
                     if (rows.length === 0) {
-                        var query1 = "insert into loan (loan_type,amount,mortgage,int_rate,tenure,acc_no) values(?,?,?,?,?,?)";
-                        connection.query(query1, [loan_type, amount, mortgage, int_rate, tenure, acc_no], function (err, rows) {
+                        var query1 = "insert into loan (loan_type,amount,mortgage,int_rate,tenure,acc_no,rem_amt) values(?,?,?,?,?,?,?)";
+                        connection.query(query1, [loan_type, amount, mortgage, int_rate, tenure, acc_no, amount], function (err, rows) {
                             if (err) {
                                 console.log(err);
                             }
                             else {
                                 console.log("Inserted Successfully!");
-                                var query2 = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no) values(?,?,?,?,?)";
-                                connection.query(query2, ["sanctioned", amount, 0, amount, acc_no], function (err) {
+                                var query2 = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no,rem_amt) values(?,?,?,?,?,?)";
+                                connection.query(query2, ["sanctioned", amount, 0, amount, acc_no, amount], function (err) {
                                     if (err) {
                                         console.log(err);
                                     }
@@ -1110,6 +1111,143 @@ app.post("/sanction", function (req, res) {
 
 });
 
+app.post("/repayment", function (req, res) {
+    var acc_no = parseInt(req.body.acc_no);
+    var amount = parseFloat(req.body.amount);
+
+    connection.query("select * from loan where acc_no=?", [acc_no], function (err, rows) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (rows.length === 0) {
+                console.log("This account doesn't have any loan");
+            }
+            else if(rows[0].rem_amt<amount){
+                console.log("You are paying higher than remaining loan.");
+            }
+            else {
+                var int_rate = rows[0].int_rate;
+                var rem_amt = rows[0].rem_amt;
+                var total_amt;
+                connection.query("select DATEDIFF(CURDATE(),time_stamp) as days from loan_trans where acc_no=? order by time_stamp desc limit 1 ", [acc_no], function (err, row) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        var int_amt = ((rem_amt * int_rate) / 36500) * row[0].days;
+                        int_amt = parseFloat(int_amt.toFixed(2));
+                        total_amt = amount + int_amt;
+                        var rem_amt2 = rem_amt - amount;
+                        console.log(rem_amt, int_rate, row[0].days, typeof (total_amt));
+                        row = {
+                            int_amt, total_amt, amount, acc_no, rem_amt2
+                        }
+                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, cls: "confirm",rows:undefined, class_name:undefined });
+                    }
+
+                });
+            }
+        }
+    });
+});
+
+app.post("/repayment_confirmed", function (req, res) {
+    var acc_no = parseInt(req.body.acc_no);
+    var amount = parseFloat(req.body.amount);
+    var int_amt = parseFloat(req.body.int_amt);
+    var total_amt = parseFloat(req.body.total_amt);
+    var rem_amt2 = parseFloat(req.body.rem_amt2);
+    connection.query("select balance from cust_account where acc_no=?", [acc_no], function (err, row) {
+        if (err) {
+            console.log(err);
+        }
+        else if(row[0].balance>=total_amt){
+
+            var query = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no,rem_amt) values ('Repayment',?,?,?,?,?)";
+
+            connection.query(query, [amount, int_amt, total_amt, acc_no, rem_amt2], function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Added into loan_trans");
+                    connection.query("update loan set rem_amt=? where acc_no=?", [rem_amt2, acc_no], function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Updated in loan");
+                            connection.query("update cust_account set balance = balance-? where acc_no=?",[total_amt,acc_no],function(err){
+                                if(err){
+                                    console.log(err);
+                                }
+                                else{
+                                    console.log("Balance Updated!!");
+                                    if(rem_amt2===0.0){
+                                        connection.query("delete from loan where acc_no=?",[acc_no],function(err){
+                                           if(err){console.log(err);}
+                                           else{
+                                               console.log("Deleted");
+                                           }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+        }
+        else{
+            console.log("Insufficient Balance!");
+        }
+    });
+});
+
+//////////////View Loan Trans Starts
+app.post("/particular_loan_trans",function(req,res){
+    var acc_no = parseInt(req.body.acc_no);
+    connection.query("select * from loan_trans where acc_no=? order by time_stamp desc",[acc_no],function(err,rows){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: "cdf",rows:rows,class_name:"trans_table"});
+        }
+    });
+});
+app.post("/all_loan_trans",function(req,res){
+    connection.query("select * from loan_trans order by time_stamp desc",function(err,rows){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: "cdf",rows:rows,class_name:"trans_table"});
+        }
+    });
+});
+app.post("/sanctioned_loan_trans",function(req,res){
+    connection.query("select * from loan_trans where type='sanctioned' order by time_stamp desc",function(err,rows){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: "cdf",rows:rows,class_name:"trans_table"});
+        }
+    });
+});
+app.post("/repayment_loan_trans",function(req,res){
+    connection.query("select * from loan_trans where type='repayment' order by time_stamp desc",function(err,rows){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: "cdf",rows:rows,class_name:"trans_table"});
+        }
+    });
+});
+///////////////View Loan Trans Ends
 /**************************Loan Management Ends****************************************/
 
 

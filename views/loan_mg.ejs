@@ -62,9 +62,10 @@
     </div>
 
     <!-- Deposit -->
-    <div class="add-custdiv deposit-div">
+    <div class="add-custdiv deposit-div <%=cls%>">
       <h2 class="create-heading debit-heading">Repayment</h2>
       <br />
+      <%if(row === undefined){%>
       <form class="create-cust" method="POST" action="/repayment">
 
         <div class="form-group debit_fields">
@@ -77,17 +78,44 @@
         </div>
         <button type="submit" class="btn btn-primary btn-cust debit-btn"> Repay </button>
       </form>
+      <%}else{%>
+        <form class="create-cust" method="POST" action="/repayment_confirmed" >
+
+          <div class="form-group debit_fields">
+            <label for="inputAddress">Account No</label>
+            <input type="text" class="form-control" id="inputAddress" name="acc_no" value="<%=row.acc_no%>" readonly required>
+          </div>
+          <div class="form-group debit_fields">
+            <label for="inputAddress">Principal Amount(₹)</label>
+            <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly required>
+          </div>
+          <div class="form-group debit_fields">
+            <label for="inputAddress">Interest Payable(₹)</label>
+            <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly required>
+          </div>
+         
+          <div class="form-group debit_fields">
+            <label for="inputAddress">Total Amount Payable(₹)</label>
+            <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly required>
+          </div>
+          <div class="form-group debit_fields">
+            <label for="inputAddress">Remaining Principal Amount(₹)</label>
+            <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-cust debit-btn"> Confirm Repayment </button>
+        </form>
+        <%}%>
     </div>
     <!-- Add Customer End -->
 
     <!-- View Customer Start -->
     <div class="view-custdiv view_trans" id="view-data">
-        <form method="POST" action="/particular_trans">
+        <form method="POST" action="/particular_loan_trans" >
           <div class="form-row">
             <div class="form-group col-md-10">
 
-              <input type="text" name="trans_no" id="view_by_trans_no" class="form-control"
-                placeholder="Enter Transaction Number">
+              <input type="text" name="acc_no" id="view_by_trans_no" class="form-control"
+                placeholder="Enter Account No">
             </div>
             <div class="form-group col-md-2">
               <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
@@ -95,17 +123,71 @@
           </div>
         </form>
         <h5 class="or">OR</h5>
-        <form action="/all_trans" method="POST">
+        <form action="/all_loan_trans" method="POST" >
           <div class="form-row">
             <div class="form-group col-md-5">
-              <button type="submit" class="btn btn-primary form-control view_all_trans_btn"> View All Transactions <i
+              <button type="submit" class="btn btn-primary form-control view_all_trans_btn"> All Loan Transactions <i
                   class="fas fa-search"></i></button>
             </div>
+            
+          </div>
+        </form>
+        <form action="/sanctioned_loan_trans" method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-5">
+              <button type="submit" class="btn btn-primary form-control view_all_trans_btn"> All Sanctioned Transactions <i
+                  class="fas fa-search"></i></button>
+            </div>
+            
+          </div>
+        </form>
+        <form action="/repayment_loan_trans" method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-5">
+              <button type="submit" class="btn btn-primary form-control view_all_trans_btn"> All Repayment Transactions <i
+                  class="fas fa-search"></i></button>
+            </div>
+            
           </div>
         </form>
 
     </div>
-    
+    <%if(class_name !== undefined || rows !== undefined){ %>
+      <div class="<%=class_name%> table_trans">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Loan Transaction No</th>
+              <th scope="col">Account No</th>
+              <th scope="col">Loan Type</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Time Stamp</th>
+              <th scope="col">Interest Amount</th>
+              <th scope="col">Total Amount</th>
+              <th scope="col">Remaining Loan</th>
+            </tr>
+          </thead>
+        <tbody>
+          <%for(var i=0;i < rows.length ; i++){%>
+            <tr>
+              <th scope="row"><%=i+1%></th>
+              <td><%=rows[i].loan_trans_id%></td>
+              <td><%=rows[i].acc_no%></td>
+              <td><%=rows[i].type%></td>
+              <td><%=rows[i].amount%></td>
+              <td><%=rows[i].time_stamp%></td>
+              <td><%=rows[i].int_amt%></td>
+              <td><%=rows[i].total_amt%></td>
+              <td><%=rows[i].rem_amt%></td>
+            </tr>
+            <%}%>
+        </tbody>
+        
+      </table>
+  
+    </div>
+    <%}%>
   </div>
 
   <!-- View Customer End -->
@@ -114,6 +196,6 @@
 
 <!-- Create Customer Form Ends -->
 
-<script src="transaction.js" charset="utf-8" type='text/javascript'></script>
+<script src="loan.js" charset="utf-8" type='text/javascript'></script>
 
 <%- include("footer") -%>
