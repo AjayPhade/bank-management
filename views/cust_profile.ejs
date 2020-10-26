@@ -165,9 +165,9 @@
         <div class="row">
             <div class="balance-box">
                 <h5 class="bal-text">Balance</h5>
-                    <%if(row.balance < r.min_bal){%>
-                        <h3 style="color: red;"> ₹ <%=row.balance%></h3>
-                        <%}else{%>
+                <%if(row.balance < r.min_bal){%>
+                <h3 style="color: red;"> ₹ <%=row.balance%></h3>
+                <%}else{%>
                 <h3> ₹ <%=row.balance%></h3>
                 <%}%>
             </div>
@@ -176,7 +176,7 @@
             <h4><em> Last 5 Transactions </em></h4>
         </div>
         <div>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-striped" id="trans_table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -190,16 +190,16 @@
                 </thead>
                 <tbody>
                     <%for(var i=0;i < length ; i++){%>
-                    <tr>
-                        <th scope="row"><%=i+1%></th>
-                        <td><%=rows[i].trans_no%></td>
-                        <td><%=rows[i].acc_no%></td>
-                        <td><%=rows[i].trans_type%></td>
-                        <td><%=rows[i].amount%></td>
-                        <td><%=rows[i].time_stamp%></td>
-                        <td><%=rows[i].counter_no%></td>
-                    </tr>
-                    <%}%>
+                <tr>
+                    <th scope="row"><%=i+1%></th>
+                    <td><%=rows[i].trans_no%></td>
+                    <td><%=rows[i].acc_no%></td>
+                    <td><%=rows[i].trans_type%></td>
+                    <td><%=rows[i].amount%></td>
+                    <td><%=rows[i].time_stamp%></td>
+                    <td><%=rows[i].counter_no%></td>
+                </tr>
+                <%}%>
             </tbody>
             
           </table>

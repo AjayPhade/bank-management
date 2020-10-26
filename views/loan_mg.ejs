@@ -18,13 +18,13 @@
   <!-- Create Customer Form Starts -->
 
   <div class="col-10 ">
-    
+
     <!-- Add Customer Start -->
     <div class="remove-custdiv sanction">
       <h2 class="create-heading debit-heading">Sanction Loan</h2>
       <br />
       <form class="create-cust" method="POST" action="/sanction">
-        
+
         <div class="form-group debit_fields ">
           <label for="inputAddress">Account No</label>
           <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
@@ -79,32 +79,37 @@
         <button type="submit" class="btn btn-primary btn-cust debit-btn"> Repay </button>
       </form>
       <%}else{%>
-        <form class="create-cust" method="POST" action="/repayment_confirmed" >
+      <form class="create-cust" method="POST" action="/repayment_confirmed">
 
-          <div class="form-group debit_fields">
-            <label for="inputAddress">Account No</label>
-            <input type="text" class="form-control" id="inputAddress" name="acc_no" value="<%=row.acc_no%>" readonly required>
-          </div>
-          <div class="form-group debit_fields">
-            <label for="inputAddress">Principal Amount(₹)</label>
-            <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly required>
-          </div>
-          <div class="form-group debit_fields">
-            <label for="inputAddress">Interest Payable(₹)</label>
-            <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly required>
-          </div>
-         
-          <div class="form-group debit_fields">
-            <label for="inputAddress">Total Amount Payable(₹)</label>
-            <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly required>
-          </div>
-          <div class="form-group debit_fields">
-            <label for="inputAddress">Remaining Principal Amount(₹)</label>
-            <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly required>
-          </div>
-          <button type="submit" class="btn btn-primary btn-cust debit-btn"> Confirm Repayment </button>
-        </form>
-        <%}%>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Account No</label>
+          <input type="text" class="form-control" id="inputAddress" name="acc_no" value="<%=row.acc_no%>" readonly
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Principal Amount(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Interest Payable(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly
+            required>
+        </div>
+
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Total Amount Payable(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Remaining Principal Amount(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly
+            required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Confirm Repayment </button>
+      </form>
+      <%}%>
     </div>
     <!-- Add Customer End -->
 
@@ -154,7 +159,7 @@
     </div>
     <%if(class_name !== undefined || rows !== undefined){ %>
       <div class="<%=class_name%> table_trans">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped" id="trans_table">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -168,8 +173,8 @@
               <th scope="col">Remaining Loan</th>
             </tr>
           </thead>
-        <tbody>
-          <%for(var i=0;i < rows.length ; i++){%>
+          <tbody>
+            <%for(var i=0;i < rows.length ; i++){%>
             <tr>
               <th scope="row"><%=i+1%></th>
               <td><%=rows[i].loan_trans_id%></td>
@@ -188,14 +193,14 @@
   
     </div>
     <%}%>
-  </div>
+      </div>
 
-  <!-- View Customer End -->
-</div>
+      <!-- View Customer End -->
+    </div>
 
 
-<!-- Create Customer Form Ends -->
+    <!-- Create Customer Form Ends -->
 
-<script src="loan.js" charset="utf-8" type='text/javascript'></script>
+    <script src="loan.js" charset="utf-8" type='text/javascript'></script>
 
-<%- include("footer") -%>
+    <%- include("footer") -%>
