@@ -66,10 +66,10 @@ app.get("/dashboard", function (req, res) {
     if (loggedIn(res)) {
         if (designation === "Manager") {
             counter_no = 0;
-            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "abc", cashier: "abc" });
+            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "Manager" });
         }
         else if (designation === "General Employee") {
-            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: " emp-management", cashier: "transaction" });
+            res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "General" });
         }
         else {
             connection.query("select counter_no from cash_counter where emp_id = ?", [emp_id], function (err, rows, fields) {
@@ -80,7 +80,7 @@ app.get("/dashboard", function (req, res) {
                     counter_no = rows[0].counter_no;
                     console.log("Query Successful");
 
-                    res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "emp-management", cashier: "abc" });
+                    res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "Cashier" });
                 }
             });
         }
@@ -148,7 +148,7 @@ app.post("/", function (req, res) {
 var extension1, extension2;
 
 const storage1 = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
     filename: function (req, file, cb) {
         /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
@@ -230,7 +230,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
 
     //to retrive int_rate
@@ -276,8 +276,8 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                         }
                     });
 
-                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
-                    move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
+                    var newPath1 = "E:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
+                    move.move('D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -297,8 +297,8 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 });
 
 /*************************** Add Customer Form Ends ***************************/
-/***************************Update Customer Starts ****************************/
 
+/***************************Update Customer Starts ****************************/
 
 app.post("/update_customer", function (req, res) {
     var acc_no = parseInt(req.body.acc_no);
@@ -395,8 +395,8 @@ app.post("/update_customer_details", function (req, res) {
 
 });
 
-
 /*****************************Update Customer Ends*******************************/
+
 /*****************************Remove Customer Starts*****************************/
 
 app.post("/remove_customer", function (req, res) {
@@ -410,18 +410,31 @@ app.post("/remove_customer", function (req, res) {
             console.log("Customer Not Found!!");
         }
         else {
-            row = rows[0];
-            var phone_no1 = row.phone_no, phone_no2;
-            if (rows.length == 2) {
-                phone_no2 = rows[1].phone_no;
-            }
-            else {
-                phone_no2 = "Not Available";
-            }
-            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: row });
+            connection.query("select * from loan where acc_no = ?", [acc_no], function (err, row) {
+                if (err) {
+                    console.log(err);
+                }
+                else if (row.length > 0) {
+                    console.log("Cannot delete account due to active loan");
+                }
+                else {
+                    row = rows[0];
+                    var phone_no1 = row.phone_no, phone_no2;
+
+                    if (rows.length == 2) {
+                        phone_no2 = rows[1].phone_no;
+                    }
+                    else {
+                        phone_no2 = "Not Available";
+                    }
+
+                    res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: row });
+                }
+            });
         }
     });
 });
+
 app.post("/remove_customer_details", function (req, res) {
     var acc_no = req.body.acc_no;
     connection.query("Update cust_account set status='INACTIVE' WHERE acc_no = ?", [acc_no], function (err) {
@@ -429,21 +442,21 @@ app.post("/remove_customer_details", function (req, res) {
             console.log(err);
         }
         else {
-            connection.query("select balance from cust_account where acc_no=?",[acc_no],function(err,row){
-                if(err){
+            connection.query("select balance from cust_account where acc_no=?", [acc_no], function (err, row) {
+                if (err) {
                     console.log(err);
                 }
-                else{
-                    connection.query("insert into transaction (trans_type,amount,acc_no) values(?,?,?)",['debit',row[0].balance,acc_no],function(err){
-                        if(err){
+                else {
+                    connection.query("insert into transaction (trans_type,amount,acc_no) values(?,?,?)", ['debit', row[0].balance, acc_no], function (err) {
+                        if (err) {
                             console.log(err);
                         }
-                        else{
-                            connection.query("update cust_account set balance=0 where acc_no=?",[acc_no],function(err){
-                                if(err){
+                        else {
+                            connection.query("update cust_account set balance=0 where acc_no=?", [acc_no], function (err) {
+                                if (err) {
                                     console.log(err);
                                 }
-                                else{
+                                else {
                                     console.log("Deleted from cust_account");
                                     res.redirect("/customer_management");
                                 }
@@ -452,7 +465,7 @@ app.post("/remove_customer_details", function (req, res) {
                     });
                 }
             })
-           
+
 
         }
     });
@@ -573,7 +586,7 @@ app.get("/emp_management", function (req, res) {
 
 /**********************************Configure storage for employee************************************************* */
 const storage2 = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
     filename: function (req, file, cb) {
 
         connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
@@ -632,7 +645,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
     var aadhaar = 'aadhaar' + extension2;
 
     //Derived Attributes
@@ -666,8 +679,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
 
             /////To rename uploaded files
-            var oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
-            var newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
+            var oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
+            var newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -678,8 +691,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 }
             });
 
-            oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
-            newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
+            oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
+            newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -688,7 +701,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 else {
                     console.log("Renamed Aadhaar");
 
-                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + emp_id + '-aadhaar' + extension2;
+                    var newPath1 = "E:/Web Development/College Project/DBE-Bank/public/pdfs/" + emp_id + '-aadhaar' + extension2;
                     move.move(newPath, newPath1, function (err) {
                         if (err) {
                             console.log(err);
@@ -1139,14 +1152,14 @@ app.post("/sanction", function (req, res) {
 app.post("/repayment", function (req, res) {
     var acc_no = parseInt(req.body.acc_no);
     var amount = parseFloat(req.body.amount);
-    connection.query("select * from cust_account where acc_no = ? and status='ACTIVE'",[acc_no],function(err,row){
-        if(err){
+    connection.query("select * from cust_account where acc_no = ? and status='ACTIVE'", [acc_no], function (err, row) {
+        if (err) {
             console.log(err);
         }
-        else if(row.length===0){
+        else if (row.length === 0) {
             console.log("Account Not Found!");
         }
-        else{
+        else {
             connection.query("select * from loan where acc_no=?", [acc_no], function (err, rows) {
                 if (err) {
                     console.log(err);
@@ -1177,14 +1190,14 @@ app.post("/repayment", function (req, res) {
                                 }
                                 res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, cls: "confirm", rows: undefined, class_name: undefined });
                             }
-        
+
                         });
                     }
                 }
             });
         }
     });
-  
+
 });
 
 app.post("/repayment_confirmed", function (req, res) {
@@ -1220,11 +1233,18 @@ app.post("/repayment_confirmed", function (req, res) {
                                 else {
                                     console.log("Balance Updated!!");
                                     if (rem_amt2 === 0.0) {
-                                        connection.query("delete from loan where acc_no=?", [acc_no], function (err) {
-                                            if (err) { console.log(err); }
+                                        connection.query("insert into loan_history select * from loan where acc_no = ?", [acc_no], function (err, rows) {
+                                            if (err) {
+                                                console.log(err);
+                                            }
                                             else {
-                                                console.log("Deleted");
-                                                res.redirect("/loan_management");
+                                                connection.query("delete from loan where acc_no=?", [acc_no], function (err) {
+                                                    if (err) { console.log(err); }
+                                                    else {
+                                                        console.log("Deleted");
+                                                        res.redirect("/loan_management");
+                                                    }
+                                                });
                                             }
                                         });
                                     }
