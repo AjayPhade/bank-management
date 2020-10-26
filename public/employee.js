@@ -43,7 +43,7 @@ function select(event) {
       element.style.transform = "scale(1.1)";
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
-      document.getElementsByName("acc_no")[0].focus();
+      document.getElementsByName("emp_id")[0].focus();
       previous = element;
       if(update !==undefined){
         update.style.display = "none";

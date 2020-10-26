@@ -55,7 +55,7 @@
           <label for="inputAddress">Tenure (in years)</label>
           <input type="number" class="form-control" id="inputAddress" name="tenure" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Sanction
+        <button type="submit" class="btn btn-primary btn-cust debit-btn">  Sanction <i class="fas fa-receipt"></i></i>
         </button>
       </form>
 
@@ -63,7 +63,7 @@
 
     <!-- Deposit -->
     <div class="add-custdiv deposit-div <%=cls%>">
-      <h2 class="create-heading debit-heading">Repayment</h2>
+      <h2 class="create-heading debit-heading">Repayment </h2>
       <br />
       <%if(row === undefined){%>
       <form class="create-cust" method="POST" action="/repayment">
@@ -76,7 +76,7 @@
           <label for="inputAddress">Principal Amount(₹)</label>
           <input type="text" class="form-control" id="inputAddress" name="amount" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Repay </button>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Repay <i class="fas fa-donate"></i> </button>
       </form>
       <%}else{%>
       <form class="create-cust" method="POST" action="/repayment_confirmed">
@@ -107,7 +107,7 @@
           <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly
             required>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Confirm Repayment </button>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> <i class="fas fa-check-circle"></i> Confirm Repayment </button>
       </form>
       <%}%>
     </div>
