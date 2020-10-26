@@ -128,7 +128,13 @@
                             <h5>Account No : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=row.acc_no%></h5>
+                            <h5 class="profile-text"><%=row.acc_no%>
+                                <%if(row.status==='INACTIVE'){%>
+                                <span style="color: red;">(<%=row.status%>)</span>
+                                <%}else{%>
+                                <span style="color: green;">(<%=row.status%>)</span>
+                                <%}%>
+                                </h5>
                         </td>
                     </tr>
                     <tr class="profile-section">
@@ -148,7 +154,7 @@
                             <h5>Minimum Balance : </h5>
                         </td>
                         <td>
-                            <h5 class="profile-text"><%=r.min_bal%></h5>
+                            <h5 class="profile-text"><%=min_bal%></h5>
                         </td>
                     </tr>
                     <tr class="profile-section">
@@ -172,24 +178,25 @@
                 <%}%>
             </div>
         </div>
-        <div class="accinfo_heading">
-            <h4><em> Last 5 Transactions </em></h4>
-        </div>
-        <div>
-            <table class="table table-bordered table-striped" id="trans_table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Transaction No</th>
-                        <th scope="col">Account No</th>
-                        <th scope="col">Transaction Type</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Time Stamp</th>
-                        <th scope="col">Counter No</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%for(var i=0;i < length ; i++){%>
+        <div class="acc_trans_table">
+            <div class="accinfo_heading">
+                <h4><em> Account Transactions </em></h4>
+            </div>
+            <div>
+                <table class="table table-bordered table-striped display">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Transaction No</th>
+                            <th scope="col">Account No</th>
+                            <th scope="col">Transaction Type</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Time Stamp</th>
+                            <th scope="col">Counter No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%for(var i=0;i < length ; i++){%>
                 <tr>
                     <th scope="row"><%=i+1%></th>
                     <td><%=rows[i].trans_no%></td>
@@ -200,11 +207,54 @@
                     <td><%=rows[i].counter_no%></td>
                 </tr>
                 <%}%>
-            </tbody>
-            
-          </table>
-      
+                </tbody>
+                
+              </table>
+          
+            </div>
         </div>
+        
+        <!-- Loan Trans -->
+        <div class="loan_trans_table">
+            <div class="accinfo_heading">
+                <h4><em> Loan Transactions </em></h4>
+            </div>
+            <div>
+                <table class="table table-bordered table-striped display">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Loan Transaction No</th>
+                        <th scope="col">Account No</th>
+                        <th scope="col">Loan Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Time Stamp</th>
+                        <th scope="col">Interest Amount</th>
+                        <th scope="col">Total Amount</th>
+                        <th scope="col">Remaining Loan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%for(var i=0;i < r.length ; i++){%>
+                <tr>
+                    <th scope="row"><%=i+1%></th>
+                    <td><%=r[i].loan_trans_id%></td>
+                    <td><%=r[i].acc_no%></td>
+                    <td><%=r[i].type%></td>
+                    <td><%=r[i].amount%></td>
+                    <td><%=r[i].time_stamp%></td>
+                    <td><%=r[i].int_amt%></td>
+                    <td><%=r[i].total_amt%></td>
+                    <td><%=r[i].rem_amt%></td>
+                </tr>
+                <%}%>
+                  </tbody>
+                  
+                </table>
+          
+            </div>
+        </div>
+        
     </div>
 </div>
 

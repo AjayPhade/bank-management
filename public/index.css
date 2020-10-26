@@ -287,6 +287,16 @@ td {
   padding-top: 10%;
   padding-bottom: 10%;
 }
+.acc_trans_table{
+  border-top:  rgb(219, 210, 210) 0.5px solid;
+  padding-top: 3%;
+  margin-bottom: 2%;
+}
+.loan_trans_table{
+  border-top:  rgb(219, 210, 210) 0.5px solid;
+  padding-top: 3%;
+  margin-bottom: 5%;
+}
 /******************************* Account View Ends *************************************/
 
 /******************************* Transaction Starts *************************************/
