@@ -354,3 +354,10 @@ td {
   padding-right: 15%;
 }
 /************************Loan Ends****************************/
+
+/**************************** Validation ****************************/
+.alert-danger {
+  margin: auto;
+  width: 60%;
+  text-align: center;
+}
