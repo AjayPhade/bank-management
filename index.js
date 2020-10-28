@@ -89,7 +89,7 @@ app.get("/dashboard", function (req, res) {
 
 app.get("/customer_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined });
+        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: [undefined, undefined] });
     }
 });
 
@@ -239,7 +239,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
             console.log(err);
         }
         else {
-            interest = row[0].int_rate
+            interest = row[0].int_rate;
             var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo, int_rate,created_by,status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + photo + ",?,?,'ACTIVE')";
             var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, interest, emp_id];
 
@@ -283,20 +283,81 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                         }
                         else {
                             console.log("Moved");
-                            res.redirect("/customer_management");
+                            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["success_added", acc_no] });
                         }
                     });
                 }
             });
         }
     });
-
-
-
-
 });
 
 /*************************** Add Customer Form Ends ***************************/
+
+/************************ Customer Profile Starts *******************************/
+
+app.post("/view_profile", function (req, res) {
+    var acc_no = parseInt(req.body.acc_no);
+    var query = "select * from cust_info where acc_no=" + acc_no;
+
+    connection.query(query, function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+        else if (rows.length === 0) {
+            console.log("Account Not Found!!");
+            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["view_error", "Account Not Found"] });
+        }
+        else {
+            var row = rows[0];
+            var phone_no1, phone_no2;
+            phone_no1 = rows[0].phone_no;
+
+            if (rows.length === 2)
+                phone_no2 = rows[1].phone_no;
+            else
+                phone_no2 = "Not Available";
+            connection.query("select * from acc_limit_int where acc_type=?", [row.acc_type], function (err, ro, fields) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    connection.query("select * from transaction where acc_no = ? order by time_stamp desc", [acc_no], function (err, rows, fields) {
+                        if (err) {
+                            console.log(err);
+
+                        }
+                        else {
+                            connection.query("select * from loan_trans where acc_no=? order by time_stamp desc", [acc_no], function (err, r) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    res.render("cust_profile", {
+                                        ifsc_code: ifsc_code,
+                                        br_name: br_name,
+                                        phone_no1: phone_no1,
+                                        phone_no2: phone_no2,
+                                        photo: row.photo.toString("base64"),
+                                        row: row,
+                                        rows: rows,
+                                        length: rows.length,
+                                        min_bal: ro[0].min_bal,
+                                        r: r
+                                    });
+                                }
+                            })
+
+
+                        }
+                    })
+                }
+            });
+        }
+    });
+});
+
+/************************ Customer Profile Ends *******************************/
 
 /***************************Update Customer Starts ****************************/
 
@@ -309,6 +370,7 @@ app.post("/update_customer", function (req, res) {
         }
         else if (rows.length === 0) {
             console.log("Customer Not Found!!");
+            res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["update_error", "Account Not Found"] });
         }
         else {
             row = rows[0];
@@ -508,73 +570,6 @@ app.get("/profile", function (req, res) {
     }
 });
 /*************************** Employee Profile Ends ***************************/
-
-/************************ Customer Profile Starts *******************************/
-
-app.post("/view_profile", function (req, res) {
-    var acc_no = parseInt(req.body.acc_no);
-    var query = "select * from cust_info where acc_no=" + acc_no;
-    connection.query(query, function (err, rows, fields) {
-        if (err) {
-            console.log(err);
-        }
-        else if (rows.length === 0) {
-            console.log("Account Not Found!!");
-        }
-        else {
-            var row = rows[0];
-            var phone_no1, phone_no2;
-            phone_no1 = rows[0].phone_no;
-
-            if (rows.length === 2)
-                phone_no2 = rows[1].phone_no;
-            else
-                phone_no2 = "Not Available";
-            connection.query("select * from acc_limit_int where acc_type=?", [row.acc_type], function (err, ro, fields) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    connection.query("select * from transaction where acc_no = ? order by time_stamp desc", [acc_no], function (err, rows, fields) {
-                        if (err) {
-                            console.log(err);
-
-                        }
-                        else {
-                            connection.query("select * from loan_trans where acc_no=? order by time_stamp desc", [acc_no], function (err, r) {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                else {
-                                    res.render("cust_profile", {
-                                        ifsc_code: ifsc_code,
-                                        br_name: br_name,
-                                        phone_no1: phone_no1,
-                                        phone_no2: phone_no2,
-                                        photo: row.photo.toString("base64"),
-                                        row: row,
-                                        rows: rows,
-                                        length: rows.length,
-                                        min_bal: ro[0].min_bal,
-                                        r: r
-                                    });
-                                }
-                            })
-
-
-                        }
-                    })
-                }
-            });
-
-
-
-        }
-    });
-});
-
-/************************ Customer Profile Ends *******************************/
-
 
 
 /************************ Employee Managenment Starts ********************************************************/

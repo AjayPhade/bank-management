@@ -23,22 +23,27 @@
     <div class="add-custdiv">
       <h2 class="create-heading">Create an Account</h2>
       <br />
-      <form class="create-cust" method="POST" action="/add_customer" enctype="multipart/form-data">
+      <form class="create-cust needs-validation" method="POST" action="/add_customer" enctype="multipart/form-data"
+        novalidate>
+        <%if(error[0] === 'success_added'){%>
+        <div class="<%=error[0]%>" hidden><%=error[1]%></div>
+        <%}%>
         <div class="form-row">
           <div class="form-group col-md-6">
             <label>First Name</label>
-            <input type="text" class="form-control" id="inputFirstName" name="first_name" required>
+            <input type="text" class="form-control" id="inputFirstName" name="first_name" pattern="[a-zA-Z]*" required>
+            <div class="invalid-feedback">Name must contain alphabets only</div>
           </div>
           <div class="form-group col-md-6">
             <label>Last Name</label>
             <input type="text" class="form-control" id="inputLastName" name="last_name" required>
+            <div class="invalid-feedback">Name must contain alphabets only</div>
           </div>
         </div>
         <div class="form-group">
           <label for="inputAddress">Address</label>
           <input type="text" class="form-control" id="inputAddress" name="address" required>
         </div>
-
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="inputCity">City</label>
@@ -46,26 +51,31 @@
           </div>
           <div class="form-group col-md-4">
             <label for="inputState">State</label>
-            <input class="form-control" type="text" name="state" id="state" required>
+            <input class="form-control" type="text" name="state" id="state" pattern="[a-zA-Z]*" required>
+            <div class="invalid-feedback">State must contain alphabets only</div>
           </div>
           <div class="form-group col-md-2">
             <label for="inputZip">Zip</label>
-            <input type="text" class="form-control" id="inputZip" name="zip" required>
+            <input type="text" class="form-control" id="inputZip" name="zip" pattern="[0-9]{6}" required>
+            <div class="invalid-feedback">Zip must be number of length 6</div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
             <label>Contact No (Primary)</label>
-            <input type="tel" class="form-control" id="primaryMob" name="pcon" required>
+            <input type="text" class="form-control" id="primaryMob" name="pcon" pattern="[0-9]{10}" required>
+            <div class="invalid-feedback">Contact no. must be number of length 10</div>
           </div>
           <div class="form-group col-md-6">
             <label>Contact No (Secondary)</label>
-            <input type="tel" class="form-control" id="secondaryMob" name="scon">
+            <input type="text" class="form-control" id="secondaryMob" name="scon" pattern="[0-9]{10}">
+            <div class="invalid-feedback">Contact no. must be number of length 10</div>
           </div>
         </div>
         <div class="form-group">
-          <label>Email Id</label>
+          <label>Email ID</label>
           <input type="email" class="form-control" id="inputEmail" name="email" required placeholder="example@abc.com">
+          <div class="invalid-feedback">Enter a valid email</div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-6 required">
@@ -91,11 +101,13 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label>Aadhar Number</label>
-            <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" required>
+            <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" pattern="[0-9]{16}" required>
+            <div class="invalid-feedback">Aadhaar must contain numbers only (16 digits)</div>
           </div>
           <div class="form-group col-md-6">
             <label>Pan Number</label>
-            <input type="text" class="form-control" id="inputLastName" name="pan">
+            <input type="text" class="form-control" id="inputLastName" name="pan" pattern="[0-9A-Z]{10}">
+            <div class="invalid-feedback">Pan number must of length 10 and alphabets must be capital</div>
           </div>
         </div>
         <div class="form-group">
@@ -143,110 +155,127 @@
 
     <!-- View Customer Start -->
     <div class="view-custdiv">
-      <form method="POST" action="/view_profile">
+      <form method="POST" action="/view_profile" class="needs-validation" novalidate>
         <div class="form-row">
           <div class="form-group col-md-10">
-            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number">
+            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number"
+              pattern="[0-9]*" required>
+            <div class="invalid-feedback">Account Number must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
             <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
           </div>
+          <%if(error[0] === 'view_error'){%>
+        <div class="alert alert-danger <%=error[0]%>" role="alert">
+          <%=error[1]%>
+        </div>
+        <%}%>
         </div>
       </form>
-
     </div>
     <!-- Update Customer Starts -->
     <div class="update-custdiv">
-      <form method="POST" action="/update_customer">
+      <form method="POST" action="/update_customer" class="needs-validation">
         <div class="form-row">
           <div class="form-group col-md-10">
-            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number">
+            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number" pattern="[0-9]*">
+            <div class="invalid-feedback">Account Number must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
             <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
           </div>
+          <%if(error[0] === 'update_error'){%>
+        <div class="alert alert-danger <%=error[0]%>" role="alert">
+          <%=error[1]%>
+        </div>
+        <%}%>
         </div>
       </form>
     </div>
 
 
     <%if(row !== undefined){%>
-    <div class="update-cust">
-      <h6 style="color: red;">*Double click on field to edit information.</h6>
-      <form class="create-cust" method="POST" action="/update_customer_details">
-        <div class="form-row">
-          <div class="form-group col-md-12">
-            <label>Name</label>
-            <input type="text" class="form-control" id="inputFirstName" name="name" value="<%=row.name%>" required
-              readonly>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="inputAddress">Address</label>
-          <input type="text" class="form-control" id="inputAddress" name="address" required readonly
-            value="<%=row.address%>">
-        </div>
+        <div class="update-cust">
+          <h6 style="color: red;">*Double click on field to edit information.</h6>
+          <form class="create-cust" method="POST" action="/update_customer_details">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label>Name</label>
+                <input type="text" class="form-control" id="inputFirstName" name="name" value="<%=row.name%>" required
+                  readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputAddress">Address</label>
+              <input type="text" class="form-control" id="inputAddress" name="address" required readonly
+                value="<%=row.address%>">
+            </div>
 
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity" name="city" required readonly value="<%=row.city%>">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="inputState">State</label>
-            <input class="form-control" type="text" name="state" id="state" required readonly value="<%=row.state%>">
-          </div>
-          <div class="form-group col-md-2">
-            <label for="inputZip">Zip</label>
-            <input type="text" class="form-control" id="inputZip" name="zip" required readonly value="<%=row.zip%>">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Contact No (Primary)</label>
-            <input type="tel" class="form-control" id="primaryMob" name="pcon" required readonly value="<%=phone_no1%>">
-          </div>
-          <div class="form-group col-md-6">
-            <label>Contact No (Secondary)</label>
-            <input type="tel" class="form-control" id="secondaryMob" name="scon" readonly value="<%=phone_no2%>">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Email Id</label>
-          <input type="email" class="form-control" id="inputEmail" name="email" required readonly
-            value="<%=row.email%>">
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
-            <label>DOB</label>
-            <input type="date" class="form-control" id="DOB" name="dob" required readonly value="<%=row.dob%>">
-          </div>
-          <div class="form-group col-md-6" hidden>
-            <input type="text" id="DOB" name="acc_no" required readonly value="<%=row.acc_no%>">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Aadhar Number</label>
-            <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" required readonly
-              value="<%=row.aadhaar_no%>">
-          </div>
-          <div class="form-group col-md-6">
-            <label>Pan Number</label>
-            <input type="text" class="form-control" id="inputLastName" name="pan" readonly value="<%=row.pan_no%>">
-          </div>
-        </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputCity">City</label>
+                <input type="text" class="form-control" id="inputCity" name="city" required readonly
+                  value="<%=row.city%>">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <input class="form-control" type="text" name="state" id="state" required readonly
+                  value="<%=row.state%>">
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input type="text" class="form-control" id="inputZip" name="zip" required readonly value="<%=row.zip%>">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Contact No (Primary)</label>
+                <input type="tel" class="form-control" id="primaryMob" name="pcon" required readonly
+                  value="<%=phone_no1%>">
+              </div>
+              <div class="form-group col-md-6">
+                <label>Contact No (Secondary)</label>
+                <input type="tel" class="form-control" id="secondaryMob" name="scon" readonly value="<%=phone_no2%>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Id</label>
+              <input type="email" class="form-control" id="inputEmail" name="email" required readonly
+                value="<%=row.email%>">
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label>DOB</label>
+                <input type="date" class="form-control" id="DOB" name="dob" required readonly value="<%=row.dob%>">
+              </div>
+              <div class="form-group col-md-6" hidden>
+                <input type="text" id="DOB" name="acc_no" required readonly value="<%=row.acc_no%>">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Aadhar Number</label>
+                <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" required readonly
+                  value="<%=row.aadhaar_no%>">
+              </div>
+              <div class="form-group col-md-6">
+                <label>Pan Number</label>
+                <input type="text" class="form-control" id="inputLastName" name="pan" readonly value="<%=row.pan_no%>">
+              </div>
+            </div>
 
 
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-          <label class="form-check-label" for="exampleCheck1">I have verified all information and documents of this
-            customer.</label>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+              <label class="form-check-label" for="exampleCheck1">I have verified all information and documents of
+                this
+                customer.</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-cust"><i class="fas fa-edit"></i> Update Account
+            </button>
+          </form>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust"><i class="fas fa-edit"></i> Update Account </button>
-      </form>
-    </div>
-    <%}%>
+        <%}%>
 
     <div class="remove-custdiv">
       <form method="POST" action="/remove_customer">
@@ -261,108 +290,113 @@
       </form>
     </div>
     <%if(rows !== undefined){%>
-    <div class="remove-cust">
-      <form class="create-cust" method="POST" action="/remove_customer_details">
-        <div class="form-row">
-          <div class="form-group col-md-12">
-            <label>Name</label>
-            <input type="text" class="form-control" id="inputFirstName" name="name" value="<%=rows.name%>" required
-              readonly>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="inputAddress">Address</label>
-          <input type="text" class="form-control" id="inputAddress" name="address" required readonly
-            value="<%=rows.address%>">
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity" name="city" required readonly value="<%=rows.city%>">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="inputState">State</label>
-            <input class="form-control" type="text" name="state" id="state" required readonly value="<%=rows.state%>">
-          </div>
-          <div class="form-group col-md-2">
-            <label for="inputZip">Zip</label>
-            <input type="text" class="form-control" id="inputZip" name="zip" required readonly value="<%=rows.zip%>">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Contact No (Primary)</label>
-            <input type="tel" class="form-control" id="primaryMob" name="pcon" required readonly value="<%=phone_no1%>">
-          </div>
-          <div class="form-group col-md-6">
-            <label>Contact No (Secondary)</label>
-            <input type="tel" class="form-control" id="secondaryMob" name="scon" readonly value="<%=phone_no2%>">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Email Id</label>
-          <input type="email" class="form-control" id="inputEmail" name="email" required readonly
-            value="<%=rows.email%>">
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-3">
-            <label>DOB</label>
-            <input type="date" class="form-control" id="DOB" name="dob" required readonly value="<%=rows.dob%>">
-          </div>
-          <div class="form-group col-md-6" hidden>
-            <input type="text" id="DOB" name="acc_no" required readonly value="<%=rows.acc_no%>">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label>Aadhar Number</label>
-            <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" required readonly
-              value="<%=rows.aadhaar_no%>">
-          </div>
-          <div class="form-group col-md-6">
-            <label>Pan Number</label>
-            <input type="text" class="form-control" id="inputLastName" name="pan" readonly value="<%=rows.pan_no%>">
-          </div>
-        </div>
-
-
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-          <label class="form-check-label" for="exampleCheck1">I have received request from <%=rows.name%> to delete the
-            account.</label>
-        </div>
-        <button type="button" class="btn btn-danger btn-cust" data-toggle="modal" data-target="#staticBackdrop"><i
-            class="fas fa-trash"></i> Remove Account </button>
-        <!-- MODAL -->
-        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
-          aria-labelledby="staticBackdropLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Warning !</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                This will delete all the information permanently and remaining balance should be handed-in to
-                <%=rows.name%>.
-                <br>
-                <strong>Balance: <%=rows.balance%></strong>
-                <br>
-                Are you sure you want to delete this account?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger">Delete Account</button>
+        <div class="remove-cust">
+          <form class="create-cust" method="POST" action="/remove_customer_details">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label>Name</label>
+                <input type="text" class="form-control" id="inputFirstName" name="name" value="<%=rows.name%>" required
+                  readonly>
               </div>
             </div>
-          </div>
+            <div class="form-group">
+              <label for="inputAddress">Address</label>
+              <input type="text" class="form-control" id="inputAddress" name="address" required readonly
+                value="<%=rows.address%>">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputCity">City</label>
+                <input type="text" class="form-control" id="inputCity" name="city" required readonly
+                  value="<%=rows.city%>">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <input class="form-control" type="text" name="state" id="state" required readonly
+                  value="<%=rows.state%>">
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input type="text" class="form-control" id="inputZip" name="zip" required readonly
+                  value="<%=rows.zip%>">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Contact No (Primary)</label>
+                <input type="tel" class="form-control" id="primaryMob" name="pcon" required readonly
+                  value="<%=phone_no1%>">
+              </div>
+              <div class="form-group col-md-6">
+                <label>Contact No (Secondary)</label>
+                <input type="tel" class="form-control" id="secondaryMob" name="scon" readonly value="<%=phone_no2%>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Id</label>
+              <input type="email" class="form-control" id="inputEmail" name="email" required readonly
+                value="<%=rows.email%>">
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label>DOB</label>
+                <input type="date" class="form-control" id="DOB" name="dob" required readonly value="<%=rows.dob%>">
+              </div>
+              <div class="form-group col-md-6" hidden>
+                <input type="text" id="DOB" name="acc_no" required readonly value="<%=rows.acc_no%>">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Aadhar Number</label>
+                <input type="text" class="form-control" id="inputFirstName" name="aadhaar_no" required readonly
+                  value="<%=rows.aadhaar_no%>">
+              </div>
+              <div class="form-group col-md-6">
+                <label>Pan Number</label>
+                <input type="text" class="form-control" id="inputLastName" name="pan" readonly value="<%=rows.pan_no%>">
+              </div>
+            </div>
+
+
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+              <label class="form-check-label" for="exampleCheck1">I have received request from <%=rows.name%> to
+                delete the
+                account.</label>
+            </div>
+            <button type="button" class="btn btn-danger btn-cust" data-toggle="modal" data-target="#staticBackdrop"><i
+                class="fas fa-trash"></i> Remove Account </button>
+            <!-- MODAL -->
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Warning !</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    This will delete all the information permanently and remaining balance should be handed-in to
+                    <%=rows.name%>.
+                    <br>
+                    <strong>Balance: <%=rows.balance%></strong>
+                    <br>
+                    Are you sure you want to delete this account?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
-    <%}%>
+        <%}%>
   </div>
 
   <!-- View Customer End -->
