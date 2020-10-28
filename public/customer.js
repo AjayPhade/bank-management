@@ -154,6 +154,7 @@ if (remove !== undefined) {
 
 }
 
+/***************Validation**************************************/
 var error1 = document.getElementsByClassName("view_error");
 
 if (error1[0] !== undefined) {
@@ -166,8 +167,27 @@ if (error2[0] !== undefined) {
   document.getElementsByClassName("update")[0].click();
 }
 
+var error3 = document.getElementsByClassName("remove_error");
+
+if (error3[0] !== undefined) {
+  document.getElementsByClassName("remove")[0].click();
+}
+
 var success1 = document.getElementsByClassName("success_added");
 
 if (success1[0] !== undefined) {
-  alert("Account Created Successfully" + "\nAccount No: " + success1.innerHTML);
+  alert("Account Created Successfully !!" + "\nAccount No: " + success1[0].innerHTML);
+}
+
+var success2 = document.getElementsByClassName("success_updated");
+
+if (success2[0] !== undefined) {
+  alert("Account Details Updated !!");
+}
+
+var success3 = document.getElementsByClassName("success_removed");
+
+if (success3[0] !== undefined) {
+  alert("Account Closed Successfully !!");
+  document.getElementsByClassName("remove")[0].click();
 }
