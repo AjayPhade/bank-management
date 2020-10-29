@@ -523,7 +523,7 @@ app.post("/remove_customer_details", function (req, res) {
                                     }
                                     else {
                                         console.log("Deleted from cust_account");
-                                        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1:undefined , phone_no2: undefined, rows: undefined, error: ["success_removed", undefined] });
+                                        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: undefined, phone_no2: undefined, rows: undefined, error: ["success_removed", undefined] });
                                     }
                                 })
                             }
@@ -531,7 +531,7 @@ app.post("/remove_customer_details", function (req, res) {
                     }
                     else {
                         console.log("Deleted from cust_account");
-                        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1:undefined , phone_no2: undefined, rows: undefined, error: ["success_removed", undefined] });
+                        res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: undefined, phone_no2: undefined, rows: undefined, error: ["success_removed", undefined] });
                     }
                 }
             })
@@ -583,7 +583,7 @@ app.get("/profile", function (req, res) {
 /************************ Employee Managenment Starts ********************************************************/
 app.get("/emp_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined });
+        res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: [undefined, undefined] });
     }
 });
 
@@ -758,10 +758,10 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
                 });
             }
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined, error: ["success_added", emp_id] });
         }
     });
 
-    res.redirect("/emp_management");
 });
 
 /////////////View Employee
@@ -774,6 +774,7 @@ app.post("/emp_profile", function (req, res) {
         }
         else if (rows.length === 0) {
             console.log("Employee Not Found!!");
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["view_error", "Employee Not Found"] });
 
         }
         else {
@@ -809,6 +810,7 @@ app.post("/update_employee", function (req, res) {
         }
         else if (rows.length === 0) {
             console.log("Employee Not Found!!");
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["update_error", "Employee Not Found"] });
         }
         else {
             row = rows[0];
@@ -819,7 +821,7 @@ app.post("/update_employee", function (req, res) {
             else {
                 phone_no2 = "Not Available";
             }
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined, error: [undefined, undefined] });
         }
     });
 });
@@ -891,7 +893,7 @@ app.post("/update_employee_details", function (req, res) {
                     });
                 }
             });
-            res.redirect("/emp_management");
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["success_updated", undefined] });
         }
     });
 
@@ -910,6 +912,7 @@ app.post("/remove_employee", function (req, res) {
         }
         else if (rows.length === 0) {
             console.log("Employee Not Found!!");
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["remove_error", "Employee Not Found"] });
         }
         else {
             row = rows[0];
@@ -920,7 +923,7 @@ app.post("/remove_employee", function (req, res) {
             else {
                 phone_no2 = "Not Available";
             }
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: row });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, phone_no1, phone_no2, row: undefined, rows: row, error: [undefined, undefined] });
         }
     });
 });
@@ -938,7 +941,7 @@ app.post("/remove_employee_details", function (req, res) {
                 }
                 else {
                     console.log("Deleted from employee");
-                    res.redirect("/emp_management");
+                    res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["success_removed", undefined] });
 
                 }
             });
@@ -954,7 +957,7 @@ app.post("/remove_employee_details", function (req, res) {
 
 app.get("/transaction_management", function (req, res) {
     if (loggedIn(res)) {
-        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined });
+        res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: [undefined, undefined] });
     }
 });
 
@@ -970,12 +973,12 @@ app.post("/withdraw", function (req, res) {
         else {
             if (rows.length === 0) {
                 console.log("Customer Not Found");
-                res.redirect("/transaction_management");
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["withdraw_error", "Account Not Found"] });
             }
             else {
                 if (rows[0].balance < amount) {
                     console.log("Insufficient Balance.... Cannot Withdraw Amount!!");
-                    res.redirect("/transaction_management");
+                    res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["withdraw_error", "Insufficient Balance.... Cannot Withdraw Amount!!\nBalance : "+rows[0].balance] });
                 }
                 else {
                     var q = "insert into transaction (counter_no, trans_type,amount, acc_no) values(?,?,?,?)";
@@ -991,7 +994,7 @@ app.post("/withdraw", function (req, res) {
                                 }
                                 else {
                                     console.log("Successful Withdraw.");
-                                    res.redirect("/transaction_management");
+                                    res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["success_withdraw", undefined] });
                                 }
                             });
                         }
@@ -1015,7 +1018,7 @@ app.post("/deposit", function (req, res) {
         else {
             if (rows.length === 0) {
                 console.log("Customer Not Found");
-                res.redirect("/transaction_management");
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["deposit_error", "Account Not Found"] });
             }
             else {
                 var q = "insert into transaction (counter_no, trans_type,amount, acc_no) values(?,?,?,?)";
@@ -1031,7 +1034,7 @@ app.post("/deposit", function (req, res) {
                             }
                             else {
                                 console.log("Successful Deposit.");
-                                res.redirect("/transaction_management");
+                                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["success_deposit", undefined] });
                             }
                         });
                     }
@@ -1052,11 +1055,11 @@ app.post("/particular_trans", function (req, res) {
         else {
             if (rows.length == 0) {
                 console.log("Transaction Not Found!!!");
-                res.redirect("/transaction_management");
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["view_error", "Transaction Number Not Found"] });
             }
             else {
                 console.log("Successful");
-                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: rows, length: rows.length, class_name: "trans_table" });
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: rows, length: rows.length, class_name: "trans_table", error: [undefined,undefined] });
             }
         }
 
@@ -1071,11 +1074,11 @@ app.post("/all_trans", function (req, res) {
         else {
             if (rows.length == 0) {
                 console.log("Transaction Not Found!!!");
-                res.redirect("/transaction_management");
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["view_error", "Transactions Not Found"] });
             }
             else {
                 console.log("Successful");
-                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: rows, length: rows.length, class_name: "trans_table" });
+                res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: rows, length: rows.length, class_name: "trans_table",error:[undefined,undefined] });
             }
         }
 

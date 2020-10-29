@@ -1,3 +1,23 @@
+// For validation
+(function () {
+  'use strict';
+  window.addEventListener('load', function () {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function (form) {
+      form.addEventListener('submit', function (event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+
 //Styling Sidebar Customer Management
 var sidebar = document.getElementsByClassName("sidebar-tile");
 var previous;
@@ -66,4 +86,38 @@ var table = document.getElementsByClassName("trans_table");
 if(table[0] !== undefined){
   document.getElementsByClassName("view")[0].click();
   table[0].style.display = "inherit";
+}
+
+
+/*******************************Validation****************************** */
+var error1 = document.getElementsByClassName("withdraw_error");
+
+if (error1[0] !== undefined) {
+  document.getElementsByClassName("remove")[0].click();
+}
+
+var error2 = document.getElementsByClassName("deposit_error");
+
+if (error2[0] !== undefined) {
+  document.getElementsByClassName("add")[0].click();
+}
+
+var error3 = document.getElementsByClassName("view_error");
+
+if (error3[0] !== undefined) {
+  document.getElementsByClassName("view")[0].click();
+}
+
+var success1 = document.getElementsByClassName("success_withdraw");
+
+if (success1[0] !== undefined) {
+  alert("Amount Withdrawn Successfully");
+  document.getElementsByClassName("remove")[0].click();
+}
+
+var success2 = document.getElementsByClassName("success_deposit");
+
+if (success2[0] !== undefined) {
+  alert("Amount Deposited Successfully");
+  document.getElementsByClassName("add")[0].click();
 }
