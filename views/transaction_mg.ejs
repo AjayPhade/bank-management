@@ -4,11 +4,11 @@
   <!-- Sidebar Starts -->
   <div class="col-2 sidebar trans_sidebar">
     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#v-pills-settings" role="tab"
+      <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-settings" aria-selected="false">Withdraw</a>
-      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#v-pills-home" role="tab"
+      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-home" aria-selected="true">Deposit</a>
-      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#view_trans" role="tab"
+      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-profile" aria-selected="false">View</a>
 
     </div>
@@ -22,9 +22,9 @@
     <!-- Add Customer Start -->
     <div class="remove-custdiv sanction">
       <h2 class="create-heading debit-heading">Withdraw</h2>
-      <br />
+      <br>
       <form class="create-cust needs-validation" method="POST" action="/withdraw" novalidate>
-        <%if(error[0] === 'success_withdraw' && error[0]!==undefined){%>
+        <%if(error[0] === 'success_withdraw'){%>
         <div class="<%=error[0]%>" hidden><%=error[1]%></div>
         <%}%>
         <div class="form-group debit_fields">
@@ -35,15 +35,14 @@
         <div class="form-group debit_fields">
           <label for="inputAddress">Amount(₹)</label>
           <input type="text" class="form-control" id="amount" name="amount" pattern="[0-9]*" required>
-          <div class="invalid-feedback">Amount must contain numbers only.</div>
+          <div class="invalid-feedback">Amount must contain numbers only</div>
         </div>
         <%if(error[0] === 'withdraw_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
           <%=error[1]%>
         </div>
         <%}%>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Withdraw
-        </button>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Withdraw </button>
         
       </form>
 
@@ -52,20 +51,20 @@
     <!-- Deposit -->
     <div class="add-custdiv deposit-div">
       <h2 class="create-heading debit-heading">Deposit</h2>
-      <br />
+      <br>
       <form class="create-cust needs-validation" method="POST" action="/deposit" novalidate>
-        <%if(error[0] === 'success_deposit' && error[0]!==undefined){%>
+        <%if(error[0] === 'success_deposit'){%>
         <div class="<%=error[0]%>" hidden><%=error[1]%></div>
         <%}%>
         <div class="form-group debit_fields">
           <label for="inputAddress">Account No</label>
           <input type="text" class="form-control" id="acc_no" name="acc_no" pattern="[0-9]*" required>
-          <div class="invalid-feedback">Account Number must contain digits only.</div>
+          <div class="invalid-feedback">Account Number must contain digits only</div>
         </div>
         <div class="form-group debit_fields">
           <label for="inputAddress">Amount(₹)</label>
           <input type="text" class="form-control" id="amount" name="amount" pattern="[0-9]*" required>
-          <div class="invalid-feedback">Amount must contain digits only.</div>
+          <div class="invalid-feedback">Amount must contain digits only</div>
         </div>
         <%if(error[0] === 'deposit_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
@@ -86,20 +85,15 @@
 
             <input type="text" name="trans_no" id="view_by_trans_no" class="form-control"
               placeholder="Enter Transaction Number" pattern="[0-9]*" required>
-              <div class="invalid-feedback">Transaction Number must contain digits only.</div>
+              <div class="invalid-feedback">Transaction Number must contain digits only</div>
 
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
           </div>
 
         </div>
       </form>
-      <%if(error[0] === 'view_error'){%>
-        <div class="alert alert-danger <%=error[0]%>" role="alert">
-          <%=error[1]%>
-        </div>
-        <%}%>
       <h5 class="or">OR</h5>
       <form action="/all_trans" method="POST">
         <div class="form-row">
@@ -109,6 +103,11 @@
           </div>
         </div>
       </form>
+      <%if(error[0] === 'view_error'){%>
+        <div class="alert alert-danger <%=error[0]%>" role="alert">
+          <%=error[1]%>
+        </div>
+        <%}%>
 
     </div>
     <%if(class_name !== undefined || rows !== undefined){ %>

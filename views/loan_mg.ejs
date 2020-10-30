@@ -22,16 +22,25 @@
     <!-- Add Customer Start -->
     <div class="remove-custdiv sanction">
       <h2 class="create-heading debit-heading">Sanction Loan</h2>
-      <br />
-      <form class="create-cust" method="POST" action="/sanction">
-
+      <%if(error[0] === 'remove_error'){%>
+      <div class="alert alert-danger <%=error[0]%>" role="alert">
+        <%=error[1]%>
+      </div>
+      <%}%>
+      <%if(error[0] === 'sanction_success'){%>
+      <div class="<%=error[0]%>" hidden></div>
+      <%}%>
+      <br>
+      <form class="create-cust needs-validation" method="POST" action="/sanction" novalidate>
         <div class="form-group debit_fields ">
           <label for="inputAddress">Account No</label>
-          <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
+          <input type="text" class="form-control" id="inputAddress" name="acc_no" pattern="[0-9]*" required>
+          <div class="invalid-feedback">Account Number must contain digits only</div>
         </div>
         <div class="form-group debit_fields">
           <label for="inputAddress">Amount(₹)</label>
-          <input type="text" class="form-control" id="inputAddress" name="amount" required>
+          <input type="text" class="form-control" id="inputAddress" name="amount" pattern="[0-9]*" required>
+          <div class="invalid-feedback">Amount must contain digits only</div>
         </div>
         <div class="form-group debit_fields">
           <label for="inputAddress">Loan Type</label>
@@ -40,7 +49,6 @@
             <option value="Gold">Gold</option>
             <option value="Educational">Educational</option>
             <option value="Housing">Housing</option>
-
           </select>
         </div>
         <div class="form-group debit_fields">
@@ -49,67 +57,78 @@
         </div>
         <div class="form-group debit_fields">
           <label for="inputAddress">Interest Rate</label>
-          <input type="text" class="form-control" id="inputAddress" name="int_rate" required>
+          <input type="text" class="form-control" id="inputAddress" name="int_rate" pattern="[0-9]*\.*[0-9]*" required>
+          <div class="invalid-feedback">Must be a number</div>
         </div>
         <div class="form-group debit_fields">
           <label for="inputAddress">Tenure (in years)</label>
-          <input type="number" class="form-control" id="inputAddress" name="tenure" required>
+          <input type="number" class="form-control" id="inputAddress" name="tenure" min="1" required>
+          <div class="invalid-feedback">Must be a number</div>
         </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn">  Sanction <i class="fas fa-receipt"></i></i>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> Sanction <i class="fas fa-receipt"></i></i>
         </button>
       </form>
-
     </div>
 
     <!-- Deposit -->
     <div class="add-custdiv deposit-div <%=cls%>">
-      <h2 class="create-heading debit-heading">Repayment </h2>
-      <br />
+      <h2 class="create-heading debit-heading">Repayment</h2>
       <%if(row === undefined){%>
-      <form class="create-cust" method="POST" action="/repayment">
-
+      <%if(error[0] === 'add_error'){%>
+      <div class="alert alert-danger <%=error[0]%>" role="alert">
+        <%=error[1]%>
+      </div>
+      <%}%>
+      <%if(error[0] === 'repayment_success'){%>
+      <div class="<%=error[0]%>" hidden></div>
+      <%}%>
+      <%if(error[0] === 'balance_error'){%>
+      <div class="<%=error[0]%>" hidden><%=error[1]%></div>
+      <%}%>
+      <br>
+      <form class="create-cust needs-validation" method="POST" action="/repayment" novalidate>
         <div class="form-group debit_fields">
           <label for="inputAddress">Account No</label>
-          <input type="text" class="form-control" id="inputAddress" name="acc_no" required>
+          <input type="text" class="form-control" id="inputAddress" name="acc_no" pattern="[0-9]*" required>
+          <div class="invalid-feedback">Account Number must contain digits only</div>
         </div>
         <div class="form-group debit_fields">
           <label for="inputAddress">Principal Amount(₹)</label>
-          <input type="text" class="form-control" id="inputAddress" name="amount" required>
+          <input type="text" class="form-control" id="inputAddress" name="amount" pattern="[0-9]*" required>
+          <div class="invalid-feedback">Amount must contain digits only</div>
         </div>
         <button type="submit" class="btn btn-primary btn-cust debit-btn"> Repay <i class="fas fa-donate"></i> </button>
       </form>
       <%}else{%>
       <form class="create-cust" method="POST" action="/repayment_confirmed">
-
         <div class="form-group debit_fields">
           <label for="inputAddress">Account No</label>
           <input type="text" class="form-control" id="inputAddress" name="acc_no" value="<%=row.acc_no%>" readonly
-            required>
-        </div>
-        <div class="form-group debit_fields">
-          <label for="inputAddress">Principal Amount(₹)</label>
-          <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly
-            required>
-        </div>
-        <div class="form-group debit_fields">
-          <label for="inputAddress">Interest Payable(₹)</label>
-          <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly
-            required>
-        </div>
-
-        <div class="form-group debit_fields">
-          <label for="inputAddress">Total Amount Payable(₹)</label>
-          <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly
-            required>
-        </div>
-        <div class="form-group debit_fields">
-          <label for="inputAddress">Remaining Principal Amount(₹)</label>
-          <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly
-            required>
-        </div>
-        <button type="submit" class="btn btn-primary btn-cust debit-btn"> <i class="fas fa-check-circle"></i> Confirm Repayment </button>
-      </form>
-      <%}%>
+      required>
+    </div>
+    <div class="form-group debit_fields">
+      <label for="inputAddress">Principal Amount(₹)</label>
+      <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly required>
+    </div>
+    <div class="form-group debit_fields">
+      <label for="inputAddress">Interest Payable(₹)</label>
+      <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly
+        required>
+    </div>
+    <div class="form-group debit_fields">
+      <label for="inputAddress">Total Amount Payable(₹)</label>
+      <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly
+        required>
+    </div>
+    <div class="form-group debit_fields">
+      <label for="inputAddress">Remaining Principal Amount(₹)</label>
+      <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly
+        required>
+    </div>
+    <button type="submit" class="btn btn-primary btn-cust debit-btn"> <i class="fas fa-check-circle"></i> Confirm
+      Repayment </button>
+    </form>
+    <%}%>
     </div>
     <!-- Add Customer End -->
 
@@ -123,7 +142,7 @@
                 placeholder="Enter Account No">
             </div>
             <div class="form-group col-md-2">
-              <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+              <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
             </div>
           </div>
         </form>
@@ -158,49 +177,49 @@
 
     </div>
     <%if(class_name !== undefined || rows !== undefined){ %>
-      <div class="<%=class_name%> table_trans">
-        <table class="table table-bordered table-striped" id="trans_table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Loan Transaction No</th>
-              <th scope="col">Account No</th>
-              <th scope="col">Loan Type</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Time Stamp</th>
-              <th scope="col">Interest Amount</th>
-              <th scope="col">Total Amount</th>
-              <th scope="col">Remaining Loan</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%for(var i=0;i < rows.length ; i++){%>
-            <tr>
-              <th scope="row"><%=i+1%></th>
-              <td><%=rows[i].loan_trans_id%></td>
-              <td><%=rows[i].acc_no%></td>
-              <td><%=rows[i].type%></td>
-              <td><%=rows[i].amount%></td>
-              <td><%=rows[i].time_stamp%></td>
-              <td><%=rows[i].int_amt%></td>
-              <td><%=rows[i].total_amt%></td>
-              <td><%=rows[i].rem_amt%></td>
-            </tr>
-            <%}%>
+    <div class="<%=class_name%> table_trans">
+      <table class="table table-bordered table-striped" id="trans_table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Loan Transaction No</th>
+            <th scope="col">Account No</th>
+            <th scope="col">Loan Type</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Time Stamp</th>
+            <th scope="col">Interest Amount</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Remaining Loan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%for(var i=0;i < rows.length ; i++){%>
+          <tr>
+            <th scope="row"><%=i+1%></th>
+            <td><%=rows[i].loan_trans_id%></td>
+            <td><%=rows[i].acc_no%></td>
+            <td><%=rows[i].type%></td>
+            <td><%=rows[i].amount%></td>
+            <td><%=rows[i].time_stamp%></td>
+            <td><%=rows[i].int_amt%></td>
+            <td><%=rows[i].total_amt%></td>
+            <td><%=rows[i].rem_amt%></td>
+          </tr>
+          <%}%>
         </tbody>
         
       </table>
   
     </div>
     <%}%>
-      </div>
-
-      <!-- View Customer End -->
     </div>
 
+    <!-- View Customer End -->
+  </div>
 
-    <!-- Create Customer Form Ends -->
 
-    <script src="loan.js" charset="utf-8" type='text/javascript'></script>
+  <!-- Create Customer Form Ends -->
 
-    <%- include("footer") -%>
+  <script src="loan.js" charset="utf-8" type='text/javascript'></script>
+
+  <%- include("footer") -%>

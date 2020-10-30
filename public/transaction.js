@@ -26,7 +26,7 @@ for (var i = 0; i < sidebar.length; i++) {
   sidebar[i].addEventListener("click", select);
 }
 
-var trans_table =  document.getElementsByClassName("trans_table")[0];
+var trans_table = document.getElementsByClassName("trans_table")[0];
 
 function select(event) {
   var element = event.target;
@@ -43,7 +43,7 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("acc_no")[1].focus();
       previous = element;
-      if(trans_table !== undefined){
+      if (trans_table !== undefined) {
         trans_table.style.display = "none";
       }
       break;
@@ -74,7 +74,7 @@ function select(event) {
       div.style.display = "inherit";
       document.getElementsByName("acc_no")[0].focus();
       previous = element;
-      if(trans_table !== undefined){
+      if (trans_table !== undefined) {
         trans_table.style.display = "none";
       }
       break;
@@ -83,7 +83,7 @@ function select(event) {
 
 var table = document.getElementsByClassName("trans_table");
 
-if(table[0] !== undefined){
+if (table[0] !== undefined) {
   document.getElementsByClassName("view")[0].click();
   table[0].style.display = "inherit";
 }
@@ -111,8 +111,8 @@ if (error3[0] !== undefined) {
 var success1 = document.getElementsByClassName("success_withdraw");
 
 if (success1[0] !== undefined) {
-  alert("Amount Withdrawn Successfully");
   document.getElementsByClassName("remove")[0].click();
+  alert("Amount Withdrawn Successfully\nCurrent Balance: " + success1[0].innerHTML);
 }
 
 var success2 = document.getElementsByClassName("success_deposit");

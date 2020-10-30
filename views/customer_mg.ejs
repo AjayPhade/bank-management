@@ -4,13 +4,13 @@
   <!-- Sidebar Starts -->
   <div class="col-2 sidebar">
     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#v-pills-home" role="tab"
-        aria-controls="v-pills-home" aria-selected="true">Add Account</a>
-      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#v-pills-profile" role="tab"
+      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-home"
+        aria-selected="true">Add Account</a>
+      <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-profile" aria-selected="false">View Account Details</a>
-      <a class="nav-link sidebar-tile update" id="update" data-toggle="pill" href="#v-pills-messages" role="tab"
+      <a class="nav-link sidebar-tile update" id="update" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-messages" aria-selected="false">Update Account Details</a>
-      <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#v-pills-settings" role="tab"
+      <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-settings" aria-selected="false">Close Account</a>
     </div>
   </div>
@@ -163,7 +163,7 @@
             <div class="invalid-feedback">Account Number must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
           </div>
           <%if(error[0] === 'view_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
@@ -175,14 +175,14 @@
     </div>
     <!-- Update Customer Starts -->
     <div class="update-custdiv">
-      <form method="POST" action="/update_customer" class="needs-validation">
+      <form method="POST" action="/update_customer" class="needs-validation" novalidate>
         <div class="form-row">
           <div class="form-group col-md-10">
-            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number" pattern="[0-9]*">
+            <input type="text" name="acc_no" id="view_by_accno" class="form-control" placeholder="Enter Account Number" pattern="[0-9]*" required>
             <div class="invalid-feedback">Account Number must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
           </div>
           <%if(error[0] === 'update_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
@@ -276,8 +276,8 @@
               </div>
             </div>
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-              <label class="form-check-label" for="exampleCheck1">I have verified all information and documents of
+              <input type="checkbox" class="form-check-input" id="exampleCheck2" required>
+              <label class="form-check-label" for="exampleCheck2">I have verified all information and documents of
                 this
                 customer.</label>
             </div>
@@ -301,13 +301,13 @@
             <div class="invalid-feedback">Account Number must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
           </div>
             <%if(error[0] === 'remove_error'){%>
-              <div class="alert alert-danger <%=error[0]%>" role="alert">
-                <%=error[1]%>
-              </div>
-              <%}%>
+        <div class="alert alert-danger <%=error[0]%>" role="alert">
+          <%=error[1]%>
+        </div>
+        <%}%>
         </div>
       </form>
     </div>
@@ -383,8 +383,8 @@
 
 
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-              <label class="form-check-label" for="exampleCheck1">I have received request from <%=rows.name%> to
+              <input type="checkbox" class="form-check-input" id="exampleCheck3" required>
+              <label class="form-check-label" for="exampleCheck3">I have received request from <%=rows.name%> to
                 delete the
                 account.</label>
             </div>
@@ -420,8 +420,8 @@
         </div>
         <%}%>
         <%if(error[0] === 'success_removed'){%>
-          <div class="<%=error[0]%>" hidden></div>
-          <%}%>
+        <div class="<%=error[0]%>" hidden></div>
+        <%}%>
   </div>
 
  

@@ -132,9 +132,8 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6 required">
-            <legend class="col-form-label pt-0">Designation</legend>
-            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="designation" required>
-              <option selected>Choose...</option>
+            <label>Designation</label>
+            <select class="form-control" id="inlineFormCustomSelectPref" name="designation" required>
               <option value="General Employee">General Employee</option>
               <option value="Cashier">Cashier</option>
               <option value="Security Guard">Security Guard</option>
@@ -161,11 +160,11 @@
       <form method="POST" action="/emp_profile" class="needs-validation" novalidate>
         <div class="form-row">
           <div class="form-group col-md-10">
-            <input type="text" name="emp_id" id="view_by_accno" class="form-control" placeholder="Enter Employee Id" pattern="[0-9]*" required>
-            <div class="invalid-feedback">Employee ID must contain digits only.</div>
+            <input type="text" name="emp_id" id="view_by_accno" class="form-control" placeholder="Enter Employee ID" pattern="[0-9]*" required>
+            <div class="invalid-feedback">Employee ID must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
           </div>
           <%if(error[0] === 'view_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
@@ -183,11 +182,11 @@
       <form method="POST" action="/update_employee" class="needs-validation" novalidate>
         <div class="form-row">
           <div class="form-group col-md-10">
-            <input type="text" name="emp_id" id="view_by_accno" class="form-control" placeholder="Enter Employee Id" pattern="[0-9]*" required>
+            <input type="text" name="emp_id" id="view_by_accno" class="form-control" placeholder="Enter Employee ID" pattern="[0-9]*" required>
             <div class="invalid-feedback">Employee ID must contain digits only</div>
           </div>
           <div class="form-group col-md-2">
-            <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+            <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
           </div>
           <%if(error[0] === 'update_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
@@ -291,10 +290,9 @@
                   value="<%=row.salary%>">
               </div>
             </div>
-
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-              <label class="form-check-label" for="exampleCheck1">I have verified all information and documents of this
+              <input type="checkbox" class="form-check-input" id="exampleCheck2" required>
+              <label class="form-check-label" for="exampleCheck2">I have verified all information and documents of this
                 customer.</label>
             </div>
             <button type="submit" class="btn btn-primary btn-cust"><i class="fas fa-edit"></i> Update Account </button>
@@ -311,11 +309,11 @@
     <form method="POST" action="/remove_employee" class="needs-validation" novalidate>
       <div class="form-row">
         <div class="form-group col-md-10">
-          <input type="text" name="emp_id" id="view_by_accno" class="form-control" placeholder="Enter Employee Id" pattern="[0-9]*">
+          <input type="text" name="emp_id" id="view_by_accno" class="form-control" placeholder="Enter Employee ID" pattern="[0-9]*" required>
           <div class="invalid-feedback">Employee ID must contain digits only</div>
         </div>
         <div class="form-group col-md-2">
-          <button type="submit" class="btn btn-primary form-control"> Search <i class="fas fa-search"></i></button>
+          <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
         </div>
         <%if(error[0] === 'remove_error'){%>
         <div class="alert alert-danger <%=error[0]%>" role="alert">
@@ -408,8 +406,8 @@
             </div>
 
             <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-              <label class="form-check-label" for="exampleCheck1">I have received resignation letter from
+              <input type="checkbox" class="form-check-input" id="exampleCheck3" required>
+              <label class="form-check-label" for="exampleCheck3">I have received resignation letter from
                 <%=rows.name%>.</label>
             </div>
             <button type="button" class="btn btn-danger btn-cust" data-toggle="modal" data-target="#staticBackdrop"><i
