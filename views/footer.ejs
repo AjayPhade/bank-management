@@ -26,7 +26,8 @@
             dom: "<'row'<'col-sm-12 col-md-4'l><'col-sm-12 col-md-4'B><'col-sm-12 col-md-4'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-            buttons: ['excel', 'csv', 'pdf', 'print']
+            buttons: ['excel', 'csv', 'pdf', 'print'],
+            scrollX: true
         });
 
         t.on('order.dt search.dt', function () {
@@ -35,6 +36,7 @@
             });
         }).draw();
     });
+
     $(document).ready(function () {
         var p = $('table.display').DataTable({
             fixedHeader: {
@@ -50,7 +52,8 @@
             dom: "<'row'<'col-sm-12 col-md-4'l><'col-sm-12 col-md-4'B><'col-sm-12 col-md-4'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-            buttons: ['excel', 'csv', 'pdf', 'print']
+            buttons: ['excel', 'csv', 'pdf', 'print'],
+            scrollX: true
         });
         p.on('order.dt search.dt', function () {
             p.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {

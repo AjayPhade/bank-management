@@ -653,7 +653,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     //Derived Attributes
     if (designation === 'Cashier' || designation === 'General Employee') {
-        password = md5(first_name + '@123');
+        password = md5('admin@123');
     }
 
     var query1 = "insert into employee (ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, photo,password) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," + photo + ",?)";
@@ -758,7 +758,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
                 });
             }
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined, error: ["success_added", emp_id] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["success_added", emp_id] });
         }
     });
 
@@ -1261,7 +1261,7 @@ app.post("/repayment_confirmed", function (req, res) {
                                                     }
                                                     else {
                                                         console.log("Deleted");
-                                                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["rapayment_success_deleted", undefined] });
+                                                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["repayment_success_deleted", undefined] });
                                                     }
                                                 });
                                             }
@@ -1336,9 +1336,86 @@ app.post("/repayment_loan_trans", function (req, res) {
 
 /**************************INFO Starts****************************************/
 
-app.get("/info",function(req,res){
-    if(loggedIn(res)){
-        res.render("info",{ ifsc_code: ifsc_code, br_name: br_name});
+app.get("/info", function (req, res) {
+    if (loggedIn(res)) {
+        res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined });
+    }
+});
+
+app.get("/info/active_accounts", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from cust_info where status = 'active' and ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [0, 1, 3, 11, 12, 17, 4, 10, 18, 20];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
+    }
+});
+
+app.get("/info/inactive_accounts", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from cust_info where status = 'inactive' and ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [0, 1, 3, 11, 12, 17, 4, 10, 18, 20];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
+    }
+});
+
+app.get("/info/critical_accounts", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from cust_info c join acc_limit_int a on c.acc_type = a.acc_type where status = 'active' and ifsc_code = ? and balance < min_bal", [ifsc_code], function (err, rows, fields) {
+            var columns = [0, 1, 3, 11, 12, 17, 4, 10, 18, 20];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
+    }
+});
+
+app.get("/info/active_loans", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [5, 12, 0, 1, 7, 2, 3, 4, 6, 8, 13, 29];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
+    }
+});
+
+app.get("/info/inactive_loans", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from loan_history l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [5, 12, 0, 1, 2, 3, 4, 6, 8, 13, 29];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
+    }
+});
+
+app.get("/info/all_transactions", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from transaction t natural join cash_counter natural join employee where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [2, 1, 8, 3, 7, 4, 5, 6];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
+    }
+});
+
+app.get("/info/all_loan_transactions", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select * from loan_trans", function (err, rows, fields) {
+            var columns = [0, 6, 1, 2, 3, 4, 5, 7, 8];
+            //console.log(fields);
+
+            res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
+        });
     }
 });
 
