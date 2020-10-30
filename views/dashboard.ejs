@@ -10,8 +10,7 @@
         <img src="images/customer.png" class="card-img-top" alt="..." />
         <div class="card-body">
           <h5 class="card-title">Customer Management</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
+          <p class="card-text">Create New Account, View Account Details, Update Account Details and Close Account.</p>
         </div>
       </div>
     </a>
@@ -25,7 +24,7 @@
         <img src="images/payment.png" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">Transaction Management</h5>
-          <p class="card-text">This is a short card.</p>
+          <p class="card-text">Withdraw Cash, Deposit Cash and View Transactions.</p>
         </div>
       </div>
     </a>
@@ -39,8 +38,7 @@
         <img src="images/loan.png" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">Loan Management</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
-            content.</p>
+          <p class="card-text">Sanction Loan, Loan Repayments and View Loan Transactions.</p>
         </div>
       </div>
     </a>
@@ -54,13 +52,39 @@
         <img src="images/employee.png" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">Employee Management</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
+          <p class="card-text">Add Employee, View Employee Details, Update Employee Details and Remove Employee.</p>
         </div>
       </div>
     </a>
   </div>
   <%}%>
+
+  <%if(designation === 'Manager'){%>
+    <div class="col mb-4">
+      <a href="info" class="card-link">
+        <div class="card h-100 row-2">
+          <img src="images/overall.png" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Overall Branch Data</h5>
+            <p class="card-text">For Overall Branch Information: Accounts, Loans, Transactions.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <%}%>
+    <%if(designation === 'General'){%>
+      <div class="col mb-4">
+        <a href="info" class="card-link">
+          <div class="card h-100 ">
+            <img src="images/overall.png" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Overall Branch Data</h5>
+              <p class="card-text">For Overall Branch Information: Accounts, Loans, Transactions.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <%}%>
 
   <%if(designation === 'Cashier'){%>
   <div class="col mb-4">

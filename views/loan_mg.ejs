@@ -82,6 +82,9 @@
       <%if(error[0] === 'repayment_success'){%>
       <div class="<%=error[0]%>" hidden></div>
       <%}%>
+      <%if(error[0] === 'repayment_success_deleted'){%>
+        <div class="<%=error[0]%>" hidden></div>
+        <%}%>
       <%if(error[0] === 'balance_error'){%>
       <div class="<%=error[0]%>" hidden><%=error[1]%></div>
       <%}%>
@@ -134,16 +137,22 @@
 
     <!-- View Customer Start -->
     <div class="view-custdiv view_trans" id="view-data">
-        <form method="POST" action="/particular_loan_trans" >
+        <form method="POST" action="/particular_loan_trans" class="needs-validation" novalidate >
           <div class="form-row">
             <div class="form-group col-md-10">
 
               <input type="text" name="acc_no" id="view_by_trans_no" class="form-control"
-                placeholder="Enter Account No">
+                placeholder="Enter Account No" required pattern="[0-9]*">
+                <div class="invalid-feedback">Account Number must contain digits only</div>
             </div>
             <div class="form-group col-md-2">
               <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
             </div>
+            <%if(error[0] === 'view_error'){%>
+              <div class="alert alert-danger <%=error[0]%>" role="alert">
+                <%=error[1]%>
+              </div>
+              <%}%>
           </div>
         </form>
         <h5 class="or">OR</h5>

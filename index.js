@@ -1261,14 +1261,18 @@ app.post("/repayment_confirmed", function (req, res) {
                                                     }
                                                     else {
                                                         console.log("Deleted");
-                                                        res.redirect("/loan_management");
+                                                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["rapayment_success_deleted", undefined] });
                                                     }
                                                 });
                                             }
                                         });
                                     }
-                                    res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["repayment_success", undefined] });
+                                    else {
+
+                                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["repayment_success", undefined] });
+                                    }
                                 }
+
                             });
                         }
                     })
@@ -1288,6 +1292,9 @@ app.post("/particular_loan_trans", function (req, res) {
     connection.query("select * from loan_trans where acc_no=? order by time_stamp desc", [acc_no], function (err, rows) {
         if (err) {
             console.log(err);
+        }
+        else if (rows.length === 0) {
+            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: "cdf", rows: rows, class_name: "trans_table", error: ["view_error", "Account Not Found"] });
         }
         else {
             res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: "cdf", rows: rows, class_name: "trans_table", error: [undefined, undefined] });
@@ -1326,6 +1333,16 @@ app.post("/repayment_loan_trans", function (req, res) {
 });
 ///////////////View Loan Trans Ends
 /**************************Loan Management Ends****************************************/
+
+/**************************INFO Starts****************************************/
+
+app.get("/info",function(req,res){
+    if(loggedIn(res)){
+        res.render("info",{ ifsc_code: ifsc_code, br_name: br_name});
+    }
+});
+
+/**************************INFO Ends****************************************/
 
 
 app.listen(3000, function () {

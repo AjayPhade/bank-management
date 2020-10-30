@@ -111,6 +111,12 @@ if (error3[0] !== undefined) {
   alert("Insufficient Balance\nCurrent Balance: " + error3[0].innerHTML);
 }
 
+var error4 = document.getElementsByClassName("view_error");
+
+if (error4[0] !== undefined) {
+  document.getElementsByClassName("view")[0].click();
+}
+
 var success1 = document.getElementsByClassName("sanction_success");
 
 if (success1[0] !== undefined) {
@@ -123,4 +129,11 @@ var success2 = document.getElementsByClassName("repayment_success");
 if (success2[0] !== undefined) {
   document.getElementsByClassName("add")[0].click();
   alert("Loan Repaid Successfully");
+}
+
+var success3 = document.getElementsByClassName("repayment_success_deleted");
+
+if (success3[0] !== undefined) {
+  document.getElementsByClassName("add")[0].click();
+  alert("Loan Repaid Successfully and Loan is closed.");
 }

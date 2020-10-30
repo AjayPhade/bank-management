@@ -361,3 +361,10 @@ td {
   width: 60%;
   text-align: center;
 }
+
+/***********************INFO***************************************/
+.info{
+  border-left: rgb(219, 210, 210) 0.5px solid;
+  margin-left: 3%;
+  margin-right: 3%;
+}
