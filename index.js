@@ -581,15 +581,16 @@ app.get("/profile", function (req, res) {
 
 /************************ Employee Managenment Starts ********************************************************/
 var emp_details;
+
 app.get("/emp_management", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from employee where ifsc_code= ? and emp_id != ?",[ifsc_code,emp_id],function(err,r){
-            if(err){
+        connection.query("select * from employee where ifsc_code = ? and emp_id != ?", [ifsc_code, emp_id], function (err, r) {
+            if (err) {
                 console.log(err);
             }
-            else{
+            else {
                 emp_details = r;
-                res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, emp_details , error: [undefined, undefined] });
+                res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, emp_details, error: [undefined, undefined] });
             }
         });
     }
@@ -599,7 +600,6 @@ app.get("/emp_management", function (req, res) {
 const storage2 = multer.diskStorage({
     destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
     filename: function (req, file, cb) {
-
         connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
             if (rows.length === 0) {
                 connection.query("alter table employee auto_increment = 1000", function (err, rows, fields) {
@@ -766,24 +766,22 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
                 });
             }
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined,emp_details, error: ["success_added", emp_id] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, emp_details, error: ["success_added", emp_id] });
         }
     });
-
 });
 
 /////////////View Employee
 app.post("/emp_profile", function (req, res) {
-    var query = "select * from emp_info where emp_id=" + req.body.emp_id;
+    var query = "select * from emp_info where emp_id = ? and ifsc_code = ?";
 
-    connection.query(query, function (err, rows, fields) {
+    connection.query(query, [req.body.emp_id, ifsc_code], function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
         else if (rows.length === 0) {
             console.log("Employee Not Found!!");
             res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, emp_details, rows: undefined, error: ["view_error", "Employee Not Found"] });
-
         }
         else {
             var row = rows[0];
@@ -812,13 +810,13 @@ app.post("/emp_profile", function (req, res) {
 app.post("/update_employee", function (req, res) {
     var emp_id = parseInt(req.body.emp_id);
 
-    connection.query("select * from emp_info where emp_id = ?", [emp_id], function (err, rows, fields) {
+    connection.query("select * from emp_info where emp_id = ? and ifsc_code = ?", [emp_id, ifsc_code], function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
         else if (rows.length === 0) {
             console.log("Employee Not Found!!");
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined,emp_details, rows: undefined, error: ["update_error", "Employee Not Found"] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, emp_details, rows: undefined, error: ["update_error", "Employee Not Found"] });
         }
         else {
             row = rows[0];
@@ -829,7 +827,7 @@ app.post("/update_employee", function (req, res) {
             else {
                 phone_no2 = "Not Available";
             }
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row,emp_details, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined, error: [undefined, undefined] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, emp_details, phone_no1: phone_no1, phone_no2: phone_no2, rows: undefined, error: [undefined, undefined] });
         }
     });
 });
@@ -901,7 +899,7 @@ app.post("/update_employee_details", function (req, res) {
                     });
                 }
             });
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined,emp_details, rows: undefined, error: ["success_updated", undefined] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, emp_details, rows: undefined, error: ["success_updated", undefined] });
         }
     });
 
@@ -914,13 +912,13 @@ app.post("/update_employee_details", function (req, res) {
 app.post("/remove_employee", function (req, res) {
     var emp_id = parseInt(req.body.emp_id);
 
-    connection.query("select * from emp_info where emp_id = ?", [emp_id], function (err, rows, fields) {
+    connection.query("select * from emp_info where emp_id = ? and ifsc_code = ?", [emp_id, ifsc_code], function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
         else if (rows.length === 0) {
             console.log("Employee Not Found!!");
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined,emp_details, rows: undefined, error: ["remove_error", "Employee Not Found"] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, emp_details, rows: undefined, error: ["remove_error", "Employee Not Found"] });
         }
         else {
             row = rows[0];
@@ -931,7 +929,7 @@ app.post("/remove_employee", function (req, res) {
             else {
                 phone_no2 = "Not Available";
             }
-            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, phone_no1,emp_details, phone_no2, row: undefined, rows: row, error: [undefined, undefined] });
+            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, phone_no1, emp_details, phone_no2, row: undefined, rows: row, error: [undefined, undefined] });
         }
     });
 });
@@ -949,7 +947,7 @@ app.post("/remove_employee_details", function (req, res) {
                 }
                 else {
                     console.log("Deleted from employee");
-                    res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name,emp_details, row: undefined, rows: undefined, error: ["success_removed", undefined] });
+                    res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, emp_details, row: undefined, rows: undefined, error: ["success_removed", undefined] });
 
                 }
             });
@@ -1031,7 +1029,7 @@ app.post("/deposit", function (req, res) {
             else {
                 var q = "insert into transaction (counter_no, trans_type,amount, acc_no,ifsc_code) values(?,?,?,?,?)";
 
-                connection.query(q, [counter_no, "Credit", amount, acc_no,ifsc_code], function (err, rows, fields) {
+                connection.query(q, [counter_no, "Credit", amount, acc_no, ifsc_code], function (err, rows, fields) {
                     if (err) {
                         console.log(err);
                     }
@@ -1075,7 +1073,7 @@ app.post("/particular_trans", function (req, res) {
 });
 
 app.post("/all_trans", function (req, res) {
-    connection.query("select * from transaction where counter_no = ? and ifsc_code = ? order by time_stamp desc", [counter_no,ifsc_code], function (err, rows, fields) {
+    connection.query("select * from transaction where counter_no = ? and ifsc_code = ? order by time_stamp desc", [counter_no, ifsc_code], function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
@@ -1112,52 +1110,57 @@ app.post("/sanction", function (req, res) {
     var mortgage = req.body.mortgage;
     var int_rate = parseFloat(req.body.int_rate);
     var tenure = parseInt(req.body.tenure);
-    connection.query("select * from cust_account where acc_no=? and status='ACTIVE'", [acc_no], function (err, row) {
+    connection.query("select * from cust_account c join branch b on c.ifsc_code = b.ifsc_code where acc_no=? and status='ACTIVE'", [acc_no], function (err, row) {
         if (err) {
             console.log(err);
         }
         else {
             if (row.length > 0) {
-                var query = "select * from loan where acc_no=?";
+                if (row[0].ifsc_code !== ifsc_code) {
+                    res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["remove_error", "Can't Saction Loan!! Account belongs to Branch: " + row[0].br_name] });
+                }
+                else {
+                    var query = "select * from loan where acc_no=?";
 
-                connection.query(query, [acc_no], function (err, rows) {
-                    if (rows.length === 0) {
-                        var query1 = "insert into loan (loan_type,amount,mortgage,int_rate,tenure,acc_no,rem_amt,sanctioned_by) values(?,?,?,?,?,?,?,?)";
+                    connection.query(query, [acc_no], function (err, rows) {
+                        if (rows.length === 0) {
+                            var query1 = "insert into loan (loan_type,amount,mortgage,int_rate,tenure,acc_no,rem_amt,sanctioned_by) values(?,?,?,?,?,?,?,?)";
 
-                        connection.query(query1, [loan_type, amount, mortgage, int_rate, tenure, acc_no, amount, emp_id], function (err, rows) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            else {
-                                console.log("Inserted Successfully!");
-                                var query2 = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no,rem_amt,done_by) values(?,?,?,?,?,?,?)";
+                            connection.query(query1, [loan_type, amount, mortgage, int_rate, tenure, acc_no, amount, emp_id], function (err, rows) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log("Inserted Successfully!");
+                                    var query2 = "insert into loan_trans (type,amount,int_amt,total_amt,acc_no,rem_amt,done_by) values(?,?,?,?,?,?,?)";
 
-                                connection.query(query2, ["Sanctioned", amount, 0, amount, acc_no, amount, emp_id], function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                    else {
-                                        console.log("Loan Sanctioned");
-                                        var query3 = "update cust_account set balance = balance+? where acc_no=?";
+                                    connection.query(query2, ["Sanctioned", amount, 0, amount, acc_no, amount, emp_id], function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                        else {
+                                            console.log("Loan Sanctioned");
+                                            var query3 = "update cust_account set balance = balance+? where acc_no=?";
 
-                                        connection.query(query3, [amount, acc_no], function (err) {
-                                            if (err) {
-                                                console.log(err);
-                                            }
-                                            else {
-                                                res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["sanction_success", undefined] });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    else {
-                        console.log("Loan Already Exists.");
-                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["remove_error", "Can't Sanction Loan!! Loan Already Exists"] });
-                    }
-                })
+                                            connection.query(query3, [amount, acc_no], function (err) {
+                                                if (err) {
+                                                    console.log(err);
+                                                }
+                                                else {
+                                                    res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["sanction_success", undefined] });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            console.log("Loan Already Exists.");
+                            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["remove_error", "Can't Sanction Loan!! Loan Already Exists"] });
+                        }
+                    });
+                }
             }
             else {
                 console.log("Account Not Found");
@@ -1172,7 +1175,7 @@ app.post("/sanction", function (req, res) {
 app.post("/repayment", function (req, res) {
     var acc_no = parseInt(req.body.acc_no);
     var amount = parseFloat(req.body.amount);
-    connection.query("select * from cust_account where acc_no = ? and status='ACTIVE'", [acc_no], function (err, row) {
+    connection.query("select * from cust_account c join branch b on c.ifsc_code = b.ifsc_code where acc_no=? and status='ACTIVE'", [acc_no], function (err, row) {
         if (err) {
             console.log(err);
         }
@@ -1181,42 +1184,47 @@ app.post("/repayment", function (req, res) {
             res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["add_error", "Account Not Found"] });
         }
         else {
-            connection.query("select * from loan where acc_no=?", [acc_no], function (err, rows) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    if (rows.length === 0) {
-                        console.log("This account doesn't have any loan");
-                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["add_error", "This account doesn't have any active loan"] });
-                    }
-                    else if (rows[0].rem_amt < amount) {
-                        console.log("You are paying higher than remaining loan.");
-                        res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["add_error", "Can't Repay!! Remaining Loan: " + rows[0].rem_amt] });
+            if (row[0].ifsc_code !== ifsc_code) {
+                res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["add_error", "Can't Repay Loan!! Account belongs to Branch: " + row[0].br_name] });
+            }
+            else {
+                connection.query("select * from loan where acc_no=?", [acc_no], function (err, rows) {
+                    if (err) {
+                        console.log(err);
                     }
                     else {
-                        var int_rate = rows[0].int_rate;
-                        var rem_amt = rows[0].rem_amt;
-                        var total_amt;
-                        connection.query("select DATEDIFF(CURDATE(),time_stamp) as days from loan_trans where acc_no=? order by time_stamp desc limit 1 ", [acc_no], function (err, row) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            else {
-                                var int_amt = ((rem_amt * int_rate) / 36500) * row[0].days;
-                                int_amt = parseFloat(int_amt.toFixed(2));
-                                total_amt = amount + int_amt;
-                                var rem_amt2 = rem_amt - amount;
-                                console.log(rem_amt, int_rate, row[0].days, typeof (total_amt));
-                                row = {
-                                    int_amt, total_amt, amount, acc_no, rem_amt2
+                        if (rows.length === 0) {
+                            console.log("This account doesn't have any loan");
+                            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["add_error", "This account doesn't have any active loan"] });
+                        }
+                        else if (rows[0].rem_amt < amount) {
+                            console.log("You are paying higher than remaining loan.");
+                            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["add_error", "Can't Repay Loan!! Remaining Loan: " + rows[0].rem_amt] });
+                        }
+                        else {
+                            var int_rate = rows[0].int_rate;
+                            var rem_amt = rows[0].rem_amt;
+                            var total_amt;
+                            connection.query("select DATEDIFF(CURDATE(),time_stamp) as days from loan_trans where acc_no=? order by time_stamp desc limit 1 ", [acc_no], function (err, row) {
+                                if (err) {
+                                    console.log(err);
                                 }
-                                res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, cls: "confirm", rows: undefined, class_name: undefined, error: [undefined, undefined] });
-                            }
-                        });
+                                else {
+                                    var int_amt = ((rem_amt * int_rate) / 36500) * row[0].days;
+                                    int_amt = parseFloat(int_amt.toFixed(2));
+                                    total_amt = amount + int_amt;
+                                    var rem_amt2 = rem_amt - amount;
+                                    console.log(rem_amt, int_rate, row[0].days, typeof (total_amt));
+                                    row = {
+                                        int_amt, total_amt, amount, acc_no, rem_amt2
+                                    }
+                                    res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: row, cls: "confirm", rows: undefined, class_name: undefined, error: [undefined, undefined] });
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     });
 
@@ -1309,8 +1317,9 @@ app.post("/particular_loan_trans", function (req, res) {
         }
     });
 });
+
 app.post("/all_loan_trans", function (req, res) {
-    connection.query("select * from loan_trans order by time_stamp desc", function (err, rows) {
+    connection.query("select * from loan_trans natural join cust_account where ifsc_code = ? order by time_stamp desc", [ifsc_code], function (err, rows) {
         if (err) {
             console.log(err);
         }
@@ -1319,8 +1328,9 @@ app.post("/all_loan_trans", function (req, res) {
         }
     });
 });
+
 app.post("/sanctioned_loan_trans", function (req, res) {
-    connection.query("select * from loan_trans where type='sanctioned' order by time_stamp desc", function (err, rows) {
+    connection.query("select * from loan_trans natural join cust_account where ifsc_code = ? and type='sanctioned' order by time_stamp desc", [ifsc_code], function (err, rows) {
         if (err) {
             console.log(err);
         }
@@ -1329,8 +1339,9 @@ app.post("/sanctioned_loan_trans", function (req, res) {
         }
     });
 });
+
 app.post("/repayment_loan_trans", function (req, res) {
-    connection.query("select * from loan_trans where type='repayment' order by time_stamp desc", function (err, rows) {
+    connection.query("select * from loan_trans natural join cust_account where ifsc_code = ? and type='repayment' order by time_stamp desc", [ifsc_code], function (err, rows) {
         if (err) {
             console.log(err);
         }
@@ -1386,7 +1397,7 @@ app.get("/info/critical_accounts", function (req, res) {
 app.get("/info/active_loans", function (req, res) {
     if (loggedIn(res)) {
         connection.query("select * from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [6,5, 12, 0, 1, 7, 2, 3, 4, 8, 13, 29];
+            var columns = [6, 5, 12, 0, 1, 7, 2, 3, 4, 8, 13, 29];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
@@ -1397,17 +1408,18 @@ app.get("/info/active_loans", function (req, res) {
 app.get("/info/inactive_loans", function (req, res) {
     if (loggedIn(res)) {
         connection.query("select * from loan_history l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [9, 0, 5, 13, 1,2, 3, 4, 6, 8];
+            var columns = [9, 0, 5, 13, 1, 2, 3, 4, 6, 8];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
         });
     }
 });
+
 app.get("/info/overdue_loans", function (req, res) {
     if (loggedIn(res)) {
         connection.query("select * from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? and TIMESTAMPDIFF(YEAR,time_stamp,CURRENT_TIMESTAMP) >= tenure", [ifsc_code], function (err, rows, fields) {
-            var columns = [6,5, 12, 0, 1, 7, 2, 3, 4, 8, 13, 29];
+            var columns = [6, 5, 12, 0, 1, 7, 2, 3, 4, 8, 13, 29];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
@@ -1418,7 +1430,7 @@ app.get("/info/overdue_loans", function (req, res) {
 app.get("/info/all_transactions", function (req, res) {
     if (loggedIn(res)) {
         connection.query("select * from transaction t natural join cash_counter natural join employee where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [3, 2, 1, 8, 7, 4, 5, 6];
+            var columns = [3, 7, 4, 5, 6, 2, 1, 8];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
@@ -1428,8 +1440,8 @@ app.get("/info/all_transactions", function (req, res) {
 
 app.get("/info/all_loan_transactions", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from loan_trans", function (err, rows, fields) {
-            var columns = [0, 6, 1, 2, 3, 4, 5, 7, 8];
+        connection.query("select * from loan_trans natural join cust_account where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [1, 0, 2, 3, 4, 5, 6, 7, 8];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
