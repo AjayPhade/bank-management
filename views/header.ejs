@@ -5,6 +5,29 @@
   <meta charset="utf-8">
   <title>Bank Management System</title>
 
+
+  <script>
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var ampm = h>=12?' PM':' AM';
+      h = h%12;
+      h = h?h:12;
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('txt').innerHTML = 'Time: '+
+      h + ":" + m + ":" + s + ampm;
+      var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+      return i;
+    }
+    </script>
+
+
   <!-- font-awesome -->
   <script src="https://kit.fontawesome.com/ee8e198b74.js" crossorigin="anonymous" SameSite="None"></script>
 
@@ -20,7 +43,7 @@
 
 </head>
 
-<body>
+<body onload="startTime()">
   <!-- Navbar Start -->
   <nav class="navbar navbar-expand-lg navbar-div1 bg-primary">
     <a class="navbar-brand company-branding" href="/dashboard">
@@ -30,6 +53,8 @@
     <div class="ifsc">
       <h6>IFSC Code: <em> <%=ifsc_code%></em></h6>
       <h6>&nbsp &nbsp Branch: <em> <%=br_name%></em></h6>
+      <div id="txt"></div>
+      
     </div>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">

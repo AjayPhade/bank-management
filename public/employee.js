@@ -41,6 +41,7 @@ function select(event) {
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
       document.getElementsByName("first_name")[0].focus();
+      document.getElementsByClassName("emp_details")[0].style.display="none";
       previous = element;
       if(update !==undefined){
         update.style.display = "none";
@@ -61,6 +62,8 @@ function select(event) {
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
       document.getElementsByName("emp_id")[0].focus();
+      document.getElementsByClassName("emp_details")[0].style.display="inherit";
+      document.getElementById("emp").click();
       previous = element;
       if(update !==undefined){
         update.style.display = "none";
@@ -80,6 +83,7 @@ function select(event) {
       element.style.transform = "scale(1.1)";
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
+      document.getElementsByClassName("emp_details")[0].style.display="none";
       previous = element;
       if(remove !==undefined){
         remove.style.display = "none";
@@ -96,6 +100,7 @@ function select(event) {
       element.style.transform = "scale(1.1)";
       div = document.getElementsByClassName(element.id + "-custdiv")[0];
       div.style.display = "inherit";
+      document.getElementsByClassName("emp_details")[0].style.display="none";
       previous = element;
       if(update !==undefined){
         update.style.display = "none";
