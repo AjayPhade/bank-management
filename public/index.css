@@ -28,6 +28,7 @@ body {
 
 .navbar-div2 {
   margin: auto;
+  padding-left: 45%;
 }
 
 .nav-link {
@@ -67,9 +68,10 @@ h6 {
 }
 
 #txt {
-  margin-left: 13%;
+  margin-left: 55%;
   color: white;
-  margin-right: 10%;
+  /*margin-right: 60%;*/
+  position: absolute;
 }
 /******************************** Navbar Ends ********************************/
 
