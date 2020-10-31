@@ -33,6 +33,7 @@ body {
 .nav-link {
   color: #deebe9e5;
   font-weight: 600;
+  transition: all 0.2s;
 }
 
 .nav-link:hover {
@@ -74,11 +75,13 @@ h6 {
 
 .card {
   width: 90%;
+  box-shadow: 5px 7px 20px gray;
+  border-radius: 0.7rem;
+  transition: all 0.3s;
 }
 
 .card:hover {
-  transform: scale(1.1);
-  border-color: rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
 }
 
 .cashier:hover {
