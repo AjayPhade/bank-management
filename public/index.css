@@ -23,11 +23,11 @@ body {
   padding-top: 0.6%;
   padding-bottom: 0.6%;
   font-size: 1.2rem;
+  box-shadow: 4px 4px 15px gray;
 }
 
 .navbar-div2 {
-  padding-left: auto;
-  margin-left: 58%;
+  margin: auto;
 }
 
 .nav-link {
@@ -49,13 +49,27 @@ body {
   color: white;
   font-weight: bold;
 }
+
+.branch {
+  text-align: center;
+  color: white;
+  margin-left: 2%;
+}
+
 .ifsc {
   text-align: center;
-  padding-left: 30%;
   color: white;
+  margin-left: 13%;
 }
+
 h6 {
   display: inline;
+}
+
+#txt {
+  margin-left: 13%;
+  color: white;
+  margin-right: 10%;
 }
 /******************************** Navbar Ends ********************************/
 
