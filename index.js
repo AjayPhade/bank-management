@@ -7,7 +7,6 @@ const path = require('path');
 const md5 = require('md5');
 const fs = require('fs');
 const move = require('fs-extra');
-const e = require("express");
 //const { check, validationResult } = require('express-validator');
 
 //ID of logged in employee
@@ -981,9 +980,9 @@ app.post("/withdraw", function (req, res) {
                     res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["withdraw_error", "Insufficient Balance!! Current Balance: " + rows[0].balance] });
                 }
                 else {
-                    var q = "insert into transaction (counter_no, trans_type,amount, acc_no) values(?,?,?,?)";
+                    var q = "insert into transaction (counter_no, trans_type,amount, acc_no, ifsc_code) values(?,?,?,?,?)";
 
-                    connection.query(q, [counter_no, "debit", amount, acc_no], function (err) {
+                    connection.query(q, [counter_no, "debit", amount, acc_no, ifsc_code], function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -1400,7 +1399,7 @@ app.get("/info/inactive_loans", function (req, res) {
 app.get("/info/all_transactions", function (req, res) {
     if (loggedIn(res)) {
         connection.query("select * from transaction t natural join cash_counter natural join employee where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [2, 1, 8, 3, 7, 4, 5, 6];
+            var columns = [3, 2, 1, 8, 7, 4, 5, 6];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });

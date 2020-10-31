@@ -171,7 +171,7 @@
         <div class="row">
             <div class="balance-box">
                 <h5 class="bal-text">Balance</h5>
-                <%if(row.balance < r.min_bal){%>
+                <%if(row.balance < min_bal){%>
                 <h3 style="color: red;"> ₹ <%=row.balance%></h3>
                 <%}else{%>
                 <h3> ₹ <%=row.balance%></h3>
