@@ -1,139 +1,153 @@
 <%- include("header") -%>
 
+<a type="button" style="position: absolute;z-index: 100;top: 50px;left:400px" href="/customer_management"
+    class="btn login-btn btn-outline-primary"><i class="far fa-arrow-alt-circle-left"></i> Back </a>
+<%if(row.status === "INACTIVE"){%>
+<form action="/reopen" method="POST">
+
+    <div hidden>
+        <input type="text" name="acc_no" value="<%=row.acc_no%>" readonly>
+    </div>
+    <button type="submit" style="position: absolute;z-index: 100;top: 50px;right:180px"
+        class="btn login-btn btn-outline-primary">Reopen Account <i class="fas fa-sync-alt"></i> </button>
+</form>
+<%}%>
 <div class="row">
     <div class="col-md-3 first_col">
         <div class="profile-col1">
             <img src="data:image/png;base64,<%=photo%>" height="200px" width="200px">
-            <p class="cust_id"><strong> Customer Id :</strong> <%=row.cust_id%></p>
-        </div>
-        <div>
-            <table class="cust_info">
-                <tr class="profile-section">
-                    <td>
-                        <h5>Name : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.name%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>Address : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.address%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>City : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.city%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>State : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.state%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>Zip : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.zip%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>Gender : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.gender%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>DOB : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.dob%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>Contact No (Primary) : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=phone_no1%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>Contact No (Secondary) : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=phone_no2%></h5>
-                    </td>
-                </tr>
-                <tr class="profile-section">
-                    <td>
-                        <h5>Email Id : </h5>
-                    </td>
-                    <td>
-                        <h5 class="profile-text"><%=row.email%></h5>
-                    </td>
-                </tr>
-            </table>
-            <div class="view-doc-btn">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                    <i class="fas fa-eye"></i> View Documents
-                </button>
-                <!-- Modal -->
-                <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Aadhaar Card</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <embed src="pdfs/<%=row.aadhaar%>" type="application/pdf" height="500px" width="100%">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
+<p class="cust_id"><strong> Customer Id :</strong> <%=row.cust_id%></p>
+</div>
+<div>
+    <table class="cust_info">
+        <tr class="profile-section">
+            <td>
+                <h5>Name : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.name%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>Address : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.address%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>City : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.city%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>State : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.state%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>Zip : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.zip%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>Gender : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.gender%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>DOB : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.dob%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>Contact No (Primary) : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=phone_no1%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>Contact No (Secondary) : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=phone_no2%></h5>
+            </td>
+        </tr>
+        <tr class="profile-section">
+            <td>
+                <h5>Email Id : </h5>
+            </td>
+            <td>
+                <h5 class="profile-text"><%=row.email%></h5>
+            </td>
+        </tr>
+    </table>
+    <div class="view-doc-btn">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <i class="fas fa-eye"></i> View Documents
+        </button>
+        <!-- Modal -->
+        <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Aadhaar Card</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <embed src="pdfs/<%=row.aadhaar%>" type="application/pdf" height="500px" width="100%">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-8 sec_col">
-        <div class="accinfo_heading">
-            <h3><em>Account Information</em></h3>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <table class="acc_info">
-                    <tr class="profile-section">
-                        <td>
-                            <h5>Account No : </h5>
-                        </td>
-                        <td>
-                            <h5 class="profile-text"><%=row.acc_no%>
-                                <%if(row.status==='INACTIVE'){%>
-                                <span style="color: red;">(<%=row.status%>)</span>
-                                <%}else{%>
-                                <span style="color: green;">(<%=row.status%>)</span>
-                                <%}%>
+</div>
+</div>
+<div class="col-md-8 sec_col">
+
+    <div class="accinfo_heading">
+
+        <h3><em>Account Information</em></h3>
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <table class="acc_info">
+                <tr class="profile-section">
+                    <td>
+                        <h5>Account No : </h5>
+                    </td>
+                    <td>
+                        <h5 class="profile-text"><%=row.acc_no%>
+                            <%if(row.status==='INACTIVE'){%>
+                            <span style="color: red;">(<%=row.status%>)</span>
+                            <%}else{%>
+                            <span style="color: green;">(<%=row.status%>)</span>
+                            <%}%>
                                 </h5>
                         </td>
                     </tr>
@@ -143,39 +157,39 @@
                         </td>
                         <td>
                             <h5 class="profile-text"><%=row.acc_type%></h5>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-md-6">
-                <table class="acc_info">
-                    <tr class="profile-section">
-                        <td>
-                            <h5>Minimum Balance : </h5>
-                        </td>
-                        <td>
-                            <h5 class="profile-text"><%=min_bal%></h5>
-                        </td>
-                    </tr>
-                    <tr class="profile-section">
-                        <td>
-                            <h5>Interest Rate : </h5>
-                        </td>
-                        <td>
-                            <h5 class="profile-text"><%=row.int_rate%></h5>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="row">
-            <div class="balance-box">
-                <h5 class="bal-text">Balance</h5>
-                <%if(row.balance < min_bal){%>
-                <h3 style="color: red;"> ₹ <%=row.balance%></h3>
-                <%}else{%>
-                <h3> ₹ <%=row.balance%></h3>
-                <%}%>
+        <div class="col-md-6">
+            <table class="acc_info">
+                <tr class="profile-section">
+                    <td>
+                        <h5>Minimum Balance : </h5>
+                    </td>
+                    <td>
+                        <h5 class="profile-text"><%=min_bal%></h5>
+                    </td>
+                </tr>
+                <tr class="profile-section">
+                    <td>
+                        <h5>Interest Rate : </h5>
+                    </td>
+                    <td>
+                        <h5 class="profile-text"><%=row.int_rate%></h5>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="balance-box">
+            <h5 class="bal-text">Balance</h5>
+            <%if(row.balance < min_bal){%>
+            <h3 style="color: red;"> ₹ <%=row.balance%></h3>
+            <%}else{%>
+            <h3> ₹ <%=row.balance%></h3>
+            <%}%>
             </div>
         </div>
         <div class="acc_trans_table">
@@ -197,16 +211,16 @@
                     </thead>
                     <tbody>
                         <%for(var i=0;i < length ; i++){%>
-                <tr>
-                    <th scope="row"><%=i+1%></th>
-                    <td><%=rows[i].trans_no%></td>
-                    <td><%=rows[i].acc_no%></td>
-                    <td><%=rows[i].trans_type%></td>
-                    <td><%=rows[i].amount%></td>
-                    <td><%=rows[i].time_stamp%></td>
-                    <td><%=rows[i].counter_no%></td>
-                </tr>
-                <%}%>
+            <tr>
+                <th scope="row"><%=i+1%></th>
+                <td><%=rows[i].trans_no%></td>
+                <td><%=rows[i].acc_no%></td>
+                <td><%=rows[i].trans_type%></td>
+                <td><%=rows[i].amount%></td>
+                <td><%=rows[i].time_stamp%></td>
+                <td><%=rows[i].counter_no%></td>
+            </tr>
+            <%}%>
                 </tbody>
                 
               </table>
@@ -236,18 +250,18 @@
                     </thead>
                     <tbody>
                       <%for(var i=0;i < r.length ; i++){%>
-                <tr>
-                    <th scope="row"><%=i+1%></th>
-                    <td><%=r[i].loan_trans_id%></td>
-                    <td><%=r[i].acc_no%></td>
-                    <td><%=r[i].type%></td>
-                    <td><%=r[i].amount%></td>
-                    <td><%=r[i].time_stamp%></td>
-                    <td><%=r[i].int_amt%></td>
-                    <td><%=r[i].total_amt%></td>
-                    <td><%=r[i].rem_amt%></td>
-                </tr>
-                <%}%>
+            <tr>
+                <th scope="row"><%=i+1%></th>
+                <td><%=r[i].loan_trans_id%></td>
+                <td><%=r[i].acc_no%></td>
+                <td><%=r[i].type%></td>
+                <td><%=r[i].amount%></td>
+                <td><%=r[i].time_stamp%></td>
+                <td><%=r[i].int_amt%></td>
+                <td><%=r[i].total_amt%></td>
+                <td><%=r[i].rem_amt%></td>
+            </tr>
+            <%}%>
                   </tbody>
                   
                 </table>
