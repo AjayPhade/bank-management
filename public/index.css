@@ -42,24 +42,24 @@ body {
 }
 
 .company-branding {
-  color: white;
+  
   font-weight: bold;
 }
 
 .company-branding:hover {
-  color: white;
+  
   font-weight: bold;
 }
 
 .branch {
   text-align: center;
-  color: white;
+  
   margin-left: 2%;
 }
 
 .ifsc {
   text-align: center;
-  color: white;
+  
   margin-left: 13%;
 }
 
@@ -69,7 +69,7 @@ h6 {
 
 #txt {
   margin-left: 60%;
-  color: white;
+  
   /*margin-right: 60%;*/
   position: absolute;
 }
@@ -89,14 +89,14 @@ h6 {
   margin-top: 10%;
 }
 
-.card {
+.col .card {
   width: 90%;
   box-shadow: 5px 7px 20px gray;
   border-radius: 1rem;
   transition: all 0.3s;
 }
 
-.card:hover {
+.col .card:hover {
   transform: scale(1.05);
 }
 
@@ -139,42 +139,31 @@ h6 {
 }
 
 .sidebar {
-  height: 100%;
+  border-radius: 1rem;
+  background-color: white;
   padding-left: 0%;
   padding-right: 0%;
   text-align: center;
   position: fixed;
-}
-
-.sidebar-tile {
-  padding-top: 20%;
-  padding-bottom: 20%;
-}
-
-.nav-pills .nav-link {
-  border-radius: 0.7rem;
   border-top-left-radius: unset;
   border-bottom-left-radius: unset;
 }
 
+.btn {
+  box-shadow: 3px 3px 9px rgb(179, 175, 175);
+}
+
+.nav-pills .nav-link {
+  color: black;
+  border-radius: 1rem;
+  border-top-left-radius: unset;
+  border-bottom-left-radius: unset;
+  padding-top: 20%;
+  padding-bottom: 20%;
+}
+
 .col-10 {
   margin-left: auto;
-}
-
-.add {
-  background-color: #29e681;
-}
-
-.view {
-  background-color: #e6a400;
-}
-
-.update {
-  background-color: #393e46;
-}
-
-.remove {
-  background-color: #cf1b1b;
 }
 
 /******************************** Customer Add Starts ********************************/
@@ -379,6 +368,11 @@ td {
   margin: auto;
   width: 60%;
   text-align: center;
+  box-shadow: 2px 2px 2px rgb(179, 175, 175);
+}
+
+.alert-success {
+  box-shadow: 2px 2px 2px rgb(179, 175, 175);
 }
 
 /***********************INFO***************************************/
@@ -392,5 +386,5 @@ td {
   display: none;
   margin-right: 9%;
   margin-left: 9%;
-  margin-top: 8%;
+  margin-top: 5%;
 }

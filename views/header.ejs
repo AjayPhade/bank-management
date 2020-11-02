@@ -16,6 +16,7 @@
       var s = today.getSeconds();
       m = checkTime(m);
       s = checkTime(s);
+      h = checkTime(h);
       document.getElementById('txt').innerHTML = '<h6 style="font-size: 1.2rem;">Time: ' +
         h + ":" + m + ":" + s + ampm + '</h6>';
       var t = setTimeout(startTime, 500);
@@ -43,7 +44,7 @@
 
 <body onload="startTime()">
   <!-- Navbar Start -->
-  <nav class="navbar navbar-expand-lg navbar-div1 bg-primary sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow sticky-top">
     <a class="navbar-brand company-branding" href="/dashboard">
       <img src="/images/jstar.png" width="35" height="35" class="d-inline-block align-top" alt="" loading="lazy">
       JStar Bank
@@ -56,7 +57,7 @@
     </div>
 
     <div id="txt">
-      <h6 style="font-size: 1.2rem;">Time: 00:00:00 00</h6>
+      <h6 style="font-size: 1.2rem;">Time: 00:00:00 PM</h6>
     </div>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">

@@ -79,7 +79,7 @@ app.get("/dashboard", function (req, res) {
                     counter_no = rows[0].counter_no;
                     console.log("Query Successful");
 
-                    res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "Cashier", error:undefined });
+                    res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "Cashier", error: undefined });
                 }
             });
         }
@@ -305,10 +305,10 @@ app.post("/view_profile", function (req, res) {
         }
         else if (rows.length === 0) {
             console.log("Account Not Found!!");
-            if(req.body.cash_dash !== undefined){
-                res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "Cashier", error:'cash_dash_error' });
+            if (req.body.cash_dash !== undefined) {
+                res.render("dashboard", { ifsc_code: ifsc_code, br_name: br_name, designation: "Cashier", error: 'cash_dash_error' });
             }
-            else{
+            else {
                 res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["view_error", "Account Not Found"] });
             }
         }
@@ -580,7 +580,7 @@ app.post("/remove_customer_details", function (req, res) {
                 }
                 else {
                     if (row[0].balance > 0) {
-                        connection.query("insert into transaction (trans_type,amount,acc_no) values(?,?,?)", ['debit', row[0].balance, acc_no], function (err) {
+                        connection.query("insert into transaction (trans_type,amount,acc_no) values(?,?,?)", ['Debit', row[0].balance, acc_no], function (err) {
                             if (err) {
                                 console.log(err);
                             }
@@ -1403,7 +1403,6 @@ app.post("/repayment_confirmed", function (req, res) {
                                         });
                                     }
                                     else {
-
                                         res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["repayment_success", undefined] });
                                     }
                                 }
@@ -1416,7 +1415,7 @@ app.post("/repayment_confirmed", function (req, res) {
         }
         else {
             console.log("Insufficient Balance!");
-            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["balance_error", "Insufficient Balance!! Current Balance: " + row[0].balance] });
+            res.render("loan_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, cls: 'cdf', rows: undefined, class_name: undefined, error: ["balance_error", row[0].balance] });
         }
     });
 });

@@ -83,8 +83,8 @@
       <div class="<%=error[0]%>" hidden></div>
       <%}%>
       <%if(error[0] === 'repayment_success_deleted'){%>
-        <div class="<%=error[0]%>" hidden></div>
-        <%}%>
+      <div class="<%=error[0]%>" hidden></div>
+      <%}%>
       <%if(error[0] === 'balance_error'){%>
       <div class="<%=error[0]%>" hidden><%=error[1]%></div>
       <%}%>
@@ -107,31 +107,32 @@
         <div class="form-group debit_fields">
           <label for="inputAddress">Account No</label>
           <input type="text" class="form-control" id="inputAddress" name="acc_no" value="<%=row.acc_no%>" readonly
-      required>
-    </div>
-    <div class="form-group debit_fields">
-      <label for="inputAddress">Principal Amount(₹)</label>
-      <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly required>
-    </div>
-    <div class="form-group debit_fields">
-      <label for="inputAddress">Interest Payable(₹)</label>
-      <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly
-        required>
-    </div>
-    <div class="form-group debit_fields">
-      <label for="inputAddress">Total Amount Payable(₹)</label>
-      <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly
-        required>
-    </div>
-    <div class="form-group debit_fields">
-      <label for="inputAddress">Remaining Principal Amount(₹)</label>
-      <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly
-        required>
-    </div>
-    <button type="submit" class="btn btn-primary btn-cust debit-btn"> <i class="fas fa-check-circle"></i> Confirm
-      Repayment </button>
-    </form>
-    <%}%>
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Principal Amount(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="amount" value="<%=row.amount%>" readonly
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Interest Payable(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="int_amt" value="<%=row.int_amt%>" readonly
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Total Amount Payable(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="total_amt" value="<%=row.total_amt%>" readonly
+            required>
+        </div>
+        <div class="form-group debit_fields">
+          <label for="inputAddress">Remaining Principal Amount(₹)</label>
+          <input type="text" class="form-control" id="inputAddress" name="rem_amt2" value="<%=row.rem_amt2%>" readonly
+            required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-cust debit-btn"> <i class="fas fa-check-circle"></i> Confirm
+          Repayment </button>
+      </form>
+      <%}%>
     </div>
     <!-- Add Customer End -->
 
@@ -149,10 +150,10 @@
               <button type="submit" class="btn btn-primary text-nowrap"> Search <i class="fas fa-search"></i></button>
             </div>
             <%if(error[0] === 'view_error'){%>
-              <div class="alert alert-danger <%=error[0]%>" role="alert">
-                <%=error[1]%>
-              </div>
-              <%}%>
+      <div class="alert alert-danger <%=error[0]%>" role="alert">
+        <%=error[1]%>
+      </div>
+      <%}%>
           </div>
         </form>
         <h5 class="or">OR</h5>
@@ -185,50 +186,52 @@
         </form>
 
     </div>
+    
     <%if(class_name !== undefined || rows !== undefined){ %>
-    <div class="<%=class_name%> table_trans">
-      <table class="table table-bordered table-striped" id="trans_table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Loan Transaction No</th>
-            <th scope="col">Account No</th>
-            <th scope="col">Loan Type</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Time Stamp</th>
-            <th scope="col">Interest Amount</th>
-            <th scope="col">Total Amount</th>
-            <th scope="col">Remaining Loan</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%for(var i=0;i < rows.length ; i++){%>
-          <tr>
-            <th scope="row"><%=i+1%></th>
-            <td><%=rows[i].loan_trans_id%></td>
-            <td><%=rows[i].acc_no%></td>
-            <td><%=rows[i].type%></td>
-            <td><%=rows[i].amount%></td>
-            <td><%=rows[i].time_stamp%></td>
-            <td><%=rows[i].int_amt%></td>
-            <td><%=rows[i].total_amt%></td>
-            <td><%=rows[i].rem_amt%></td>
-          </tr>
-          <%}%>
-        </tbody>
-        
-      </table>
-  
-    </div>
+      <div class="<%=class_name%> table_trans">
+        <div class="card shadow">
+          <div class="card-body">
+            <table class="table table-bordered table-striped" id="trans_table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Loan Transaction No</th>
+                  <th scope="col">Account No</th>
+                  <th scope="col">Loan Type</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Time Stamp</th>
+                  <th scope="col">Interest Amount</th>
+                  <th scope="col">Total Amount</th>
+                  <th scope="col">Remaining Loan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%for(var i=0;i < rows.length ; i++){%>
+                <tr>
+                  <th scope="row"><%=i+1%></th>
+                  <td><%=rows[i].loan_trans_id%></td>
+                  <td><%=rows[i].acc_no%></td>
+                  <td><%=rows[i].type%></td>
+                  <td><%=rows[i].amount%></td>
+                  <td><%=rows[i].time_stamp%></td>
+                  <td><%=rows[i].int_amt%></td>
+                  <td><%=rows[i].total_amt%></td>
+                  <td><%=rows[i].rem_amt%></td>
+                </tr>
+                <%}%>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     <%}%>
-    </div>
+          </div>
+          <!-- View Customer End -->
+        </div>
 
-    <!-- View Customer End -->
-  </div>
 
+        <!-- Create Customer Form Ends -->
 
-  <!-- Create Customer Form Ends -->
+        <script src="loan.js" charset="utf-8" type='text/javascript'></script>
 
-  <script src="loan.js" charset="utf-8" type='text/javascript'></script>
-
-  <%- include("footer") -%>
+        <%- include("footer") -%>

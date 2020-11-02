@@ -34,6 +34,7 @@ function select(event) {
         previous.style.transform = "initial";
         div = document.getElementsByClassName(previous.id + "-custdiv")[0];
         div.style.display = "none";
+        previous.style.backgroundColor = "white";
       }
       element.style.backgroundColor = "#29e681";
       element.style.transform = "scale(1.1)";
@@ -54,6 +55,7 @@ function select(event) {
         previous.style.transform = "initial";
         div = document.getElementsByClassName(previous.id + "-custdiv")[0];
         div.style.display = "none";
+        previous.style.backgroundColor = "white";
       }
       element.style.backgroundColor = "#e6a400";
       element.style.transform = "scale(1.1)";
@@ -74,6 +76,7 @@ function select(event) {
         previous.style.transform = "initial";
         div = document.getElementsByClassName(previous.id + "-custdiv")[0];
         div.style.display = "none";
+        previous.style.backgroundColor = "white";
       }
       element.style.backgroundColor = "#393e46";
       element.style.transform = "scale(1.1)";
@@ -90,6 +93,7 @@ function select(event) {
         previous.style.transform = "initial";
         div = document.getElementsByClassName(previous.id + "-custdiv")[0];
         div.style.display = "none";
+        previous.style.backgroundColor = "white";
       }
       element.style.backgroundColor = "#cf1b1b";
       element.style.transform = "scale(1.1)";
