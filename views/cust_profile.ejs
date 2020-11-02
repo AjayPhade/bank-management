@@ -16,7 +16,7 @@
     <div class="col-md-3 first_col">
         <div class="profile-col1">
             <img src="data:image/png;base64,<%=photo%>" height="200px" width="200px">
-<p class="cust_id"><strong> Customer Id :</strong> <%=row.cust_id%></p>
+<p class="cust_id"><strong> Customer ID :</strong> <%=row.cust_id%></p>
 </div>
 <div>
     <table class="cust_info">
@@ -196,8 +196,9 @@
             <div class="accinfo_heading">
                 <h4><em> Account Transactions </em></h4>
             </div>
-            <div>
-                <table class="table table-bordered table-striped display">
+            <div class="card shadow">
+                <div class="card-body">
+                <table class="table display">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -224,7 +225,7 @@
                 </tbody>
                 
               </table>
-          
+          </div>
             </div>
         </div>
         
@@ -233,8 +234,9 @@
             <div class="accinfo_heading">
                 <h4><em> Loan Transactions </em></h4>
             </div>
-            <div>
-                <table class="table table-bordered table-striped display">
+            <div class="card shadow">
+                <div class="card-body">
+                <table class="table display">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -265,7 +267,7 @@
                   </tbody>
                   
                 </table>
-          
+          </div>
             </div>
         </div>
         

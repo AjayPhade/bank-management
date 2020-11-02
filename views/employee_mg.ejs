@@ -172,27 +172,28 @@
         </div>
         <%}%>
         </div>
-      </form>
-      
-
+      </form>  
     </div>
+
     <div class="emp_details">
-      <h2 style="text-align: center;">All Employees</h2>
-      <table class="table table-bordered table-striped nowrap display">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th id="emp" scope="col">Employee ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Designation</th>
-            <th scope="col">Salary</th>
-            <th scope="col">Email</th>
-            <th scope="col">City</th>
-            <th scope="col">Zip</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%for(var i=0;i < emp_details.length ; i++){%>
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 style="text-align: center;">All Employees</h2>
+          <table class="table table-bordered table-striped nowrap display">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th id="emp" scope="col">Employee ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Email</th>
+                <th scope="col">City</th>
+                <th scope="col">Zip</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%for(var i=0;i < emp_details.length ; i++){%>
         <tr>
           <th scope="row"><%=i+1%></th>
           <td><%=emp_details[i].emp_id%></td>
@@ -204,10 +205,10 @@
           <td><%=emp_details[i].zip%></td>
         </tr>
         <%}%>
-    </tbody>
-    
-  </table>
-
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
     <!-- View Customer End -->

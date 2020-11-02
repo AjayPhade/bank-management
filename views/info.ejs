@@ -21,33 +21,33 @@
   </div>
   <div class="col-md-9">
     <%if(rows !== undefined){%>
-    <div>
-      <table class="table table-bordered table-striped display nowrap">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <%for(var i = 0; i < columns.length; i++){%>
-            <th scope="col"><%=fields[columns[i]].name%></th>
+    <div class="card shadow">
+      <div class="card-body">
+        <table class="table display table-bordered table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <%for(var i = 0; i < columns.length; i++){%>
+              <th scope="col"><%=fields[columns[i]].name%></th>
+              <%}%>
+            </tr>
+          </thead>
+          <tbody>
+            <%for(var i = 0; i < rows.length; i++){%>
+            <tr>
+              <th scope="row"><%=i + 1%></th>
+              <%for(var j = 0; j < columns.length; j++){%>
+              <%var row = 'rows[i].' + fields[columns[j]].name;%>
+              <td><%=eval(row)%></td>
+              <%}%>
+            </tr>
             <%}%>
-          </tr>
-        </thead>
-        <tbody>
-          <%for(var i = 0; i < rows.length; i++){%>
-          <tr>
-            <th scope="row"><%=i + 1%></th>
-            <%for(var j = 0; j < columns.length; j++){%>
-            <%var row = 'rows[i].' + fields[columns[j]].name;%>
-            <td><%=eval(row)%></td>
-            <%}%>
-          </tr>
-          <%}%>
-            </tbody>
-      </table>
+              </tbody>
+        </table>
+      </div>
     </div>
+    <%}%>
   </div>
-  <%}%>
-    </div>
-
-  </div>
+</div>
 
   <%- include("footer") -%>

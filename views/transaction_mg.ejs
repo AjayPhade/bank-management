@@ -6,8 +6,8 @@
     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       <a class="nav-link sidebar-tile remove" id="remove" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-settings" aria-selected="false">Withdraw</a>
-      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#" role="tab"
-        aria-controls="v-pills-home" aria-selected="true">Deposit</a>
+      <a class="nav-link sidebar-tile add" id="add" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-home"
+        aria-selected="true">Deposit</a>
       <a class="nav-link sidebar-tile view" id="view" data-toggle="pill" href="#" role="tab"
         aria-controls="v-pills-profile" aria-selected="false">View</a>
 
@@ -126,48 +126,50 @@
         <%}%>
 
     </div>
+
     <%if(class_name !== undefined || rows !== undefined){ %>
         <div class="<%=class_name%> table_trans">
-          <table class="table table-bordered table-striped" id="trans_table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Transaction No</th>
-                <th scope="col">Account No</th>
-                <th scope="col">Transaction Type</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Time Stamp</th>
-                <th scope="col">Counter No</th>
-                <th scope="col">Done From</th>
-              </tr>
-            </thead>
-            <tbody>
-              <%for(var i=0;i < length ; i++){%>
-              <tr>
-                <th scope="row"><%=i+1%></th>
-                <td><%=rows[i].trans_no%></td>
-                <td><%=rows[i].acc_no%></td>
-                <td><%=rows[i].trans_type%></td>
-                <td><%=rows[i].amount%></td>
-                <td><%=rows[i].time_stamp%></td>
-                <td><%=rows[i].counter_no%></td>
-                <td><%=rows[i].ifsc_code%></td>
-              </tr>
-              <%}%>
-        </tbody>
-        
-      </table>
-  
-    </div>
-    <%}%>
+          <div class="card shadow">
+            <div class="card-body">
+              <table class="table table-bordered table-striped" id="trans_table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Transaction No</th>
+                    <th scope="col">Account No</th>
+                    <th scope="col">Transaction Type</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Time Stamp</th>
+                    <th scope="col">Counter No</th>
+                    <th scope="col">Done From</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <%for(var i=0;i < length ; i++){%>
+                  <tr>
+                    <th scope="row"><%=i+1%></th>
+                    <td><%=rows[i].trans_no%></td>
+                    <td><%=rows[i].acc_no%></td>
+                    <td><%=rows[i].trans_type%></td>
+                    <td><%=rows[i].amount%></td>
+                    <td><%=rows[i].time_stamp%></td>
+                    <td><%=rows[i].counter_no%></td>
+                    <td><%=rows[i].ifsc_code%></td>
+                  </tr>
+                  <%}%>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+    <%}%>
+            </div>
+            <!-- View Customer End -->
+          </div>
 
-        <!-- View Customer End -->
-    </div>
 
+          <!-- Create Customer Form Ends -->
 
-    <!-- Create Customer Form Ends -->
+          <script src="transaction.js" charset="utf-8" type='text/javascript'></script>
 
-    <script src="transaction.js" charset="utf-8" type='text/javascript'></script>
-
-    <%- include("footer") -%>
+          <%- include("footer") -%>

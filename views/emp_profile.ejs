@@ -123,67 +123,69 @@
             <form method="POST" action="/change_password" class="needs-validation" novalidate>
                 <div class="form-row">
                     <div class="form-group">
-                        <input type="password" name="pass" class="form-control" id="password" placeholder="New Password" required>
+                        <input type="password" name="pass" class="form-control" id="password" placeholder="New Password"
+                            required>
                         <div class="invalid-feedback">Password cannot be blank</div>
                     </div>
                     <div class="form-group">
-                        <input type="password" name="confirm_pass" class="form-control" id="confirm_password" placeholder="Confirm Password"
-                            required>
+                        <input type="password" name="confirm_pass" class="form-control" id="confirm_password"
+                            placeholder="Confirm Password" required>
                         <div class="invalid-feedback" id="valid-pass">Password cannot be blank</div>
                     </div>
                 </div>
                 <div class="form-group" style="margin: auto;">
-                    <button type="submit" class="btn btn-primary text-nowrap" style="margin-left: 15%;"> Save <i class="fas fa-lock"></i> </button>
+                    <button type="submit" class="btn btn-primary text-nowrap" style="margin-left: 15%;"> Save <i
+                            class="fas fa-lock"></i> </button>
                 </div>
             </form>
         </div>
         <%if(success!==undefined){%>
-            <div class="alert alert-success" role="alert">
-                Password Changed Successfully !
-              </div>
+        <div class="alert alert-success" role="alert">
+            Password Changed Successfully !
+        </div>
         <%}%>
     </div>
 </div>
 
 <script>
-    document.getElementsByClassName("nav-link")[1].style.color = "white";
+    document.getElementsByClassName("nav-link")[1].style.color = "black";
 
     (function () {
-  'use strict';
-  window.addEventListener('load', function () {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function (form) {
-      form.addEventListener('submit', function (event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    function pass() {
+        document.getElementsByClassName("pass-box")[0].removeAttribute("hidden");
+    }
+
+    var password = document.getElementById("password");
+    var confirm_password = document.getElementById("confirm_password");
+
+    function validatePassword() {
+        if (password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords Don't Match");
+            document.getElementById('valid-pass').innerHTML = "Passwords Don't Match";
+        } else {
+            confirm_password.setCustomValidity('');
         }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
+    }
 
-function pass(){
-    document.getElementsByClassName("pass-box")[0].removeAttribute("hidden");
-}
-
-var password = document.getElementById("password")
-  , confirm_password = document.getElementById("confirm_password");
-
-function validatePassword(){
-  if(password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Passwords Don't Match");
-    document.getElementById('valid-pass').innerHTML = "Passwords Don't Match";
-  } else {
-    confirm_password.setCustomValidity('');
-  }
-}
-
-password.onchange = validatePassword;
-confirm_password.onkeyup = validatePassword;
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
 </script>
 
 <%- include("footer") -%>
