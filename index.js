@@ -580,7 +580,7 @@ app.post("/remove_customer_details", function (req, res) {
                 }
                 else {
                     if (row[0].balance > 0) {
-                        connection.query("insert into transaction (trans_type,amount,acc_no) values(?,?,?)", ['Debit', row[0].balance, acc_no], function (err) {
+                        connection.query("insert into transaction (trans_type,amount,acc_no,ifsc_code,rem_bal) values(?,?,?,?,?)", ['Debit', row[0].balance, acc_no,ifsc_code,0], function (err) {
                             if (err) {
                                 console.log(err);
                             }
@@ -1040,16 +1040,44 @@ app.post("/remove_employee_details", function (req, res) {
         }
         else {
             console.log("Deleted from emp_phone");
-            connection.query("DELETE FROM employee WHERE emp_id = ?", [emp_id], function (err) {
-                if (err) {
+            connection.query("select * from employee where emp_id=?",[emp_id],function(err,row){
+                if(err){
                     console.log(err);
                 }
-                else {
-                    console.log("Deleted from employee");
-                    res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, emp_details, row: undefined, rows: undefined, error: ["success_removed", undefined] });
-
+                else if(row[0].designation === "Cashier"){
+                    connection.query("delete from cash_counter where emp_id=?",[emp_id],function(err){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            connection.query("DELETE FROM employee WHERE emp_id = ?", [emp_id], function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log("Deleted from employee");
+                                    res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, emp_details, row: undefined, rows: undefined, error: ["success_removed", undefined] });
+                
+                                }
+                            });
+                        }
+                    });
+                    
+                }
+                else{
+                    connection.query("DELETE FROM employee WHERE emp_id = ?", [emp_id], function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            console.log("Deleted from employee");
+                            res.render("employee_mg", { ifsc_code: ifsc_code, br_name: br_name, emp_details, row: undefined, rows: undefined, error: ["success_removed", undefined] });
+        
+                        }
+                    });
                 }
             });
+            
         }
     });
 });
@@ -1086,9 +1114,9 @@ app.post("/withdraw", function (req, res) {
                     res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["withdraw_error", "Insufficient Balance!! Current Balance: " + rows[0].balance] });
                 }
                 else {
-                    var q = "insert into transaction (counter_no, trans_type,amount, acc_no, ifsc_code) values(?,?,?,?,?)";
+                    var q = "insert into transaction (counter_no, trans_type,amount, acc_no, ifsc_code, rem_bal) values(?,?,?,?,?,?)";
 
-                    connection.query(q, [counter_no, "Debit", amount, acc_no, ifsc_code], function (err) {
+                    connection.query(q, [counter_no, "Debit", amount, acc_no, ifsc_code, rows[0].balance-amount], function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -1126,9 +1154,9 @@ app.post("/deposit", function (req, res) {
                 res.render("transaction_mg", { ifsc_code: ifsc_code, br_name: br_name, rows: undefined, class_name: undefined, error: ["deposit_error", "Account Not Found"] });
             }
             else {
-                var q = "insert into transaction (counter_no, trans_type,amount, acc_no,ifsc_code) values(?,?,?,?,?)";
+                var q = "insert into transaction (counter_no, trans_type,amount, acc_no,ifsc_code,rem_bal) values(?,?,?,?,?,?)";
 
-                connection.query(q, [counter_no, "Credit", amount, acc_no, ifsc_code], function (err, rows, fields) {
+                connection.query(q, [counter_no, "Credit", amount, acc_no, ifsc_code, rows[0].balance+amount], function (err, rows, fields) {
                     if (err) {
                         console.log(err);
                     }
@@ -1514,8 +1542,8 @@ app.get("/info/critical_accounts", function (req, res) {
 
 app.get("/info/active_loans", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [6, 5, 12, 0, 1, 7, 2, 3, 4, 8, 13, 29];
+        connection.query("select *,l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [6, 5, 12, 0, 1, 7, 2, 30, 4, 8, 13, 29];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
@@ -1525,8 +1553,8 @@ app.get("/info/active_loans", function (req, res) {
 
 app.get("/info/inactive_loans", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from loan_history l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [9, 0, 5, 13, 1, 2, 3, 4, 6, 8];
+        connection.query("select *,l.int_rate from loan_history l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+            var columns = [9, 0, 5, 13, 1, 2, 31, 4, 6, 8];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
@@ -1536,8 +1564,8 @@ app.get("/info/inactive_loans", function (req, res) {
 
 app.get("/info/overdue_loans", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? and TIMESTAMPDIFF(YEAR,time_stamp,CURRENT_TIMESTAMP) >= tenure", [ifsc_code], function (err, rows, fields) {
-            var columns = [6, 5, 12, 0, 1, 7, 2, 3, 4, 8, 13, 29];
+        connection.query("select *,l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? and TIMESTAMPDIFF(YEAR,time_stamp,CURRENT_TIMESTAMP) >= tenure", [ifsc_code], function (err, rows, fields) {
+            var columns = [6, 5, 12, 0, 1, 7, 2, 30, 4, 8, 13, 29];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
@@ -1548,7 +1576,7 @@ app.get("/info/overdue_loans", function (req, res) {
 app.get("/info/all_transactions", function (req, res) {
     if (loggedIn(res)) {
         connection.query("select * from transaction t natural join cash_counter natural join employee where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
-            var columns = [3, 7, 4, 5, 6, 2, 1, 8];
+            var columns = [3, 7, 4, 5, 8, 6, 2, 1,9];
             //console.log(fields);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
