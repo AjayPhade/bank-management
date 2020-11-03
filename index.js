@@ -1610,12 +1610,41 @@ app.get("/info/all_loan_transactions", function (req, res) {
 
 app.get("/sessions", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select *,timestampdiff(Minute,login_time,logout_time) as Duration from login_sessions natural join employee where ifsc_code=?", [ifsc_code], function (err, rows) {
-            if(err){
+        connection.query("select *, timestampdiff(second, login_time, logout_time) as Duration from login_sessions natural join employee where ifsc_code=?", [ifsc_code], function (err, rows) {
+            if (err) {
                 console.log(err);
             }
-            else{
-                res.render('sessions',{ifsc_code, br_name,rows});
+            else {
+                for (var i = 0; i < rows.length; i++) {
+                    var seconds = rows[i].Duration;
+                    var mins = Math.floor(seconds / 60);
+                    seconds -= mins * 60;
+                    var hours = Math.floor(mins / 60);
+                    mins -= hours * 60;
+                    var time = '';
+
+                    if (hours > 0)
+                        if (hours === 1)
+                            time += hours.toString() + ' Hr ';
+                        else
+                            time += hours.toString() + ' Hrs ';
+
+                    if (mins > 0)
+                        if (mins === 1)
+                            time += mins.toString() + ' Min ';
+                        else
+                            time += mins.toString() + ' Mins ';
+
+                    if (seconds > 0)
+                        if (seconds === 1)
+                            time += seconds.toString() + ' Sec';
+                        else
+                            time += seconds.toString() + ' Secs';
+
+                    rows[i].Duration = time;
+                }
+
+                res.render('sessions', { ifsc_code, br_name, rows });
             }
         })
     }
