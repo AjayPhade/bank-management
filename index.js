@@ -1542,26 +1542,10 @@ app.get("/info/critical_accounts", function (req, res) {
 
 app.get("/info/active_loans", function (req, res) {
     if (loggedIn(res)) {
-        var cols = "date_format(time_stamp, '%d-%b-%Y %r') Time" +
-            ", l.acc_no 'Account No'" +
-            ", name Name" +
-            ", loan_type 'Loan'" +
-            ", amount Amount" +
-            ", rem_amt 'Remaining'" +
-            ", mortgage Mortgage" +
-            ", l.int_rate 'Interest'" +
-            ", tenure Tenure" +
-            ", sanctioned_by 'Sanctioned'" +
-            ", email Email" +
-            ", phone_no 'Phone'";
-
-        connection.query("select " + cols + " from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+        connection.query("select *, l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
             var columns = [6, 5, 12, 0, 1, 7, 2, 30, 4, 8, 13, 29];
             //console.log(fields);
             //console.log(rows);
-
-            if(err)
-                console.log(err);
 
             res.render("info", { ifsc_code: ifsc_code, br_name: br_name, rows, columns, fields });
         });
