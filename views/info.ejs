@@ -23,12 +23,12 @@
     <%if(rows !== undefined){%>
     <div class="card shadow">
       <div class="card-body">
-        <table class="table display table-bordered table-striped">
+        <table class="table display table-bordered table-striped nowrap">
           <thead>
             <tr>
               <th scope="col">#</th>
-              <%for(var i = 0; i < columns.length; i++){%>
-              <th scope="col"><%=fields[columns[i]].name%></th>
+              <%for(var i = 0; i < fields.length; i++){%>
+              <th scope="col"><%=fields[i].name%></th>
               <%}%>
             </tr>
           </thead>
@@ -36,9 +36,8 @@
             <%for(var i = 0; i < rows.length; i++){%>
             <tr>
               <th scope="row"><%=i + 1%></th>
-              <%for(var j = 0; j < columns.length; j++){%>
-              <%var row = 'rows[i].' + fields[columns[j]].name;%>
-              <td><%=eval(row)%></td>
+              <%for(var j = 0; j < fields.length; j++){%>
+              <td><%=rows[i][fields[j].name]%></td>
               <%}%>
             </tr>
             <%}%>
