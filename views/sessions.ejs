@@ -1,0 +1,40 @@
+<%- include("header") -%>
+<div class="col-md-9" style="margin: auto;margin-top: 7%;">
+  <div class="card shadow">
+    <div class="card-body">
+      <table class="table display table-bordered table-striped nowrap" >
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Employee ID</th>
+            <th scope="col">Employee Name</th>
+            <th scope="col">Designation</th>
+            <th scope="col">Login Time</th>
+            <th scope="col" id="logout">Logout Time</th>
+            <th scope="col">Session Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%for(var i=0; i < rows.length; i++){%>
+          <tr>
+            <th scope="row"><%=i + 1%></th>
+            <td><%=rows[i].emp_id%></td>
+            <td><%=rows[i].name%></td>
+            <td><%=rows[i].designation%></td>
+            <td><%=rows[i].login_time%></td>
+            <td><%=rows[i].logout_time%></td>
+            <td><%=rows[i].Duration%> Mins</td>
+          </tr>
+          <%}%>
+          </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<script>
+  window.onload = function(){
+  document.getElementById("logout").click();
+  document.getElementById("logout").click();
+  }
+</script>
+<%- include("footer") -%>

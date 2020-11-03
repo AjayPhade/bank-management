@@ -17,6 +17,7 @@ var cust_id;
 var logged_in = false;
 var designation;
 var counter_no;
+var login_time;
 
 //Configure View Engine
 app.set('view engine', 'ejs');
@@ -94,11 +95,17 @@ app.get("/customer_management", function (req, res) {
 
 app.get("/logout", function (req, res) {
     logged_in = false;
+    connection.query("insert into login_sessions (emp_id,login_time) values(?,from_unixtime(?*0.001))", [emp_id, login_time], function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
     console.log("-------------------" + name + " LOGGED OUT (ID: " + emp_id + ", IFSC: " + ifsc_code + ") -------------------");
     res.redirect("/");
 });
 
 /*************************** Login Starts ***************************/
+
 app.post("/", function (req, res) {
     emp_id = req.body.emp_id;
     var password = md5(req.body.password);
@@ -116,6 +123,9 @@ app.post("/", function (req, res) {
             }
             else if (rows[0].password === password) {
                 logged_in = true;
+                date = new Date().getTime()
+                login_time = date;
+                console.log(date);
                 designation = rows[0].designation;
 
                 connection.query("select br_name from branch where ifsc_code = ?", [rows[0].ifsc_code], function (err, result, field) {
@@ -1509,7 +1519,7 @@ app.get("/info", function (req, res) {
 
 app.get("/info/active_accounts", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from cust_info where status = 'active' and ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+        connection.query("select * from cust_info where status = 'active' and ifsc_code = ? group by acc_no", [ifsc_code], function (err, rows, fields) {
             var columns = [0, 1, 3, 11, 12, 17, 4, 10, 18, 20];
             //console.log(fields);
 
@@ -1520,7 +1530,7 @@ app.get("/info/active_accounts", function (req, res) {
 
 app.get("/info/inactive_accounts", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from cust_info where status = 'inactive' and ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+        connection.query("select * from cust_info where status = 'inactive' and ifsc_code = ? group by acc_no", [ifsc_code], function (err, rows, fields) {
             var columns = [0, 1, 3, 11, 12, 17, 4, 10, 18, 20];
             //console.log(fields);
 
@@ -1531,7 +1541,7 @@ app.get("/info/inactive_accounts", function (req, res) {
 
 app.get("/info/critical_accounts", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select * from cust_info c join acc_limit_int a on c.acc_type = a.acc_type where status = 'active' and ifsc_code = ? and balance < min_bal", [ifsc_code], function (err, rows, fields) {
+        connection.query("select * from cust_info c join acc_limit_int a on c.acc_type = a.acc_type where status = 'active' and ifsc_code = ? and balance < min_bal group by acc_no", [ifsc_code], function (err, rows, fields) {
             var columns = [0, 1, 3, 11, 12, 17, 4, 10, 18, 20];
             //console.log(fields);
 
@@ -1542,7 +1552,7 @@ app.get("/info/critical_accounts", function (req, res) {
 
 app.get("/info/active_loans", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select *, l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+        connection.query("select *, l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? group by c.acc_no", [ifsc_code], function (err, rows, fields) {
             var columns = [6, 5, 12, 0, 1, 7, 2, 30, 4, 8, 13, 29];
             //console.log(fields);
             //console.log(rows);
@@ -1554,7 +1564,7 @@ app.get("/info/active_loans", function (req, res) {
 
 app.get("/info/inactive_loans", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select *,l.int_rate from loan_history l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ?", [ifsc_code], function (err, rows, fields) {
+        connection.query("select *,l.int_rate from loan_history l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? group by c.acc_no", [ifsc_code], function (err, rows, fields) {
             var columns = [9, 0, 5, 13, 1, 2, 31, 4, 6, 8];
             //console.log(fields);
 
@@ -1565,7 +1575,7 @@ app.get("/info/inactive_loans", function (req, res) {
 
 app.get("/info/overdue_loans", function (req, res) {
     if (loggedIn(res)) {
-        connection.query("select *,l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? and TIMESTAMPDIFF(YEAR,time_stamp,CURRENT_TIMESTAMP) >= tenure", [ifsc_code], function (err, rows, fields) {
+        connection.query("select *,l.int_rate from loan l join cust_info c on l.acc_no = c.acc_no where ifsc_code = ? and TIMESTAMPDIFF(YEAR,time_stamp,CURRENT_TIMESTAMP) >= tenure group by c.acc_no", [ifsc_code], function (err, rows, fields) {
             var columns = [6, 5, 12, 0, 1, 7, 2, 30, 4, 8, 13, 29];
             //console.log(fields);
 
@@ -1598,6 +1608,18 @@ app.get("/info/all_loan_transactions", function (req, res) {
 
 /**************************INFO Ends****************************************/
 
+app.get("/sessions", function (req, res) {
+    if (loggedIn(res)) {
+        connection.query("select *,timestampdiff(Minute,login_time,logout_time) as Duration from login_sessions natural join employee where ifsc_code=?", [ifsc_code], function (err, rows) {
+            if(err){
+                console.log(err);
+            }
+            else{
+                res.render('sessions',{ifsc_code, br_name,rows});
+            }
+        })
+    }
+});
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");
