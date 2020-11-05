@@ -2,9 +2,9 @@
 
 <a type="button" style="position: absolute;z-index: 100;top: 50px;left:400px" href="/customer_management"
     class="btn login-btn btn-outline-primary"><i class="far fa-arrow-alt-circle-left"></i> Back </a>
+
 <%if(row.status === "INACTIVE"){%>
 <form action="/reopen" method="POST">
-
     <div hidden>
         <input type="text" name="acc_no" value="<%=row.acc_no%>" readonly>
     </div>
@@ -12,12 +12,14 @@
         class="btn login-btn btn-outline-primary">Reopen Account <i class="fas fa-sync-alt"></i> </button>
 </form>
 <%}%>
+
 <div class="row">
     <div class="col-md-3 first_col">
         <div class="profile-col1">
             <img src="data:image/png;base64,<%=photo%>" height="200px" width="200px">
 <p class="cust_id"><strong> Customer ID :</strong> <%=row.cust_id%></p>
 </div>
+
 <div>
     <table class="cust_info">
         <tr class="profile-section">
@@ -127,6 +129,7 @@
     </div>
 </div>
 </div>
+
 <div class="col-md-8 sec_col">
 
     <div class="accinfo_heading">
@@ -198,7 +201,7 @@
             </div>
             <div class="card shadow">
                 <div class="card-body">
-                <table class="table display">
+                <table class="table display table-bordered table-striped">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -227,12 +230,12 @@
             </tr>
             <%}%>
                 </tbody>
-                
+
               </table>
           </div>
             </div>
         </div>
-        
+
         <!-- Loan Trans -->
         <div class="loan_trans_table">
             <div class="accinfo_heading">
@@ -240,7 +243,7 @@
             </div>
             <div class="card shadow">
                 <div class="card-body">
-                <table class="table display">
+                <table class="table display table-bordered table-striped">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -269,12 +272,12 @@
             </tr>
             <%}%>
                   </tbody>
-                  
+
                 </table>
           </div>
             </div>
         </div>
-        
+
     </div>
 </div>
 

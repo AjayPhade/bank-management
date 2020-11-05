@@ -171,7 +171,7 @@ app.post("/", function (req, res) {
 var extension1, extension2;
 
 const storage1 = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer',
     filename: function (req, file, cb) {
         /*****************************To get cust_id of last customer************************************/
         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
@@ -253,7 +253,7 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
 
     //to retrive int_rate
@@ -299,8 +299,8 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
                         }
                     });
 
-                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + cust_id + '-aadhaar' + extension2;
-                    move.move('C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
+                    var newPath1 = "E:/Projects/bank-management/public/pdfs/" + cust_id + '-aadhaar' + extension2;
+                    move.move('D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/' + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
                         if (err) {
                             console.log(err);
                         }
@@ -721,7 +721,7 @@ app.get("/emp_management", function (req, res) {
 
 /**********************************Configure storage for employee************************************************* */
 const storage2 = multer.diskStorage({
-    destination: 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
+    destination: 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee',
     filename: function (req, file, cb) {
         connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
             if (rows.length === 0) {
@@ -779,7 +779,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(extension1, extension2);
 
-    var photo = 'load_file("C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
+    var photo = 'load_file("D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/' + 'photo' + extension1 + '")';
     var aadhaar = 'aadhaar' + extension2;
 
     //Derived Attributes
@@ -813,8 +813,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
 
 
             /////To rename uploaded files
-            var oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
-            var newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
+            var oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'photo' + extension1;
+            var newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-photo' + extension1;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -825,8 +825,8 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 }
             });
 
-            oldPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
-            newPath = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
+            oldPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + 'aadhaar' + extension2;
+            newPath = "D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/" + emp_id + '-aadhaar' + extension2;
 
             fs.rename(oldPath, newPath, function (err) {
                 if (err) {
@@ -835,7 +835,7 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                 else {
                     console.log("Renamed Aadhaar");
 
-                    var newPath1 = "D:/Web Development/College Project/DBE-Bank/public/pdfs/" + emp_id + '-aadhaar' + extension2;
+                    var newPath1 = "E:/Projects/bank-management/public/pdfs/" + emp_id + '-aadhaar' + extension2;
                     move.move(newPath, newPath1, function (err) {
                         if (err) {
                             console.log(err);
