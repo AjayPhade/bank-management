@@ -58,8 +58,22 @@ function loggedIn(res) {
 
 //Routing Starts
 app.get("/", function (req, res) {
-    logged_in = false;
-    res.render("login", { error: undefined });
+    if (logged_in) {
+        logged_in = false;
+
+        connection.query("insert into login_sessions (emp_id,login_time) values(?,from_unixtime(?*0.001))", [emp_id, login_time], function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+
+        console.log("-------------------" + name + " LOGGED OUT (ID: " + emp_id + ", IFSC: " + ifsc_code + ") -------------------");
+        res.render("login", { error: "You have been logged out. Login again to access the site." });
+    }
+    else {
+        logged_in = false;
+        res.render("login", { error: undefined });
+    }
 });
 
 app.get("/dashboard", function (req, res) {
