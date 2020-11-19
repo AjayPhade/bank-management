@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="/index.css">
+
+<!--BOOTSTRAP -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.22/b-1.6.5/b-html5-1.6.5/datatables.min.css" />
+
+<div class="card shadow">
+    <div class="card-body">
+        <h2 style="text-align: center;">All Employees</h2>
+        <table class="table table-bordered table-striped nowrap display">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th id="emp" scope="col">Employee ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Designation</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Zip</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%for(var i=0;i < rows.length ; i++){%>
+                <tr>
+                    <th scope="row"><%=i+1%></th>
+                    <td><%=rows[i].emp_id%></td>
+                    <td><%=rows[i].name%></td>
+                    <td><%=rows[i].designation%></td>
+                    <td><%=rows[i].salary%></td>
+                    <td><%=rows[i].email%></td>
+                    <td><%=rows[i].city%></td>
+                    <td><%=rows[i].zip%></td>
+                </tr>
+                <%}%>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<%- include("footer") -%>
