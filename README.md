@@ -1,5 +1,5 @@
 # Bank Management System
-This is Bank Management Web Application similar to application used by employees in the bank. 
+This is Bank Management Web Application similar to application used by employees in the bank.
 # Preview
 ![image](https://i.ibb.co/4STBy1Q/Screenshot-128.png)
 # Prerequisites
@@ -20,13 +20,13 @@ npm i
 Open MySQL Workbench and import database from 'bank.sql' file stored in 'Database' directory.
 
 ## .env
-In project directory make '.env' file to store environment variables. 
+In project directory make '.env' file to store environment variables.
 Copy the following text and paste in '.env' file you just created. Replace the content where specified.
 ```
-DB_HOST=<MySQL Connection Hostname>
-DB_USER=<MYSQL Connection Username>
-DB_PASS=<MySQL Connection Password>
-DB_SCHEMA=bank
+DB_HOST=sql12.freemysqlhosting.net
+DB_USER=sql12377987
+DB_PASS=f4sxmeRXJ4
+DB_SCHEMA=sql12377987
 
 CUST_SERVER=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer
 CUST_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/
@@ -37,14 +37,14 @@ EMP_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/
 EMP_RENAME=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/
 
 MOVE_TO=<Path to directory where you cloned project>/bank-management/public/pdfs/
-``` 
+```
 _Example :-_
 Don't copy this. Just for reference.
 ```
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=sql123
-DB_SCHEMA=bank
+DB_HOST=sql12.freemysqlhosting.net
+DB_USER=sql12377987
+DB_PASS=f4sxmeRXJ4
+DB_SCHEMA=sql12377987
 
 CUST_SERVER=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer
 CUST_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/
@@ -65,4 +65,4 @@ node index.js
 ```
 localhost:3000
 ```
-3) Use 1001 as Employee ID and admin@123 as a Password to log in as a manager. You can add a new employee, the default password is admin@123. 
+3) Use 1001 as Employee ID and admin@123 as a Password to log in as a manager. You can add a new employee, the default password is admin@123.

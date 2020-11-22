@@ -1680,6 +1680,4 @@ app.get("/emp_details", function (req, res) {
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");
-    console.log(process.env.CUST_SERVER, process.env.CUST_LOAD);
-    console.log('load_file(' + process.env.CUST_LOAD + 1000 + '-photo' + '.jpg' + '")');
 });
