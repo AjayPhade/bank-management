@@ -280,15 +280,14 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
     console.log(extension1, extension2);
     console.log(req.files, req.file);
 
-    // storageRef.upload(req.file.path, function (err) {
-    //     if(err)
-    //         console.log(err);
-    //     else
-    //     {
-    //         console.log("Uploaded Successfully");
-    //         console.log(req.body.myImage);
-    //     }
-    // });
+    storageRef.upload(req.file.path, function (err) {
+        if (err)
+            console.log(err);
+        else {
+            console.log("Uploaded Successfully");
+            console.log(req.body.myImage);
+        }
+    });
 
     var photo = 'load_file(' + process.env.CUST_LOAD + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
@@ -1720,7 +1719,7 @@ app.listen(process.env.PORT || 3000, function () {
 
     console.log(__dirname);
 
-    storageRef.upload('public/images/kyc.png', {destination: 'test/c.png'}, function (err, lol) {
+    storageRef.upload('public/images/kyc.png', { destination: 'test/c.png' }, function (err, lol) {
         if (err)
             console.log(err);
         else
