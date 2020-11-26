@@ -11,7 +11,7 @@ require('dotenv').config()
 //const { check, validationResult } = require('express-validator');
 
 var admin = require('firebase-admin');
-var serviceAccount = require('D:/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
+//var serviceAccount = require('D:/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,7 +24,7 @@ var firebaseConfig = {
     messagingSenderId: "958869290156",
     appId: "1:958869290156:web:dd0684a44a47432ebdf309",
     measurementId: "G-58EFH046K3",
-    credential: admin.credential.cert(serviceAccount)
+    //credential: admin.credential.cert(serviceAccount)
 };
 // Initialize Firebase
 admin.initializeApp(firebaseConfig);
