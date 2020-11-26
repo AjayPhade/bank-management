@@ -10,6 +10,31 @@ const move = require('fs-extra');
 require('dotenv').config()
 //const { check, validationResult } = require('express-validator');
 
+var admin = require('firebase-admin');
+var serviceAccount = require('D:/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+var firebaseConfig = {
+    apiKey: "AIzaSyBifXxZj0unNv6tTpDAhkw9Qfn67An1okA",
+    authDomain: "bank--management.firebaseapp.com",
+    databaseURL: "https://bank--management.firebaseio.com",
+    projectId: "bank--management",
+    storageBucket: "bank--management.appspot.com",
+    messagingSenderId: "958869290156",
+    appId: "1:958869290156:web:dd0684a44a47432ebdf309",
+    measurementId: "G-58EFH046K3",
+    credential: admin.credential.cert(serviceAccount)
+};
+// Initialize Firebase
+admin.initializeApp(firebaseConfig);
+
+// Get a reference to the storage service, which is used to create references in your storage bucket
+var storage = admin.storage();
+
+// Create a root reference
+var storageRef = storage.bucket('gs://bank--management.appspot.com');
+
 //ID of logged in employee
 var emp_id, name;
 var ifsc_code;
@@ -253,6 +278,17 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
     var interest;
 
     console.log(extension1, extension2);
+    console.log(req.files, req.file);
+
+    // storageRef.upload(req.file.path, function (err) {
+    //     if(err)
+    //         console.log(err);
+    //     else
+    //     {
+    //         console.log("Uploaded Successfully");
+    //         console.log(req.body.myImage);
+    //     }
+    // });
 
     var photo = 'load_file(' + process.env.CUST_LOAD + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
@@ -1680,4 +1716,14 @@ app.get("/emp_details", function (req, res) {
 
 app.listen(3000, function () {
     console.log("Server started at port 3000");
+    //console.log(storageRef);
+
+    console.log(__dirname);
+
+    storageRef.upload('public/images/kyc.png', {destination: 'test/c.png'}, function (err, lol) {
+        if (err)
+            console.log(err);
+        else
+            console.log("Upload Successful");
+    });
 });
