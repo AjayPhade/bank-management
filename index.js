@@ -8,10 +8,11 @@ const md5 = require('md5');
 const fs = require('fs');
 const move = require('fs-extra');
 require('dotenv').config()
+const { format } = require('util');
 //const { check, validationResult } = require('express-validator');
 
 var admin = require('firebase-admin');
-var serviceAccount = require('D:/Web Development/College Project/DBE-Bank/bank-management/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
+//var serviceAccount = require('D:/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,7 +25,7 @@ var firebaseConfig = {
     messagingSenderId: "958869290156",
     appId: "1:958869290156:web:dd0684a44a47432ebdf309",
     measurementId: "G-58EFH046K3",
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT))
 };
 // Initialize Firebase
 admin.initializeApp(firebaseConfig);
@@ -34,6 +35,14 @@ var storage = admin.storage();
 
 // Create a root reference
 var bucket = storage.bucket('gs://bank--management.appspot.com');
+bucket.makePublic({ includeFiles: true, force: true }, function (err, files) {
+    if (err) {
+        console.log(err);
+    }
+    else {
+        console.log(files);
+    }
+});
 
 //ID of logged in employee
 var emp_id, name;
@@ -194,7 +203,7 @@ app.post("/", function (req, res) {
 /*************************** Add Customer Form Starts ***************************/
 //FOR FILE UPLOAD
 // Set The Storage Engine
-var extension1, extension2;
+var extension;
 
 // const storage1 = multer.diskStorage({
 //     destination: process.env.CUST_SERVER,
@@ -224,7 +233,7 @@ var extension1, extension2;
 //                 cb(null, cust_id + '-photo' + path.extname(file.originalname));
 //             }
 //             else if (file.fieldname === 'aadhaar') {
-//                 extension2 = path.extname(file.originalname);
+//                 extension = path.extname(file.originalname);
 //                 cb(null, cust_id + '-aadhaar' + path.extname(file.originalname));
 
 
@@ -279,79 +288,100 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
 
     console.log(req.files, req.file);
 
-
-   // Create a new blob in the bucket and upload the file data.
-   console.log(req.files.myImage[0].originalname);
-    const blob = bucket.file(req.files.myImage[0].originalname);
-    const blobStream = blob.createWriteStream();
-
-    blobStream.on('error', err => {
-        next(err);
-    });
-
-    blobStream.on('finish', () => {
-        // The public URL can be used to directly access the file via HTTP.
-        const publicUrl = format(
-            `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-        );
-        res.status(200).send(publicUrl);
-    });
-
-    blobStream.end(req.files.myImage[0].buffer);
-
-    var photo = 'load_file(' + process.env.CUST_LOAD + cust_id + '-photo' + extension1 + '")';
-    var aadhaar = cust_id + '-aadhaar' + extension2;
-
-    //to retrive int_rate
-    connection.query("select int_rate from acc_limit_int where acc_type = ?", [acc_type], function (err, row, col) {
+    connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
         if (err) {
             console.log(err);
         }
         else {
-            interest = row[0].int_rate;
-            var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo, int_rate,created_by,status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + photo + ",?,?,'ACTIVE')";
-            var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, interest, emp_id];
+            if (rows.length === 0) {
+                cust_id = 5000;
+                connection.query("alter table cust_account auto_increment = 74001000", function (err, rows, fields) {
+                    if (err) {
+                        console.log("Error in query");
+                        console.log(error);
+                    }
+                    else {
+                        console.log("Successful Query");
+                        // console.log(rows);
+                    }
+                });
+            }
+            else
+                cust_id = rows[0].cust_id + 1;
 
-            console.log(list);
+            // console.log(cust_id);
 
-            //Executing Query
-            connection.query(query1, list, function (error, rows, fields) {
-                if (error) {
-                    console.log("Error in query");
-                    console.log(error);
+            extension = path.extname(req.files.aadhaar[0].originalname);
+
+            // Create a new blob in the bucket and upload the file data.
+            console.log(req.files.aadhaar[0].originalname);
+            blob = bucket.file('Customer/' + cust_id + '-aadhaar' + extension);
+            blobStream = blob.createWriteStream();
+
+            blobStream.on('error', err => {
+                console.log(err);
+                next(err);
+            });
+
+            blobStream.on('finish', () => {
+                // The public URL can be used to directly access the file via HTTP.
+                const publicUrl = format(
+                    `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+                );
+                console.log(publicUrl);
+                console.log(bucket.name);
+                console.log(blob.name);
+                // res.status(200).send(publicUrl);
+            });
+
+            blobStream.end(req.files.aadhaar[0].buffer);
+
+            var aadhaar = cust_id + '-aadhaar' + extension;
+
+            //to retrive int_rate
+            connection.query("select int_rate from acc_limit_int where acc_type = ?", [acc_type], function (err, row, col) {
+                if (err) {
+                    console.log(err);
                 }
                 else {
-                    console.log("Successful Query");
-                    // console.log(rows);
+                    interest = row[0].int_rate;
+                    var photo = req.files.myImage[0].buffer;
+                    var query1 = "insert into cust_account (cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo, int_rate,created_by,status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE')";
+                    var list = [cust_id, ifsc_code, name, email, gender, dob, address, city, state, zip, acc_type, balance, pan_no, aadhaar_no, aadhaar, photo, interest, emp_id];
 
-                    var query2 = "insert into cust_phone values ?";
-                    var phone;
-                    var acc_no = rows.insertId;
+                    console.log(list);
 
-                    if (Number.isNaN(sno))
-                        phone = [[acc_no, pno]];
-                    else
-                        phone = [[acc_no, pno], [acc_no, sno]];
-
-                    connection.query(query2, [phone], function (error, rows, fields) {
+                    //Executing Query
+                    connection.query(query1, list, function (error, rows, fields) {
                         if (error) {
                             console.log("Error in query");
                             console.log(error);
                         }
                         else {
                             console.log("Successful Query");
-
                             // console.log(rows);
-                        }
-                    });
 
-                    var newPath1 = process.env.MOVE_TO + cust_id + '-aadhaar' + extension2;
-                    move.move(process.env.CUST_MOVE_FROM + cust_id + '-aadhaar' + extension2, newPath1, function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            console.log("Moved");
+                            var query2 = "insert into cust_phone values ?";
+                            var phone;
+                            var acc_no = rows.insertId;
+
+                            if (Number.isNaN(sno))
+                                phone = [[acc_no, pno]];
+                            else
+                                phone = [[acc_no, pno], [acc_no, sno]];
+
+                            connection.query(query2, [phone], function (error, rows, fields) {
+                                if (error) {
+                                    console.log("Error in query");
+                                    console.log(error);
+                                }
+                                else {
+                                    console.log("Successful Query");
+
+                                    // console.log(rows);
+                                }
+                            });
+
                             res.render("customer_mg", { ifsc_code: ifsc_code, br_name: br_name, row: undefined, rows: undefined, error: ["success_added", acc_no] });
                         }
                     });
@@ -383,6 +413,8 @@ app.post("/view_profile", function (req, res) {
             }
         }
         else {
+
+
             var row = rows[0];
             var phone_no1, phone_no2;
             phone_no1 = rows[0].phone_no;
@@ -766,45 +798,8 @@ app.get("/emp_management", function (req, res) {
 });
 
 /**********************************Configure storage for employee************************************************* */
-const storage2 = multer.diskStorage({
-    destination: process.env.EMP_SERVER,
-    filename: function (req, file, cb) {
-        connection.query("select emp_id from employee order by emp_id desc limit 1", function (err, rows, fields) {
-            if (rows.length === 0) {
-                connection.query("alter table employee auto_increment = 1000", function (err, rows, fields) {
-                    if (err) {
-                        console.log("Error in query");
-                        console.log(error);
-                    }
-                    else {
-                        console.log("Successful Query");
-                        // console.log(rows);
-                    }
-                });
-            }
-        });
 
-        if (file.fieldname === 'myImage') {
-            extension1 = path.extname(file.originalname);
-            cb(null, 'photo' + path.extname(file.originalname));
-        }
-        else if (file.fieldname === 'aadhaar') {
-            extension2 = path.extname(file.originalname);
-            cb(null, 'aadhaar' + path.extname(file.originalname));
-        }
-    }
-});
-
-//For Image
-const upload2 = multer({
-    storage: storage2,
-    limits: { fileSize: 2000000 },
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    }
-});
-
-app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { name: 'aadhaar', maxCount: 1 }]), function (req, res) {
+app.post("/add_employee", upload1.fields([{ name: 'myImage', maxCount: 1 }, { name: 'aadhaar', maxCount: 1 }]), function (req, res) {
     var first_name = req.body.first_name;
     var last_name = req.body.last_name;
     var name = first_name + " " + last_name;
@@ -823,18 +818,18 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
     var designation = req.body.designation;
     var password;
 
-    console.log(extension1, extension2);
+    extension = path.extname(req.files.aadhaar[0].originalname);
 
-    var photo = 'load_file(' + process.env.EMP_LOAD + 'photo' + extension1 + '")';
-    var aadhaar = 'aadhaar' + extension2;
+    var aadhaar = 'aadhaar' + extension;
 
     //Derived Attributes
     if (designation === 'Cashier' || designation === 'General Employee') {
         password = md5('admin@123');
     }
 
-    var query1 = "insert into employee (ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, photo,password) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," + photo + ",?)";
-    var list = [ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, password];
+    var photo = req.files.myImage[0].buffer;
+    var query1 = "insert into employee (ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, photo,password) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+    var list = [ifsc_code, name, email, gender, dob, address, city, state, zip, designation, salary, pan_no, aadhaar_no, aadhaar, photo, password];
 
     console.log(list);
 
@@ -857,42 +852,6 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
             else
                 phone = [[emp_id, pno], [emp_id, sno]];
 
-
-            /////To rename uploaded files
-            var oldPath = process.env.EMP_RENAME + 'photo' + extension1;
-            var newPath = process.env.EMP_RENAME + emp_id + '-photo' + extension1;
-
-            fs.rename(oldPath, newPath, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("Renamed Photo");
-                }
-            });
-
-            oldPath = process.env.EMP_RENAME + 'aadhaar' + extension2;
-            newPath = process.env.EMP_RENAME + emp_id + '-aadhaar' + extension2;
-
-            fs.rename(oldPath, newPath, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("Renamed Aadhaar");
-
-                    var newPath1 = process.env.MOVE_TO + emp_id + '-aadhaar' + extension2;
-                    move.move(newPath, newPath1, function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            console.log("Moved");
-                        }
-                    });
-                }
-            });
-
             connection.query(query2, [phone], function (error, rows, fields) {
                 if (error) {
                     console.log("Error in query");
@@ -903,7 +862,31 @@ app.post("/add_employee", upload2.fields([{ name: 'myImage', maxCount: 1 }, { na
                     // console.log(rows);
                 }
             });
-            connection.query("update employee set aadhaar = ? where emp_id = ?", [emp_id + "-aadhaar" + extension2, emp_id], function (err, rows, fields) {
+
+            // Create a new blob in the bucket and upload the file data.
+            console.log(req.files.aadhaar[0].originalname);
+            blob = bucket.file('Employee/' + emp_id + '-aadhaar' + extension);
+            blobStream = blob.createWriteStream();
+
+            blobStream.on('error', err => {
+                console.log(err);
+                next(err);
+            });
+
+            blobStream.on('finish', () => {
+                // The public URL can be used to directly access the file via HTTP.
+                const publicUrl = format(
+                    `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+                );
+                console.log(publicUrl);
+                console.log(bucket.name);
+                console.log(blob.name);
+                // res.status(200).send(publicUrl);
+            });
+
+            blobStream.end(req.files.aadhaar[0].buffer);
+
+            connection.query("update employee set aadhaar = ? where emp_id = ?", [emp_id + "-aadhaar" + extension, emp_id], function (err, rows, fields) {
                 if (err) {
                     console.log("Error in Query");
                     console.log(err);
