@@ -11,7 +11,7 @@ require('dotenv').config()
 //const { check, validationResult } = require('express-validator');
 
 var admin = require('firebase-admin');
-//var serviceAccount = require('D:/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
+var serviceAccount = require('D:/Web Development/College Project/DBE-Bank/bank-management/bank--management-firebase-adminsdk-3zde7-e2d517cbdf.json');
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,7 +24,7 @@ var firebaseConfig = {
     messagingSenderId: "958869290156",
     appId: "1:958869290156:web:dd0684a44a47432ebdf309",
     measurementId: "G-58EFH046K3",
-    //credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount)
 };
 // Initialize Firebase
 admin.initializeApp(firebaseConfig);
@@ -33,7 +33,7 @@ admin.initializeApp(firebaseConfig);
 var storage = admin.storage();
 
 // Create a root reference
-var storageRef = storage.bucket('gs://bank--management.appspot.com');
+var bucket = storage.bucket('gs://bank--management.appspot.com');
 
 //ID of logged in employee
 var emp_id, name;
@@ -196,46 +196,46 @@ app.post("/", function (req, res) {
 // Set The Storage Engine
 var extension1, extension2;
 
-const storage1 = multer.diskStorage({
-    destination: process.env.CUST_SERVER,
-    filename: function (req, file, cb) {
-        /*****************************To get cust_id of last customer************************************/
-        connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
-            if (rows.length === 0) {
-                cust_id = 5000;
-                connection.query("alter table cust_account auto_increment = 74001000", function (err, rows, fields) {
-                    if (err) {
-                        console.log("Error in query");
-                        console.log(error);
-                    }
-                    else {
-                        console.log("Successful Query");
-                        // console.log(rows);
-                    }
-                });
-            }
-            else
-                cust_id = rows[0].cust_id + 1;
+// const storage1 = multer.diskStorage({
+//     destination: process.env.CUST_SERVER,
+//     filename: function (req, file, cb) {
+//         /*****************************To get cust_id of last customer************************************/
+//         connection.query("select cust_id from cust_account order by cust_id desc limit 1", function (err, rows, fields) {
+//             if (rows.length === 0) {
+//                 cust_id = 5000;
+//                 connection.query("alter table cust_account auto_increment = 74001000", function (err, rows, fields) {
+//                     if (err) {
+//                         console.log("Error in query");
+//                         console.log(error);
+//                     }
+//                     else {
+//                         console.log("Successful Query");
+//                         // console.log(rows);
+//                     }
+//                 });
+//             }
+//             else
+//                 cust_id = rows[0].cust_id + 1;
 
-            // console.log(cust_id);
+//             // console.log(cust_id);
 
-            if (file.fieldname === 'myImage') {
-                extension1 = path.extname(file.originalname);
-                cb(null, cust_id + '-photo' + path.extname(file.originalname));
-            }
-            else if (file.fieldname === 'aadhaar') {
-                extension2 = path.extname(file.originalname);
-                cb(null, cust_id + '-aadhaar' + path.extname(file.originalname));
+//             if (file.fieldname === 'myImage') {
+//                 extension1 = path.extname(file.originalname);
+//                 cb(null, cust_id + '-photo' + path.extname(file.originalname));
+//             }
+//             else if (file.fieldname === 'aadhaar') {
+//                 extension2 = path.extname(file.originalname);
+//                 cb(null, cust_id + '-aadhaar' + path.extname(file.originalname));
 
 
-            }
-        });
-    }
-});
+//             }
+//         });
+//     }
+// });
 
 //For Image
 const upload1 = multer({
-    storage: storage1,
+    storage: multer.memoryStorage(),
     limits: { fileSize: 2000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
@@ -277,17 +277,27 @@ app.post("/add_customer", upload1.fields([{ name: 'myImage', maxCount: 1 }, { na
     var acc_type = req.body.acc_type;
     var interest;
 
-    console.log(extension1, extension2);
     console.log(req.files, req.file);
 
-    storageRef.upload(req.file.path, function (err) {
-        if (err)
-            console.log(err);
-        else {
-            console.log("Uploaded Successfully");
-            console.log(req.body.myImage);
-        }
+
+   // Create a new blob in the bucket and upload the file data.
+   console.log(req.files.myImage[0].originalname);
+    const blob = bucket.file(req.files.myImage[0].originalname);
+    const blobStream = blob.createWriteStream();
+
+    blobStream.on('error', err => {
+        next(err);
     });
+
+    blobStream.on('finish', () => {
+        // The public URL can be used to directly access the file via HTTP.
+        const publicUrl = format(
+            `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+        );
+        res.status(200).send(publicUrl);
+    });
+
+    blobStream.end(req.files.myImage[0].buffer);
 
     var photo = 'load_file(' + process.env.CUST_LOAD + cust_id + '-photo' + extension1 + '")';
     var aadhaar = cust_id + '-aadhaar' + extension2;
@@ -1719,7 +1729,7 @@ app.listen(process.env.PORT || 3000, function () {
 
     console.log(__dirname);
 
-    storageRef.upload('public/images/kyc.png', { destination: 'test/c.png' }, function (err, lol) {
+    bucket.upload('public/images/kyc.png', { destination: 'test/c.png' }, function (err, lol) {
         if (err)
             console.log(err);
         else
