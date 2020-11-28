@@ -5,8 +5,8 @@ const mysql = require("mysql");
 const multer = require("multer");
 const path = require('path');
 const md5 = require('md5');
-const fs = require('fs');
-const move = require('fs-extra');
+// const fs = require('fs');
+// const move = require('fs-extra');
 require('dotenv').config()
 const { format } = require('util');
 //const { check, validationResult } = require('express-validator');
@@ -27,6 +27,7 @@ var firebaseConfig = {
     measurementId: "G-58EFH046K3",
     credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT))
 };
+
 // Initialize Firebase
 admin.initializeApp(firebaseConfig);
 
@@ -35,14 +36,22 @@ var storage = admin.storage();
 
 // Create a root reference
 var bucket = storage.bucket('gs://bank--management.appspot.com');
-bucket.makePublic({ includeFiles: true, force: true }, function (err, files) {
-    if (err) {
-        console.log(err);
-    }
-    else {
-        console.log(files);
-    }
-});
+// bucket.makePublic({ includeFiles: true, force: true }, function (err, files) {
+//     if (err) {
+//         console.log(err);
+//     }
+//     else {
+//         var file = files[files.length - 1];
+//         file.download(function (err, contents) {
+//             if (err)
+//                 console.log(err);
+//             else {
+//                 console.log(contents);
+//                 console.log('lol');
+//             }
+//         });
+//     }
+// });
 
 //ID of logged in employee
 var emp_id, name;
@@ -413,8 +422,6 @@ app.post("/view_profile", function (req, res) {
             }
         }
         else {
-
-
             var row = rows[0];
             var phone_no1, phone_no2;
             phone_no1 = rows[0].phone_no;
@@ -439,17 +446,26 @@ app.post("/view_profile", function (req, res) {
                                     console.log(err);
                                 }
                                 else {
-                                    res.render("cust_profile", {
-                                        ifsc_code: ifsc_code,
-                                        br_name: br_name,
-                                        phone_no1: phone_no1,
-                                        phone_no2: phone_no2,
-                                        photo: row.photo.toString("base64"),
-                                        row: row,
-                                        rows: rows,
-                                        length: rows.length,
-                                        min_bal: ro[0].min_bal,
-                                        r: r
+                                    bucket.file('Customer/' + row.aadhaar).get(function (err, file, apiResponse) {
+                                        if (err)
+                                            console.log(err);
+                                        else {
+                                            console.log('Retrieved the ID Successfully');
+
+                                            res.render("cust_profile", {
+                                                ifsc_code: ifsc_code,
+                                                br_name: br_name,
+                                                phone_no1: phone_no1,
+                                                phone_no2: phone_no2,
+                                                photo: row.photo.toString("base64"),
+                                                row: row,
+                                                rows: rows,
+                                                length: rows.length,
+                                                min_bal: ro[0].min_bal,
+                                                id: file.id,
+                                                r: r
+                                            });
+                                        }
                                     });
                                 }
                             })
@@ -462,6 +478,7 @@ app.post("/view_profile", function (req, res) {
         }
     });
 });
+
 app.post("/reopen", function (req, res) {
     var acc_no = req.body.acc_no;
     connection.query("update cust_account set status='ACTIVE' where acc_no = ?", [acc_no], function (err) {
@@ -501,17 +518,26 @@ app.post("/reopen", function (req, res) {
                                             console.log(err);
                                         }
                                         else {
-                                            res.render("cust_profile", {
-                                                ifsc_code: ifsc_code,
-                                                br_name: br_name,
-                                                phone_no1: phone_no1,
-                                                phone_no2: phone_no2,
-                                                photo: row.photo.toString("base64"),
-                                                row: row,
-                                                rows: rows,
-                                                length: rows.length,
-                                                min_bal: ro[0].min_bal,
-                                                r: r
+                                            bucket.file('Customer/' + row.aadhaar).get(function (err, file, apiResponse) {
+                                                if (err)
+                                                    console.log(err);
+                                                else {
+                                                    console.log('Retrieved the ID Successfully');
+
+                                                    res.render("cust_profile", {
+                                                        ifsc_code: ifsc_code,
+                                                        br_name: br_name,
+                                                        phone_no1: phone_no1,
+                                                        phone_no2: phone_no2,
+                                                        photo: row.photo.toString("base64"),
+                                                        row: row,
+                                                        rows: rows,
+                                                        length: rows.length,
+                                                        min_bal: ro[0].min_bal,
+                                                        id: file.id,
+                                                        r: r
+                                                    });
+                                                }
                                             });
                                         }
                                     })
@@ -716,6 +742,7 @@ app.post("/remove_customer_details", function (req, res) {
 
 /*************************** Employee Profile Starts ***************************/
 var emp_login_details;
+
 app.get("/profile", function (req, res) {
     if (loggedIn(res)) {
         var query = "select * from emp_info where emp_id=" + emp_id;
@@ -735,20 +762,32 @@ app.get("/profile", function (req, res) {
                     phone_no2 = "Not Available";
 
                 // console.log(typeof(row.dob), row.dob);
-                emp_login_details = {
-                    phone_no1,
-                    phone_no2,
-                    photo: row.photo.toString("base64"),
-                    row
-                }
-                res.render("emp_profile", {
-                    ifsc_code,
-                    br_name,
-                    row: emp_login_details.row,
-                    phone_no1: emp_login_details.phone_no1,
-                    phone_no2: emp_login_details.phone_no2,
-                    photo: emp_login_details.photo,
-                    success: undefined
+
+                bucket.file('Employee/' + rows[0].aadhaar).download(function (err, contents) {
+                    if (err)
+                        console.log(err);
+                    else {
+                        console.log('Download Successful');
+
+                        emp_login_details = {
+                            phone_no1,
+                            phone_no2,
+                            photo: row.photo.toString("base64"),
+                            pdf: contents.toString('base64'),
+                            row
+                        }
+
+                        res.render("emp_profile", {
+                            ifsc_code,
+                            br_name,
+                            row: emp_login_details.row,
+                            phone_no1: emp_login_details.phone_no1,
+                            phone_no2: emp_login_details.phone_no2,
+                            photo: emp_login_details.photo,
+                            pdf: emp_login_details.pdf,
+                            success: undefined
+                        });
+                    }
                 });
             }
         });
@@ -769,6 +808,7 @@ app.post("/change_password", function (req, res) {
                 phone_no1: emp_login_details.phone_no1,
                 phone_no2: emp_login_details.phone_no2,
                 photo: emp_login_details.photo,
+                pdf: emp_login_details.pdf,
                 success: 'Success'
             }
             )
@@ -947,13 +987,22 @@ app.post("/emp_profile", function (req, res) {
 
             // console.log(typeof(row.dob), row.dob);
 
-            res.render("emp_profile 2", {
-                ifsc_code: ifsc_code,
-                br_name: br_name,
-                phone_no1: phone_no1,
-                phone_no2: phone_no2,
-                photo: row.photo.toString("base64"),
-                row: row
+            bucket.file('Employee/' + rows[0].aadhaar).download(function (err, contents) {
+                if (err)
+                    console.log(err);
+                else {
+                    console.log('Download Successful');
+
+                    res.render("emp_profile 2", {
+                        ifsc_code: ifsc_code,
+                        br_name: br_name,
+                        phone_no1: phone_no1,
+                        phone_no2: phone_no2,
+                        photo: row.photo.toString("base64"),
+                        pdf: contents.toString('base64'),
+                        row: row
+                    });
+                }
             });
         }
     });
@@ -1716,6 +1765,16 @@ app.listen(process.env.PORT || 3000, function () {
         if (err)
             console.log(err);
         else
-            console.log("Upload Successful");
+            console.log("Connection to Storage Successful");
     });
+
+    // bucket.file('Customer/5008-aadhaar.pdf').get(function (err, file, apiResponse) {
+    //     if (err)
+    //         console.log(err);
+    //     else {
+    //         console.log(file);
+    //         console.log(apiResponse);
+    //         console.log(file.id);
+    //     }
+    // });
 });
