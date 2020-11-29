@@ -1,68 +1,18 @@
 # Bank Management System
 This is Bank Management Web Application similar to application used by employees in the bank.
+## Link
+https://bank--management.herokuapp.com/
+
+Use Employee ID :-1001 and Password:- admin@123 to login as Manager.
 # Preview
 ![image](https://i.ibb.co/4STBy1Q/Screenshot-128.png)
-# Prerequisites
 
-* [MySQL Workbench](https://dev.mysql.com/downloads/installer/)
-* [Node](https://nodejs.org/en/)
 
-# Installation
+![image](https://i.ibb.co/M56nVyN/Screenshot-163.png)
 
-## NPM
-Use the package manager [npm](https://www.npmjs.com/) to install modules. Run this command where you have cloned the project.
 
-```bash
-npm i
-```
+![image](https://i.ibb.co/mX7mNzj/Screenshot-164.png)
 
-## Database
-Open MySQL Workbench and import database from 'bank.sql' file stored in 'Database' directory.
 
-## .env
-In project directory make '.env' file to store environment variables.
-Copy the following text and paste in '.env' file you just created. Replace the content where specified.
-```
-DB_HOST=sql12.freemysqlhosting.net
-DB_USER=sql12377987
-DB_PASS=f4sxmeRXJ4
-DB_SCHEMA=sql12377987
+![image](https://i.ibb.co/s5G0drv/Screenshot-165.png)
 
-CUST_SERVER=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer
-CUST_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/
-CUST_MOVE_FROM=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/
-
-EMP_SERVER=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee
-EMP_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/
-EMP_RENAME=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/
-
-MOVE_TO=<Path to directory where you cloned project>/bank-management/public/pdfs/
-```
-_Example :-_
-Don't copy this. Just for reference.
-```
-DB_HOST=sql12.freemysqlhosting.net
-DB_USER=sql12377987
-DB_PASS=f4sxmeRXJ4
-DB_SCHEMA=sql12377987
-
-CUST_SERVER=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer
-CUST_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/
-CUST_MOVE_FROM=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Customer/
-
-EMP_SERVER=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee
-EMP_LOAD="C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/
-EMP_RENAME=C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Employee/
-
-MOVE_TO=D:/Web Development/College Project/DBE-Bank/public/pdfs/
-```
-# Usage
-1) Run this command on the terminal in the project directory to start the local server.
-```python
-node index.js
-```
-2) Open your browser and paste this into the URL field.
-```
-localhost:3000
-```
-3) Use 1001 as Employee ID and admin@123 as a Password to log in as a manager. You can add a new employee, the default password is admin@123.
