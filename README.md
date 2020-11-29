@@ -16,3 +16,9 @@ Use Employee ID :-1001 and Password:- admin@123 to login as Manager.
 
 ![image](https://i.ibb.co/s5G0drv/Screenshot-165.png)
 
+# Technology
+* Frontend :- HTML, CSS, Javascript, Bootstrap 4,EJS
+* Backend :- Node.js, Express.js
+* Database :- MySQL
+* Storage :- Firebase
+* Hosting :- Heroku
