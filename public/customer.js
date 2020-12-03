@@ -121,14 +121,34 @@ function showFileName(event) {
   // the change event gives us the input it occurred in
   var input = event.srcElement;
 
+  if (input.files[0].size > 2000000) {
+    alert("File size limit exceeded !!");
+    input.value = null;
+    return;
+  }
+
   // the input has an array of files in the `files` property, each one has a name that you can use. We're just using the name here.
   var fileName = input.files[0].name;
+  var ext = fileName.split('.');
+  ext = ext[ext.length - 1].toLowerCase();
 
   // change the text to the actual filename
   if (event.target.id === "validatedCustomFile1") {
+    if (ext != 'png' && ext != 'jpg' && ext != 'jpeg') {
+      alert("Upload JPG/JPEG/PNG file only !!");
+      input.value = null;
+      return;
+    }
+
     infoArea1.textContent = fileName;
   }
   else {
+    if (ext != 'pdf') {
+      alert("Upload PDF file only !!");
+      input.value = null;
+      return;
+    }
+
     infoArea2.textContent = fileName;
   }
 
