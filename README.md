@@ -2,6 +2,8 @@
 This is Bank Management Web Application similar to application used by employees in the bank.
 ## Link
 https://bank--management.herokuapp.com/
+OR
+https://bank---management.herokuapp.com/
 
 Use Employee ID:- 1001 and Password:- admin@123 to login as Manager.
 
